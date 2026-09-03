@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" role="img" aria-labelledby="title">
+  <title id="title">Ícone do aplicativo Rastro</title>
+  <rect x="36" y="36" width="952" height="952" rx="236" fill="#FFF9EC"/>
+  <g transform="translate(80 80) scale(7.2)">
+    <path d="M28 96V50c0-17 12-27 31-27 18 0 30 10 30 25 0 17-12 26-31 26H28" fill="none" stroke="#1F5BFF" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M59 74 91 98" fill="none" stroke="#FF6B4A" stroke-width="18" stroke-linecap="round"/>
+    <circle cx="59" cy="23" r="11" fill="#C7EA46"/>
+    <circle cx="59" cy="74" r="10" fill="#C7EA46" stroke="#252525" stroke-width="4"/>
+    <circle cx="91" cy="98" r="10" fill="#FF6B4A"/>
+  </g>
+</svg>

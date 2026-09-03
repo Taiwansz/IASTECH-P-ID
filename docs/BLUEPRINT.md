@@ -1,4 +1,4 @@
-# Blueprint: ThLoop Atlas P&ID Lens
+# Blueprint: Rastro — P&ID Lens
 
 **ID:** THL-PID-BP-001  
 **Version:** 1.1.0

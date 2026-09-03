@@ -1,8 +1,10 @@
-# ThLoop Atlas P&ID Lens
+# Rastro — P&ID Lens
 
-Prova de conceito local para análise auditável de diagramas P&ID. A aplicação localiza TAGs por OCR neural, sugere classes, projeta evidências sobre o documento e encaminha resultados incertos para revisão humana.
+Prova de conceito local para análise auditável de diagramas P&ID. O Rastro localiza TAGs por OCR neural, sugere classes, projeta evidências sobre o documento e encaminha resultados incertos para revisão humana.
 
 Projeto desenvolvido por **Matheus Sousa dos Santos**, Equipe **ThLoop**.
+
+O kit oficial da marca está em `public/brand/`, com masters vetoriais, tokens e PNGs transparentes prontos para sites, slides e mockups. As regras de aplicação estão em `docs/brand/README.md`.
 
 ## O que a demo entrega
 

@@ -2,14 +2,15 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "ThLoop Atlas P&ID Lens",
-  description: "Demonstração local para análise auditável de diagramas P&ID.",
+  title: "Rastro — P&ID Lens",
+  description: "Análise local e auditável de diagramas P&ID, com evidências, rotas e revisão humana.",
   other: {
     "codex-preview": "development",
   },
   icons: {
-    icon: "/favicon.svg",
-    shortcut: "/favicon.svg",
+    icon: "/brand/marks/rastro-app-icon.svg",
+    shortcut: "/brand/png/favicon-32.png",
+    apple: "/brand/png/apple-touch-icon-180.png",
   },
 };
 

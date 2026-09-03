@@ -1,0 +1,35 @@
+{
+  "brand": "Rastro",
+  "version": "1.0.0",
+  "palette": {
+    "cream": "#F8F3E7",
+    "paper": "#FFFAF0",
+    "cobalt": "#1F5BFF",
+    "lime": "#C7EA46",
+    "coral": "#FF6B4A",
+    "ink": "#252525"
+  },
+  "logos": [
+    { "path": "logos/rastro-lockup-dark.svg", "surface": "light", "viewBox": "0 0 700 150" },
+    { "path": "logos/rastro-lockup-light.svg", "surface": "dark", "viewBox": "0 0 700 150" }
+  ],
+  "marks": [
+    { "path": "marks/rastro-mark.svg", "viewBox": "0 0 120 120" },
+    { "path": "marks/rastro-app-icon.svg", "viewBox": "0 0 1024 1024" }
+  ],
+  "visualDevices": [
+    { "path": "visual/route-ribbon.svg", "png": "png/route-ribbon-1600.png", "dimensions": [1600, 520] },
+    { "path": "visual/node-cluster.svg", "png": "png/node-cluster-1200.png", "dimensions": [1200, 1200] },
+    { "path": "visual/identity-stickers.svg", "png": "png/identity-stickers-1600.png", "dimensions": [1600, 1000] },
+    { "path": "visual/corner-route.svg", "png": "png/corner-route-1200.png", "dimensions": [1200, 1200] }
+  ],
+  "rasterExports": [
+    { "path": "png/app-icon-1024.png", "dimensions": [1024, 1024] },
+    { "path": "png/app-icon-512.png", "dimensions": [512, 512] },
+    { "path": "png/apple-touch-icon-180.png", "dimensions": [180, 180] },
+    { "path": "png/favicon-32.png", "dimensions": [32, 32] },
+    { "path": "png/rastro-mark-512.png", "dimensions": [512, 512] },
+    { "path": "png/rastro-wordmark-dark-1400.png", "dimensions": [1400, 300] },
+    { "path": "png/rastro-wordmark-light-1400.png", "dimensions": [1400, 300] }
+  ]
+}

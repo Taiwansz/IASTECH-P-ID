@@ -81,7 +81,7 @@ const navigation = [
   { id: "documents" as View, label: "Documentos", icon: SquaresFour },
   { id: "review" as View, label: "Revisão humana", icon: UserFocus },
   { id: "metrics" as View, label: "Métricas", icon: ChartBar },
-  { id: "atlas" as View, label: "Atlas Console", icon: Fingerprint },
+  { id: "atlas" as View, label: "Governança Atlas", icon: Fingerprint },
 ];
 
 const kindLabels: Record<DetectionKind, string> = {
@@ -387,14 +387,14 @@ export default function PIDLensApp() {
   };
 
   return (
-    <Theme theme="g100">
+    <Theme theme="white">
       <div className="atlas-app">
         <header className="topbar">
           <button className="brand-lockup" onClick={() => setActiveView("overview")} aria-label="Abrir visão geral">
-            <span className="brand-mark" aria-hidden="true"><span>T</span><span>L</span></span>
+            <Image className="brand-mark-image" src="/brand/marks/rastro-mark.svg" alt="" width={40} height={40} priority />
             <span className="brand-copy">
-              <strong>Atlas P&amp;ID Lens</strong>
-              <small>by ThLoop</small>
+              <strong>RASTRO</strong>
+              <small>P&amp;ID LENS</small>
             </span>
           </button>
           <div className="topbar-actions">
@@ -423,7 +423,7 @@ export default function PIDLensApp() {
           <div className="sidebar-foot">
             <div className="team-chip">
               <span>TS</span>
-              <div><strong>Matheus Sousa</strong><small>Equipe ThLoop</small></div>
+              <div><strong>Matheus Sousa</strong><small>ThLoop × IASTECH</small></div>
             </div>
             <div className="offline-note"><LockKey size={15} /> Runtime local protegido</div>
           </div>
@@ -709,10 +709,11 @@ function Overview({ onStart, onAtlas }: { onStart: () => void; onAtlas: () => vo
   return (
     <section className="overview-page">
       <div className="overview-hero">
+        <Image className="hero-brand-decor" src="/brand/png/corner-route-1200.png" alt="" width={1200} height={1200} aria-hidden="true" priority />
         <div className="overview-copy">
-          <span className="hero-kicker"><ShieldCheck size={17} weight="fill" /> Inteligência industrial soberana</span>
-          <h1>Transforme um P&amp;ID em evidência verificável.</h1>
-          <p>Uma demonstração local da Equipe ThLoop para localizar TAGs, classificar elementos e expor incertezas antes que elas virem decisões.</p>
+          <span className="hero-kicker"><ShieldCheck size={17} weight="fill" /> Inteligência que deixa rastro</span>
+          <h1>Siga cada evidência do seu P&amp;ID.</h1>
+          <p>O Rastro localiza TAGs, conecta rotas e mostra de onde cada resultado veio — tudo localmente, com a decisão final nas suas mãos.</p>
           <div className="hero-actions">
             <Button kind="primary" size="lg" renderIcon={Play} onClick={onStart}>Iniciar demonstração</Button>
             <Button kind="tertiary" size="lg" renderIcon={Fingerprint} onClick={onAtlas}>Ver governança Atlas</Button>
@@ -753,7 +754,7 @@ function Overview({ onStart, onAtlas }: { onStart: () => void; onAtlas: () => vo
       <div className="overview-story">
         <article className="story-main">
           <div><Brain size={23} /><span>Fluxo de decisão</span></div>
-          <h2>A IA encontra. O Atlas exige prova.</h2>
+          <h2>A IA encontra. O Rastro mostra o caminho.</h2>
           <p>O motor de visão produz candidatos. Regras locais sugerem classe e grupo. O Red Team expõe o que não está claro. A decisão final continua humana.</p>
           <div className="flow-nodes">
             <span>Imagem local</span><i /><span>OCR neural</span><i /><span>Classificação</span><i /><span>Red Team</span><i /><span>Humano</span>
@@ -790,7 +791,7 @@ function ReviewView({
   const reviewSelected = selected?.status === "review" ? selected : queue[0] ?? null;
   return (
     <section className="page review-page">
-      <PageHeader title="Revisão humana" description="A soberania humana do Atlas aplicada a cada evidência de baixa confiança." />
+      <PageHeader title="Revisão humana" description="A soberania humana aplicada a cada evidência de baixa confiança." />
       {queue.length ? (
         <div className="review-layout">
           <div className="review-queue">
@@ -911,7 +912,7 @@ function AtlasView({ audit, onAnalyze }: { audit: AuditEvent[]; onAnalyze: () =>
   ];
   return (
     <section className="page atlas-page">
-      <PageHeader title="Atlas Console" description="A camada de governança que transforma uma detecção em uma decisão rastreável." actions={<Button kind="primary" renderIcon={Crosshair} onClick={onAnalyze}>Abrir análise</Button>} />
+      <PageHeader title="Governança Atlas" description="A camada de governança do Rastro que transforma uma detecção em uma decisão verificável." actions={<Button kind="primary" renderIcon={Crosshair} onClick={onAnalyze}>Abrir análise</Button>} />
       <div className="constitution-banner">
         <div className="constitution-seal"><Fingerprint size={34} weight="duotone" /></div>
         <div><span>Constituição THL-PID-CONST-001</span><h2>7 invariantes ativos. Nenhuma exceção aberta.</h2><p>A execução é local, evidências são obrigatórias e resultados incertos dependem de aprovação humana.</p></div>

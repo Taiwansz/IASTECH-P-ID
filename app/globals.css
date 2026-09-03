@@ -63,27 +63,27 @@
 }
 
 :root {
-  --background: #0b100e;
-  --surface-1: #101714;
-  --surface-2: #151e1a;
-  --surface-3: #1a2520;
-  --surface-4: #233029;
-  --border: #2a3731;
-  --border-strong: #3b4b43;
-  --text: #e8f0ec;
-  --text-soft: #bdcbc4;
-  --muted: #85948c;
-  --accent: #78d2a3;
-  --accent-strong: #9ce7bf;
-  --accent-ink: #07120d;
-  --warning: #ddb268;
-  --danger: #da7c73;
-  --info: #88abc8;
-  --radius-panel: 14px;
-  --radius-control: 8px;
-  --topbar-height: 68px;
-  --sidebar-width: 224px;
-  --shadow-panel: 0 18px 50px rgb(2 8 5 / 0.28);
+  --background: #f8f3e7;
+  --surface-1: #fffaf0;
+  --surface-2: #f3ecde;
+  --surface-3: #eae1d1;
+  --surface-4: #ded3c0;
+  --border: #d9cfbd;
+  --border-strong: #b8ad99;
+  --text: #252525;
+  --text-soft: #4b4b48;
+  --muted: #74726c;
+  --accent: #1f5bff;
+  --accent-strong: #164de0;
+  --accent-ink: #fffaf0;
+  --warning: #ff6b4a;
+  --danger: #d64545;
+  --info: #7a9700;
+  --radius-panel: 20px;
+  --radius-control: 12px;
+  --topbar-height: 76px;
+  --sidebar-width: 236px;
+  --shadow-panel: 0 20px 55px rgb(67 54 34 / 0.12);
   --font-geist-sans: "IBM Plex Sans", system-ui, sans-serif;
   --font-geist-mono: "IBM Plex Mono", ui-monospace, monospace;
 }
@@ -94,7 +94,7 @@
 
 html {
   background: var(--background);
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 body {
@@ -103,6 +103,10 @@ body {
   color: var(--text);
   font-family: var(--font-geist-sans), system-ui, sans-serif;
   min-width: 320px;
+  background-image:
+    radial-gradient(circle at 12% 9%, rgb(199 234 70 / 0.2), transparent 19rem),
+    radial-gradient(circle at 90% 20%, rgb(255 107 74 / 0.12), transparent 21rem);
+  background-attachment: fixed;
 }
 
 button,
@@ -3871,5 +3875,357 @@ input:focus-visible {
   .mobile-nav,
   .drawer-backdrop {
     backdrop-filter: none;
+  }
+}
+
+/* Rastro brand layer ------------------------------------------------------ */
+
+.cds--btn {
+  border-radius: 999px;
+  font-weight: 600;
+}
+
+.cds--btn--primary {
+  box-shadow: 0 5px 0 #123db5;
+}
+
+.cds--btn--primary:hover {
+  background: #174de0;
+}
+
+.cds--btn--secondary {
+  background: var(--text);
+  color: var(--surface-1);
+}
+
+.cds--btn--secondary:hover {
+  background: #3b3b37;
+  color: var(--surface-1);
+}
+
+.cds--btn--tertiary {
+  border-color: var(--text);
+  background: var(--surface-1);
+  color: var(--text);
+}
+
+.cds--btn--ghost:hover {
+  background: rgb(31 91 255 / 0.08);
+}
+
+.topbar {
+  border-bottom: 1px solid var(--border);
+  background: rgb(255 250 240 / 0.9);
+  box-shadow: 0 8px 28px rgb(67 54 34 / 0.06);
+}
+
+.brand-lockup {
+  gap: 10px;
+}
+
+.brand-mark-image {
+  width: 42px;
+  height: 42px;
+  flex: 0 0 auto;
+}
+
+.brand-copy {
+  gap: 0;
+}
+
+.brand-copy strong {
+  color: var(--text);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  line-height: 1;
+}
+
+.brand-copy small {
+  margin-top: 5px;
+  color: var(--muted);
+  font: 600 9px/1 var(--font-geist-mono), monospace;
+  letter-spacing: 0.22em;
+}
+
+.privacy-state {
+  color: #385100;
+}
+
+.sidebar {
+  border-right: 1px solid var(--border);
+  background: rgb(255 250 240 / 0.82);
+  box-shadow: 12px 0 38px rgb(67 54 34 / 0.04);
+  backdrop-filter: blur(18px);
+}
+
+.nav-item {
+  border-radius: 14px;
+  color: var(--muted);
+  font-weight: 550;
+}
+
+.nav-item:hover {
+  background: rgb(31 91 255 / 0.07);
+  color: var(--text);
+}
+
+.nav-item.active {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #fffaf0;
+  box-shadow: 0 6px 16px rgb(31 91 255 / 0.22);
+}
+
+.nav-item.active svg {
+  color: #c7ea46;
+}
+
+.nav-item b {
+  background: var(--warning);
+  color: #252525;
+}
+
+.team-chip > span {
+  background: #c7ea46;
+  color: var(--text);
+}
+
+.workspace,
+.atlas-app {
+  background: transparent;
+}
+
+.page,
+.overview-page {
+  padding-top: 36px;
+}
+
+.page-header h1,
+.overview-copy h1 {
+  font-weight: 700;
+}
+
+.page-header h1 {
+  letter-spacing: -0.05em;
+}
+
+.overview-hero {
+  position: relative;
+  isolation: isolate;
+  border-bottom-color: var(--border);
+}
+
+.hero-brand-decor {
+  position: absolute;
+  z-index: -1;
+  top: -23%;
+  right: -17%;
+  width: min(52vw, 760px);
+  height: auto;
+  opacity: 0.22;
+  pointer-events: none;
+}
+
+.overview-copy,
+.hero-diagram {
+  position: relative;
+  z-index: 1;
+}
+
+.hero-kicker {
+  border: 1px solid rgb(31 91 255 / 0.18);
+  border-radius: 999px;
+  background: rgb(255 250 240 / 0.8);
+  color: var(--accent);
+  padding: 8px 12px;
+  box-shadow: 0 8px 20px rgb(67 54 34 / 0.06);
+}
+
+.overview-copy h1 {
+  color: var(--text);
+  font-size: clamp(46px, 5.4vw, 82px);
+  letter-spacing: -0.07em;
+}
+
+.overview-copy > p {
+  color: var(--text-soft);
+}
+
+.hero-assurances svg {
+  color: var(--accent);
+}
+
+.hero-diagram {
+  border: 2px solid var(--text);
+  border-radius: 24px;
+  background: var(--surface-1);
+  box-shadow: 12px 12px 0 #c7ea46, var(--shadow-panel);
+  transform: rotate(0.5deg);
+}
+
+.hero-focus {
+  border-color: var(--accent);
+  background: rgb(31 91 255 / 0.08);
+}
+
+.hero-focus.three {
+  border-color: var(--warning);
+}
+
+.hero-diagram-head strong,
+.story-main > div:first-child,
+.story-privacy svg,
+.story-honesty svg {
+  color: var(--accent);
+}
+
+.overview-rail {
+  border-bottom-color: var(--border);
+}
+
+.overview-rail > div {
+  border-right-color: var(--border);
+}
+
+.overview-story article,
+.viewer-panel,
+.evidence-panel,
+.review-queue,
+.review-decision,
+.distribution-panel,
+.confidence-panel,
+.matrix-panel,
+.principles-panel,
+.agents-panel,
+.audit-panel,
+.analysis-toolbar,
+.sync-panel,
+.impact-map-panel,
+.control-graph-panel,
+.impact-inspector,
+.control-detail,
+.topology-unavailable {
+  background: rgb(255 250 240 / 0.9);
+  box-shadow: 0 14px 34px rgb(67 54 34 / 0.07);
+}
+
+.story-main {
+  border-left: 6px solid var(--accent) !important;
+}
+
+.story-privacy {
+  border-color: #b3d42f !important;
+  background: #d9f36d !important;
+}
+
+.story-honesty {
+  border-color: #e65a3e !important;
+  background: #ff8064 !important;
+}
+
+.story-privacy h3,
+.story-privacy p,
+.story-privacy svg,
+.story-honesty h3,
+.story-honesty p,
+.story-honesty svg {
+  color: var(--text);
+}
+
+.flow-nodes span,
+.document-facts span,
+.kind-filters button,
+.analysis-mode-tabs button,
+.heatmap-toggle,
+.route-selector button,
+.library-filters button {
+  background: var(--surface-1);
+}
+
+.kind-filters button.active,
+.analysis-mode-tabs button.active,
+.heatmap-toggle.active,
+.route-selector button.active,
+.library-filters button.active {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #fffaf0;
+}
+
+.analysis-toolbar select,
+.diagram-scroll,
+.synced-diagram-canvas,
+.topology-graph,
+.document-thumb {
+  background: #eee8dc;
+}
+
+.detection-box,
+.detection-box.selected,
+.detection-box.route-highlight {
+  border-color: var(--accent);
+  background: rgb(31 91 255 / 0.11);
+}
+
+.detection-box.review,
+.confidence-heat-layer .confidence-moderate {
+  border-color: var(--warning);
+  background: rgb(255 107 74 / 0.12);
+}
+
+.confidence-heat-layer .confidence-high,
+.topology-node.confidence-high,
+.topology-node.control {
+  border-color: #8fae16;
+  background: rgb(199 234 70 / 0.24);
+}
+
+.agent-strip > div > span,
+.constitution-seal,
+.agent-cards span {
+  background: rgb(31 91 255 / 0.1);
+  color: var(--accent);
+}
+
+.constitution-banner {
+  border-color: rgb(31 91 255 / 0.2);
+  background: linear-gradient(110deg, rgb(31 91 255 / 0.08), rgb(199 234 70 / 0.16));
+}
+
+.toast {
+  border-color: var(--accent);
+  background: var(--text);
+  color: var(--surface-1);
+}
+
+.drawer-backdrop {
+  background: rgb(37 37 37 / 0.44);
+}
+
+.presentation-drawer {
+  background: var(--surface-1);
+  box-shadow: -20px 0 60px rgb(67 54 34 / 0.16);
+}
+
+@media (max-width: 767px) {
+  .mobile-nav {
+    background: rgb(255 250 240 / 0.94);
+  }
+
+  .mobile-nav button.active {
+    color: var(--accent);
+  }
+
+  .hero-brand-decor {
+    top: -5%;
+    right: -45%;
+    width: 115vw;
+    opacity: 0.15;
+  }
+
+  .hero-diagram {
+    box-shadow: 7px 7px 0 #c7ea46, var(--shadow-panel);
+    transform: none;
   }
 }
