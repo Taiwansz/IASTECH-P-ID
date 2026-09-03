@@ -1,0 +1,46 @@
+{
+  "name": "thloop-pid-lens",
+  "version": "0.1.0",
+  "private": true,
+  "engines": {
+    "node": ">=22.13.0"
+  },
+  "scripts": {
+    "install:ci": "bash scripts/install-ci.sh",
+    "dev": "vite",
+    "build": "vinext build",
+    "build:verified": "bash scripts/build-verified.sh",
+    "start": "vinext start",
+    "test": "npm run lint && npm run typecheck && node --experimental-strip-types --test tests/local-ocr.test.ts tests/topology.test.ts",
+    "validate:artifact": "bash scripts/validate-artifact.sh",
+    "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@carbon/react": "^1.113.0",
+    "@carbon/styles": "^1.112.0",
+    "@phosphor-icons/react": "^2.1.10",
+    "@tesseract.js-data/eng": "^1.0.0",
+    "next": "16.2.6",
+    "react": "19.2.6",
+    "react-dom": "19.2.6",
+    "tesseract.js": "^7.0.0"
+  },
+  "devDependencies": {
+    "@cloudflare/vite-plugin": "1.37.1",
+    "@types/node": "22.19.19",
+    "@types/react": "19.2.14",
+    "@types/react-dom": "19.2.3",
+    "@vitejs/plugin-react": "6.0.2",
+    "@vitejs/plugin-rsc": "0.5.26",
+    "eslint": "9.39.4",
+    "eslint-config-next": "16.2.6",
+    "react-server-dom-webpack": "19.2.6",
+    "typescript": "5.9.3",
+    "vinext": "0.0.50",
+    "vite": "8.0.13",
+    "wrangler": "4.92.0"
+  },
+  "type": "module",
+  "displayName": "ThLoop Atlas P&ID Lens"
+}
