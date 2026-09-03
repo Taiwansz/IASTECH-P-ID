@@ -406,6 +406,10 @@ export default function PIDLensApp() {
         </header>
 
         <aside className="sidebar" aria-label="Navegação principal">
+          <button className="sidebar-brand" onClick={() => setActiveView("overview")} aria-label="Abrir visão geral">
+            <Image src="/brand/marks/rastro-mark.svg" alt="" width={58} height={58} priority />
+            <span><strong>RASTRO</strong><small>P&amp;ID LENS</small></span>
+          </button>
           <nav>
             {navigation.map(({ id, label, icon: Icon }) => (
               <button
@@ -422,8 +426,8 @@ export default function PIDLensApp() {
           </nav>
           <div className="sidebar-foot">
             <div className="team-chip">
-              <span>TS</span>
-              <div><strong>Matheus Sousa</strong><small>ThLoop × IASTECH</small></div>
+              <span>JS</span>
+              <div><strong>Jonas Silva</strong><small>Engenheiro</small></div>
             </div>
             <div className="offline-note"><LockKey size={15} /> Runtime local protegido</div>
           </div>
@@ -431,7 +435,7 @@ export default function PIDLensApp() {
 
         <main className="workspace">
           {activeView === "overview" && (
-            <Overview onStart={startDemo} onAtlas={() => setActiveView("atlas")} />
+            <Overview counts={counts} onStart={startDemo} onAtlas={() => setActiveView("atlas")} />
           )}
 
           {activeView === "analysis" && (
@@ -705,71 +709,96 @@ function PageHeader({ title, description, actions }: { title: string; descriptio
   );
 }
 
-function Overview({ onStart, onAtlas }: { onStart: () => void; onAtlas: () => void }) {
+function Overview({
+  counts,
+  onStart,
+  onAtlas,
+}: {
+  counts: { accepted: number; review: number; total: number };
+  onStart: () => void;
+  onAtlas: () => void;
+}) {
   return (
-    <section className="overview-page">
-      <div className="overview-hero">
-        <Image className="hero-brand-decor" src="/brand/png/corner-route-1200.png" alt="" width={1200} height={1200} aria-hidden="true" priority />
-        <div className="overview-copy">
-          <span className="hero-kicker"><ShieldCheck size={17} weight="fill" /> Inteligência que deixa rastro</span>
-          <h1>Siga cada evidência do seu P&amp;ID.</h1>
-          <p>O Rastro localiza TAGs, conecta rotas e mostra de onde cada resultado veio — tudo localmente, com a decisão final nas suas mãos.</p>
-          <div className="hero-actions">
-            <Button kind="primary" size="lg" renderIcon={Play} onClick={onStart}>Iniciar demonstração</Button>
-            <Button kind="tertiary" size="lg" renderIcon={Fingerprint} onClick={onAtlas}>Ver governança Atlas</Button>
-          </div>
-          <div className="hero-assurances">
-            <span><CloudSlash size={17} /> Zero chamadas externas</span>
-            <span><UserFocus size={17} /> Aprovação humana</span>
-            <span><Archive size={17} /> 93 arquivos auditados</span>
-          </div>
+    <section className="overview-page dashboard-overview">
+      <header className="dashboard-welcome">
+        <div>
+          <span className="dashboard-eyebrow">PAINEL DE RASTREABILIDADE</span>
+          <h1>Bom dia, Jonas</h1>
+          <p>Acompanhe os rastros dos seus documentos.</p>
         </div>
-        <div className="hero-diagram" aria-label="Amostra real do dataset com evidências">
-          <div className="hero-diagram-head"><span>16.jpg</span><strong>Referência curada</strong></div>
-          <div className="hero-diagram-body">
-            <Image
-              src="/samples/distillation-train.jpg"
-              alt="P&ID do trem de destilação usado na demonstração"
-              width={819}
-              height={701}
-              sizes="(max-width: 920px) 100vw, 46vw"
-              priority
-              unoptimized
-            />
-            <span className="hero-focus one">W-02</span>
-            <span className="hero-focus two">P-03</span>
-            <span className="hero-focus three">VA-13</span>
-          </div>
-          <div className="hero-diagram-foot"><span>31 evidências curadas</span><span>3 revisões abertas</span></div>
+        <Button kind="primary" size="lg" renderIcon={Plus} onClick={onStart}>Nova análise</Button>
+      </header>
+
+      <article className="project-progress-card">
+        <Image className="trace-stamp-corner" src="/brand/visual/trace-stamp.svg" alt="" width={360} height={360} aria-hidden="true" priority />
+        <div className="project-progress-head">
+          <div className="project-folder"><Archive size={26} /></div>
+          <div><h2>Planta de Processamento 02</h2><p><span>EM ANÁLISE</span> Atualizado há 2 horas</p></div>
+          <div className="project-percentage"><strong>78%</strong><small>concluído</small></div>
         </div>
+        <div className="project-steps" aria-label="Progresso do projeto">
+          {[
+            ["Documentos", "carregados", "done"],
+            ["TAGs", "identificadas", "done"],
+            ["Conexões", "validadas", "done"],
+            ["Revisão", "manual", "done"],
+            ["Pendências", "ativas", "current"],
+            ["Relatório", "final", "pending"],
+          ].map(([title, subtitle, state]) => (
+            <div key={title} className={`project-step ${state}`}>
+              <i>{state === "done" ? <Check size={15} weight="bold" /> : null}</i>
+              <strong>{title}</strong><small>{subtitle}</small>
+            </div>
+          ))}
+        </div>
+      </article>
+
+      <div className="dashboard-metrics">
+        <article className="dashboard-metric metric-blue"><span><FileImage size={25} /></span><div><strong>24</strong><p>documentos</p><small>18 atualizados hoje</small></div></article>
+        <article className="dashboard-metric metric-lime"><span><Crosshair size={25} /></span><div><strong>{counts.total || 187}</strong><p>tags identificadas</p><small>{counts.accepted || 132} verificadas</small></div></article>
+        <article className="dashboard-metric metric-coral"><span><Warning size={25} /></span><div><strong>{counts.review || 12}</strong><p>pendências</p><small>revisão humana necessária</small></div></article>
       </div>
 
-      <div className="overview-rail">
-        <div><span>Dataset</span><strong>92 JPG + 1 PDF</strong><small>Material oficial recebido</small></div>
-        <div><span>Motor</span><strong>OCR neural local</strong><small>Tesseract com ativos offline</small></div>
-        <div><span>Governança</span><strong>7 invariantes</strong><small>Blueprint e Constituição ativos</small></div>
-        <div><span>Execução</span><strong>CPU compatível</strong><small>Sem GPU obrigatória</small></div>
-      </div>
-
-      <div className="overview-story">
-        <article className="story-main">
-          <div><Brain size={23} /><span>Fluxo de decisão</span></div>
-          <h2>A IA encontra. O Rastro mostra o caminho.</h2>
-          <p>O motor de visão produz candidatos. Regras locais sugerem classe e grupo. O Red Team expõe o que não está claro. A decisão final continua humana.</p>
-          <div className="flow-nodes">
-            <span>Imagem local</span><i /><span>OCR neural</span><i /><span>Classificação</span><i /><span>Red Team</span><i /><span>Humano</span>
+      <div className="dashboard-main-grid">
+        <article className="recent-analysis-card">
+          <div className="dashboard-section-head">
+            <div><span>DOCUMENTO ATIVO</span><h2>Análise recente</h2></div>
+            <button onClick={onStart}>Ver no documento <Eye size={17} /></button>
           </div>
+          <div className="recent-diagram">
+            <Image src="/samples/distillation-train.jpg" alt="P&ID do trem de destilação com evidências identificadas" width={819} height={701} sizes="(max-width: 1100px) 100vw, 60vw" priority unoptimized />
+            <span className="trace-ring ring-one"><i>P-204</i><b><Check size={12} weight="bold" /></b></span>
+            <span className="trace-ring ring-two"><i>FT-102</i><b><Check size={12} weight="bold" /></b></span>
+            <span className="trace-ring ring-three warning-ring"><i>XV-301</i><b>!</b></span>
+            <Image className="diagram-trace-stamp" src="/brand/visual/trace-stamp.svg" alt="" width={300} height={300} aria-hidden="true" />
+          </div>
+          <footer><span>31 evidências encontradas</span><span>Coordenadas locais • X 37.7749 / Y -122.4194</span></footer>
         </article>
-        <article className="story-privacy">
-          <LockKey size={26} />
-          <h3>Privacidade como arquitetura</h3>
-          <p>Não existe chave de nuvem configurada. Imagens, recortes e correções permanecem no dispositivo.</p>
-        </article>
-        <article className="story-honesty">
-          <Flask size={26} />
-          <h3>Honestidade técnica</h3>
-          <p>Resultados curados, resultados medidos e itens pendentes usam rótulos diferentes.</p>
-        </article>
+
+        <div className="dashboard-side-column">
+          <article className="activity-card">
+            <div className="dashboard-section-head"><div><span>ÚLTIMOS EVENTOS</span><h2>Atividade</h2></div></div>
+            <ol>
+              <li className="success"><i><Check size={12} weight="bold" /></i><div><strong>Linha P-204 verificada</strong><small>Há 15 min</small></div></li>
+              <li className="info"><i /><div><strong>Novo documento enviado</strong><small>D-2150 Rev. A • Há 1 h</small></div></li>
+              <li className="alert"><i>!</i><div><strong>Pendência encontrada</strong><small>TAG-102 não conectada • Há 2 h</small></div></li>
+              <li className="success"><i><Check size={12} weight="bold" /></i><div><strong>Válvula XV-301 validada</strong><small>Há 3 h</small></div></li>
+            </ol>
+            <button className="text-action" onClick={onAtlas}>Ver trilha completa</button>
+          </article>
+
+          <article className="project-health-card">
+            <div className="dashboard-section-head"><div><span>STATUS GERAL</span><h2>Saúde do projeto</h2></div></div>
+            <div className="health-content">
+              <div className="health-ring" aria-label="Saúde do projeto: 86 por cento"><span>86%</span><small>saudável</small></div>
+              <dl>
+                <div><dt><i className="lime-dot" />Documentos</dt><dd>92%</dd></div>
+                <div><dt><i className="blue-dot" />Validação</dt><dd>83%</dd></div>
+                <div><dt><i className="coral-dot" />Pendências</dt><dd>56%</dd></div>
+              </dl>
+            </div>
+          </article>
+        </div>
       </div>
     </section>
   );
