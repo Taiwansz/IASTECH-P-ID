@@ -3996,6 +3996,10 @@ input:focus-visible {
   background: transparent;
 }
 
+.atlas-app {
+  overflow-x: clip;
+}
+
 .page,
 .overview-page {
   padding-top: 36px;
