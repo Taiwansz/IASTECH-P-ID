@@ -11,7 +11,7 @@
     "build": "vinext build",
     "build:verified": "bash scripts/build-verified.sh",
     "start": "vinext start",
-    "test": "npm run lint && npm run typecheck && node --experimental-strip-types --test tests/local-ocr.test.ts tests/topology.test.ts",
+    "test": "npm run lint && npm run typecheck && node --experimental-strip-types --test tests/local-ocr.test.ts tests/topology.test.ts tests/isa51.test.ts tests/evaluation.test.ts tests/ml-engine.test.ts",
     "validate:artifact": "bash scripts/validate-artifact.sh",
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
     "typecheck": "tsc --noEmit"
@@ -35,6 +35,7 @@
     "@vitejs/plugin-rsc": "0.5.26",
     "eslint": "9.39.4",
     "eslint-config-next": "16.2.6",
+    "playwright": "^1.62.1",
     "react-server-dom-webpack": "19.2.6",
     "typescript": "5.9.3",
     "vinext": "0.0.50",

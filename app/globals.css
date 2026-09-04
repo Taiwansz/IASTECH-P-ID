@@ -2630,6 +2630,39 @@ input:focus-visible {
   white-space: nowrap;
 }
 
+.dense-graph .topology-node {
+  width: auto;
+  min-width: 44px;
+  max-width: 76px;
+  min-height: 20px;
+  padding: 2px 4px;
+  gap: 1px;
+}
+
+.dense-graph .topology-node strong {
+  font-size: 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dense-graph .topology-node span {
+  display: none;
+}
+
+.dense-graph .topology-node:hover,
+.dense-graph .topology-node.selected {
+  z-index: 10;
+  max-width: 140px;
+}
+
+.dense-graph .topology-node:hover span,
+.dense-graph .topology-node.selected span {
+  display: block;
+  font-size: 7px;
+  white-space: normal;
+}
+
 .topology-node.kind-instrument {
   width: 76px;
   min-height: 42px;

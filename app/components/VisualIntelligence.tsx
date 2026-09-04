@@ -24,6 +24,8 @@ import {
   topologyEdges,
   topologyNodeById,
   topologyNodes,
+  type FlowRoute,
+  type TopologyEdge,
   type TopologyNode,
 } from "../lib/topology-data";
 
@@ -179,6 +181,8 @@ export function TopologyGraph({
   upstreamIds = [],
   downstreamIds = [],
   controlNodeIds = [],
+  nodes,
+  edges,
 }: {
   detections: Detection[];
   selectedNodeId: string;
@@ -188,7 +192,11 @@ export function TopologyGraph({
   upstreamIds?: string[];
   downstreamIds?: string[];
   controlNodeIds?: string[];
+  nodes?: TopologyNode[];
+  edges?: TopologyEdge[];
 }) {
+  const nodesToRender = nodes && nodes.length > 0 ? nodes : topologyNodes;
+  const edgesToRender = edges ?? topologyEdges;
   const confidenceByDetection = new Map(detections.map((item) => [item.id, item.confidence]));
   const routeNodes = new Set(routeNodeIds);
   const routeEdges = new Set(routeEdgeIds);
@@ -197,8 +205,10 @@ export function TopologyGraph({
   const control = new Set(controlNodeIds);
   const hasFocus = routeNodes.size > 0 || upstream.size > 0 || downstream.size > 0 || control.size > 0;
 
+  const isDense = nodesToRender.length > 25;
+
   return (
-    <div className="topology-graph">
+    <div className={`topology-graph ${isDense ? "dense-graph" : ""}`}>
       <svg viewBox="0 0 1000 600" preserveAspectRatio="none" aria-hidden="true">
         <defs>
           <marker id="process-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
@@ -208,9 +218,9 @@ export function TopologyGraph({
             <path d="M 0 0 L 10 5 L 0 10 z" />
           </marker>
         </defs>
-        {topologyEdges.map((edge) => {
-          const source = topologyNodeById(edge.source);
-          const target = topologyNodeById(edge.target);
+        {edgesToRender.map((edge) => {
+          const source = topologyNodeById(edge.source, nodesToRender);
+          const target = topologyNodeById(edge.target, nodesToRender);
           if (!source || !target) return null;
           const inImpact = (upstream.has(edge.source) && (upstream.has(edge.target) || edge.target === selectedNodeId))
             || (downstream.has(edge.target) && (downstream.has(edge.source) || edge.source === selectedNodeId));
@@ -226,7 +236,7 @@ export function TopologyGraph({
         })}
       </svg>
 
-      {topologyNodes.map((node) => {
+      {nodesToRender.map((node) => {
         const confidence = node.detectionId ? confidenceByDetection.get(node.detectionId) : undefined;
         const isFocused = routeNodes.has(node.id) || upstream.has(node.id) || downstream.has(node.id) || control.has(node.id) || node.id === selectedNodeId;
         const nodeStyle = { left: `${node.x}%`, top: `${node.y}%` } as CSSProperties;
@@ -257,6 +267,9 @@ export function TopologyWorkspace({
   onSelectDetection,
   onSelectNode,
   onRoute,
+  nodes,
+  edges,
+  routes,
 }: {
   sample: DiagramSample;
   detections: Detection[];
@@ -267,10 +280,16 @@ export function TopologyWorkspace({
   onSelectDetection: (id: string) => void;
   onSelectNode: (node: TopologyNode) => void;
   onRoute: (id: string) => void;
+  nodes?: TopologyNode[];
+  edges?: TopologyEdge[];
+  routes?: FlowRoute[];
 }) {
-  const route = flowRoutes.find((item) => item.id === routeId) ?? flowRoutes[0];
-  const routeDetectionIds = topologyNodes
-    .filter((node) => route.nodeIds.includes(node.id) && node.detectionId)
+  const routesToUse = routes && routes.length > 0 ? routes : flowRoutes;
+  const nodesToUse = nodes && nodes.length > 0 ? nodes : topologyNodes;
+  const edgesToUse = edges ?? topologyEdges;
+  const route = routesToUse.find((item) => item.id === routeId) ?? routesToUse[0];
+  const routeDetectionIds = nodesToUse
+    .filter((node) => route?.nodeIds.includes(node.id) && node.detectionId)
     .map((node) => node.detectionId as string);
 
   return (
@@ -278,11 +297,14 @@ export function TopologyWorkspace({
       <div className="intelligence-command">
         <div>
           <FlowArrow size={19} />
-          <span><strong>Traçado de fluxo</strong><small>Relações curadas da referência 16.jpg</small></span>
+          <span>
+            <strong>Traçado de fluxo</strong>
+            <small>{sample.referenceReady ? "Relações curadas da referência 16.jpg" : `Topologia dinâmica (${nodesToUse.length} nós, ${edgesToUse.length} arestas)`}</small>
+          </span>
         </div>
         <div className="route-selector" role="group" aria-label="Selecionar rota de processo">
-          {flowRoutes.map((item) => (
-            <button key={item.id} className={item.id === route.id ? "active" : ""} onClick={() => onRoute(item.id)}>{item.name}</button>
+          {routesToUse.map((item) => (
+            <button key={item.id} className={item.id === route?.id ? "active" : ""} onClick={() => onRoute(item.id)}>{item.name}</button>
           ))}
         </div>
       </div>
@@ -306,27 +328,31 @@ export function TopologyWorkspace({
         <article className="sync-panel graph-panel">
           <div className="intelligence-panel-head">
             <span><Graph size={17} /> Topologia</span>
-            <strong>Camada demonstrativa</strong>
+            <strong>{sample.referenceReady ? "Camada demonstrativa" : "Topologia dinâmica"}</strong>
           </div>
           <TopologyGraph
             detections={detections}
             selectedNodeId={selectedNodeId}
             onSelectNode={onSelectNode}
-            routeNodeIds={route.nodeIds}
-            routeEdgeIds={route.edgeIds}
+            routeNodeIds={route?.nodeIds ?? []}
+            routeEdgeIds={route?.edgeIds ?? []}
+            nodes={nodesToUse}
+            edges={edgesToUse}
           />
         </article>
       </div>
 
-      <div className="route-ledger">
-        <span><Path size={19} /></span>
-        <div><strong>{route.name}</strong><p>{route.purpose}</p></div>
-        <dl>
-          <div><dt>Nós</dt><dd>{route.nodeIds.length}</dd></div>
-          <div><dt>Conexões</dt><dd>{route.edgeIds.length}</dd></div>
-          <div><dt>Validação</dt><dd>Especialista</dd></div>
-        </dl>
-      </div>
+      {route && (
+        <div className="route-ledger">
+          <span><Path size={19} /></span>
+          <div><strong>{route.name}</strong><p>{route.purpose}</p></div>
+          <dl>
+            <div><dt>Nós</dt><dd>{route.nodeIds.length}</dd></div>
+            <div><dt>Conexões</dt><dd>{route.edgeIds.length}</dd></div>
+            <div><dt>Validação</dt><dd>{sample.referenceReady ? "Especialista" : "BFS Topológico"}</dd></div>
+          </dl>
+        </div>
+      )}
     </div>
   );
 }
@@ -337,17 +363,31 @@ export function ImpactWorkspace({
   onSelectNode,
   onConfirm,
   onLocate,
+  nodes,
+  edges,
 }: {
   detections: Detection[];
   selectedNodeId: string;
   onSelectNode: (node: TopologyNode) => void;
   onConfirm: (node: TopologyNode) => void;
   onLocate: (detectionId: string) => void;
+  nodes?: TopologyNode[];
+  edges?: TopologyEdge[];
 }) {
-  const selectedNode = topologyNodeById(selectedNodeId) ?? topologyNodeById("p03")!;
-  const impact = useMemo(() => getImpactNeighborhood(selectedNode.id), [selectedNode.id]);
-  const upstreamNodes = impact.upstream.map(topologyNodeById).filter(Boolean) as TopologyNode[];
-  const downstreamNodes = impact.downstream.map(topologyNodeById).filter(Boolean) as TopologyNode[];
+  const nodesToUse = nodes && nodes.length > 0 ? nodes : topologyNodes;
+  const edgesToUse = edges ?? topologyEdges;
+  const fallbackNode: TopologyNode = nodesToUse[0] ?? topologyNodes[0] ?? {
+    id: "node-root",
+    label: "Equipamento",
+    detail: "Componente de processo",
+    kind: "equipment",
+    x: 50,
+    y: 50,
+  };
+  const selectedNode = topologyNodeById(selectedNodeId, nodesToUse) ?? fallbackNode;
+  const impact = useMemo(() => getImpactNeighborhood(selectedNode.id, edgesToUse), [selectedNode.id, edgesToUse]);
+  const upstreamNodes = impact.upstream.map((id) => topologyNodeById(id, nodesToUse)).filter(Boolean) as TopologyNode[];
+  const downstreamNodes = impact.downstream.map((id) => topologyNodeById(id, nodesToUse)).filter(Boolean) as TopologyNode[];
 
   return (
     <div className="impact-workspace">
@@ -362,6 +402,8 @@ export function ImpactWorkspace({
           onSelectNode={onSelectNode}
           upstreamIds={impact.upstream}
           downstreamIds={impact.downstream}
+          nodes={nodesToUse}
+          edges={edgesToUse}
         />
         <div className="impact-legend">
           <span className="upstream">Montante relacionado</span>
@@ -385,7 +427,7 @@ export function ImpactWorkspace({
         </div>
         <div className="redteam-map-warning">
           <Warning size={19} weight="fill" />
-          <p><strong>Limite constitucional</strong>Este mapa mostra relações curadas. Não calcula falha, risco ou consequência operacional.</p>
+          <p><strong>Limite constitucional</strong>Este mapa mostra relações curadas ou topológicas geradas por proximidade e BFS. Não calcula risco de processo sem chancela de especialista.</p>
         </div>
         <div className="impact-actions">
           {selectedNode.detectionId && <button onClick={() => onLocate(selectedNode.detectionId!)}><Crosshair size={16} /> Localizar no P&amp;ID</button>}
@@ -401,15 +443,21 @@ export function ControlWorkspace({
   selectedNodeId,
   onSelectNode,
   onLocate,
+  nodes,
+  edges,
 }: {
   detections: Detection[];
   selectedNodeId: string;
   onSelectNode: (node: TopologyNode) => void;
   onLocate: (detectionId: string) => void;
+  nodes?: TopologyNode[];
+  edges?: TopologyEdge[];
 }) {
   const [contextId, setContextId] = useState(controlContexts[0].id);
   const context = controlContexts.find((item) => item.id === contextId) ?? controlContexts[0];
   const contextNodeIds = context.steps.map((step) => step.nodeId);
+  const nodesToUse = nodes && nodes.length > 0 ? nodes : topologyNodes;
+  const edgesToUse = edges ?? topologyEdges;
 
   return (
     <div className="control-workspace">
@@ -426,13 +474,15 @@ export function ControlWorkspace({
         <article className="control-graph-panel">
           <div className="intelligence-panel-head">
             <span><Graph size={17} /> Contexto no processo</span>
-            <strong>Curadoria local</strong>
+            <strong>Curadoria local e grafo ativo</strong>
           </div>
           <TopologyGraph
             detections={detections}
             selectedNodeId={selectedNodeId}
             onSelectNode={onSelectNode}
             controlNodeIds={contextNodeIds}
+            nodes={nodesToUse}
+            edges={edgesToUse}
           />
         </article>
         <article className="control-detail">
@@ -441,7 +491,8 @@ export function ControlWorkspace({
           <p>{context.summary}</p>
           <div className="control-chain">
             {context.steps.map((step, index) => {
-              const node = topologyNodeById(step.nodeId)!;
+              const node = topologyNodeById(step.nodeId, nodesToUse) ?? topologyNodeById(step.nodeId);
+              if (!node) return null;
               return (
                 <div key={step.nodeId}>
                   <button onClick={() => onSelectNode(node)} className={selectedNodeId === node.id ? "active" : ""}>
@@ -454,7 +505,7 @@ export function ControlWorkspace({
           </div>
           <div className="control-warning"><Warning size={18} /><p>{context.warning}</p></div>
           <div className="control-locate-actions">
-            {context.steps.map((step) => topologyNodeById(step.nodeId)).filter((node) => node?.detectionId).map((node) => (
+            {context.steps.map((step) => topologyNodeById(step.nodeId, nodesToUse) ?? topologyNodeById(step.nodeId)).filter((node) => node?.detectionId).map((node) => (
               <button key={node!.id} onClick={() => onLocate(node!.detectionId!)}><Crosshair size={15} /> {node!.label}</button>
             ))}
           </div>
@@ -464,13 +515,22 @@ export function ControlWorkspace({
   );
 }
 
-export function TopologyUnavailable({ onRestore }: { onRestore: () => void }) {
+export function TopologyUnavailable({ onRestore, onRunOcr }: { onRestore: () => void; onRunOcr?: () => void }) {
   return (
     <div className="topology-unavailable">
-      <LockKey size={34} />
-      <h2>Topologia ainda não validada para este documento</h2>
-      <p>O OCR local continua disponível. Relações semânticas não são inventadas sem uma curadoria aprovada.</p>
-      <button onClick={onRestore}><FileImage size={17} /> Carregar referência 16.jpg</button>
+      <Graph size={34} />
+      <h2>Topologia dinâmica sob demanda</h2>
+      <p>Execute o OCR neural local para extrair os nós e traçar o grafo de processo e sinal deste documento.</p>
+      <div style={{ display: "flex", gap: "0.75rem", marginTop: "1rem", flexWrap: "wrap", justifyContent: "center" }}>
+        {onRunOcr && (
+          <button onClick={onRunOcr} style={{ background: "var(--cds-interactive, #0f62fe)", color: "#fff", border: "none", cursor: "pointer", padding: "0.6rem 1.2rem", borderRadius: "4px", display: "inline-flex", alignItems: "center", gap: "0.5rem" }}>
+            <Crosshair size={17} /> Executar OCR local
+          </button>
+        )}
+        <button onClick={onRestore} style={{ cursor: "pointer", padding: "0.6rem 1.2rem", borderRadius: "4px", display: "inline-flex", alignItems: "center", gap: "0.5rem" }}>
+          <FileImage size={17} /> Carregar referência 16.jpg
+        </button>
+      </div>
     </div>
   );
 }

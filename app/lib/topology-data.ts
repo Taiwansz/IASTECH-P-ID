@@ -1,3 +1,5 @@
+import type { Detection } from "./demo-data.ts";
+
 export type TopologyNodeKind = "source" | "equipment" | "instrument" | "valve" | "destination";
 export type TopologyEdgeKind = "process" | "signal";
 
@@ -36,6 +38,16 @@ export interface ControlContext {
   steps: Array<{ nodeId: string; role: string; detail: string }>;
 }
 
+export interface TopologyGraphData {
+  nodes: TopologyNode[];
+  edges: TopologyEdge[];
+  routes: FlowRoute[];
+}
+
+/**
+ * Topologia Curada de Referência (Amostra 16.jpg - Trem de Destilação B-01).
+ * Mantida para retrocompatibilidade total com as rotas ricas e contextos de controle.
+ */
 export const topologyNodes: TopologyNode[] = [
   { id: "feed", label: "FEED", detail: "Limite de alimentação", kind: "source", x: 5, y: 46 },
   { id: "va25", label: "VA-25", detail: "Válvula de entrada", kind: "valve", x: 14, y: 46, detectionId: "val-va25" },
@@ -140,35 +152,357 @@ export const controlContexts: ControlContext[] = [
   },
 ];
 
-const processEdges = topologyEdges.filter((edge) => edge.kind === "process");
+/**
+ * Estado ativo da topologia (padrão inicial aponta para a referência 16.jpg).
+ * Pode ser comutado dinamicamente para uploads ou outras amostras.
+ */
+let activeGraph: TopologyGraphData = {
+  nodes: topologyNodes,
+  edges: topologyEdges,
+  routes: flowRoutes,
+};
 
-const walk = (startId: string, direction: "upstream" | "downstream") => {
-  const visited = new Set<string>();
-  const queue = [startId];
+export function setActiveTopologyGraph(graph: TopologyGraphData): void {
+  activeGraph = graph;
+}
 
-  while (queue.length) {
-    const current = queue.shift();
-    if (!current) continue;
-    for (const edge of processEdges) {
-      const matches = direction === "downstream" ? edge.source === current : edge.target === current;
-      if (!matches) continue;
-      const next = direction === "downstream" ? edge.target : edge.source;
-      if (next === startId || visited.has(next)) continue;
-      visited.add(next);
-      queue.push(next);
+export function getActiveTopologyGraph(): TopologyGraphData {
+  return activeGraph;
+}
+
+export function resetActiveTopologyGraph(): void {
+  activeGraph = {
+    nodes: topologyNodes,
+    edges: topologyEdges,
+    routes: flowRoutes,
+  };
+}
+
+/**
+ * Gera dinamicamente nós e arestas de topologia para qualquer conjunto de detecções e dimensões de diagrama.
+ * - Converte centros das bounding boxes em coordenadas percentuais (0-100%).
+ * - Conecta equipamentos de processo adjacentes (distância euclidiana < 220px) com fluxo montante->jusante.
+ * - Conecta instrumentos aos seus equipamentos mais próximos (distância euclidiana < 220px) via sinal ISA.
+ * - Constrói uma rota de fluxo dinâmica via BFS da entrada (menor coordenada X) até a saída (maior coordenada X).
+ */
+export function generateTopologyFromDetections(
+  detections: Detection[],
+  docWidth: number,
+  docHeight: number,
+): TopologyGraphData {
+  if (!detections || detections.length === 0) {
+    return { nodes: [], edges: [], routes: [] };
+  }
+
+  const safeW = docWidth > 0 ? docWidth : 1000;
+  const safeH = docHeight > 0 ? docHeight : 1000;
+
+  // 1. Mapeamento de Detecções para Nós com Coordenadas Percentuais
+  const nodes: TopologyNode[] = detections.map((det) => {
+    const cx = det.box.x + det.box.width / 2;
+    const cy = det.box.y + det.box.height / 2;
+    const x = Math.round((cx / safeW) * 100);
+    const y = Math.round((cy / safeH) * 100);
+
+    const kind: TopologyNodeKind =
+      det.kind === "equipment"
+        ? "equipment"
+        : det.kind === "valve"
+        ? "valve"
+        : det.kind === "instrument"
+        ? "instrument"
+        : "instrument";
+
+    const detail =
+      det.group ||
+      det.rationale ||
+      `${det.kind.toUpperCase()} (${Math.round(cx)}, ${Math.round(cy)})`;
+
+    return {
+      id: det.id,
+      label: det.label,
+      detail,
+      kind,
+      x,
+      y,
+      detectionId: det.id,
+    };
+  });
+
+  const getCenter = (det: Detection) => ({
+    x: det.box.x + det.box.width / 2,
+    y: det.box.y + det.box.height / 2,
+  });
+
+  const euclideanDistance = (d1: Detection, d2: Detection) => {
+    const c1 = getCenter(d1);
+    const c2 = getCenter(d2);
+    const dx = c1.x - c2.x;
+    const dy = c1.y - c2.y;
+    return Math.sqrt(dx * dx + dy * dy);
+  };
+
+  const edges: TopologyEdge[] = [];
+  const edgeSet = new Set<string>();
+
+  const processDetections = detections.filter(
+    (d) => d.kind === "equipment" || d.kind === "valve",
+  );
+  const instrumentDetections = detections.filter(
+    (d) => d.kind === "instrument" || d.kind === "tag",
+  );
+
+  // 2. Arestas de Processo: conecta equipamentos adjacentes (distância euclidiana < 220px)
+  for (let i = 0; i < processDetections.length; i++) {
+    for (let j = i + 1; j < processDetections.length; j++) {
+      const a = processDetections[i];
+      const b = processDetections[j];
+      const dist = euclideanDistance(a, b);
+
+      if (dist < 220) {
+        const ca = getCenter(a);
+        const cb = getCenter(b);
+        // Direcionamento ordenado do fluxo de processo (menor X -> maior X)
+        const [sourceDet, targetDet] =
+          ca.x !== cb.x
+            ? ca.x <= cb.x
+              ? [a, b]
+              : [b, a]
+            : ca.y <= cb.y
+            ? [a, b]
+            : [b, a];
+
+        const edgeId = `${sourceDet.id}-${targetDet.id}`;
+        if (!edgeSet.has(edgeId) && sourceDet.id !== targetDet.id) {
+          edgeSet.add(edgeId);
+          edges.push({
+            id: edgeId,
+            source: sourceDet.id,
+            target: targetDet.id,
+            kind: "process",
+            label: "Linha de Processo",
+          });
+        }
+      }
     }
   }
 
-  return Array.from(visited);
+  // 3. Arestas de Sinal: conecta instrumentos aos seus equipamentos mais próximos (distância euclidiana < 220px)
+  let equipmentTargets = detections.filter((d) => d.kind === "equipment");
+  if (equipmentTargets.length === 0) {
+    equipmentTargets = detections.filter((d) => d.kind === "valve");
+  }
+
+  for (const ins of instrumentDetections) {
+    let closestTarget: Detection | null = null;
+    let minDistance = Infinity;
+
+    for (const target of equipmentTargets) {
+      if (ins.id === target.id) continue;
+      const dist = euclideanDistance(ins, target);
+      if (dist < minDistance) {
+        minDistance = dist;
+        closestTarget = target;
+      }
+    }
+
+    if (closestTarget && minDistance < 220) {
+      const edgeId = `${ins.id}-${closestTarget.id}`;
+      if (!edgeSet.has(edgeId)) {
+        edgeSet.add(edgeId);
+        edges.push({
+          id: edgeId,
+          source: ins.id,
+          target: closestTarget.id,
+          kind: "signal",
+          label: "Sinal ISA",
+        });
+      }
+    }
+  }
+
+  // 4. Rota Dinâmica por BFS conectando equipamentos de menor coordenada X (entrada)
+  // até a maior coordenada X (saída/produto)
+  const routes: FlowRoute[] = [];
+
+  let routeCandidateNodes = nodes.filter((n) => n.kind === "equipment");
+  if (routeCandidateNodes.length === 0) {
+    routeCandidateNodes = nodes.filter((n) => n.kind === "valve");
+  }
+  if (routeCandidateNodes.length === 0) {
+    routeCandidateNodes = nodes;
+  }
+
+  if (routeCandidateNodes.length > 0) {
+    const sortedByX = [...routeCandidateNodes].sort((a, b) => (a.x !== b.x ? a.x - b.x : a.y - b.y));
+    const startNode = sortedByX[0];
+    const endNode = sortedByX[sortedByX.length - 1];
+
+    if (startNode.id === endNode.id) {
+      routes.push({
+        id: "main-process-route",
+        name: "Rota Principal de Processo",
+        purpose: `Ponto de processo isolado: ${startNode.label}.`,
+        nodeIds: [startNode.id],
+        edgeIds: [],
+      });
+    } else {
+      const processEdges = edges.filter((e) => e.kind === "process");
+
+      const findPath = (directed: boolean) => {
+        const queue: string[] = [startNode.id];
+        const parent = new Map<string, { prev: string; edgeId: string }>();
+        const visited = new Set<string>([startNode.id]);
+
+        while (queue.length > 0) {
+          const curr = queue.shift()!;
+          if (curr === endNode.id) break;
+
+          for (const edge of processEdges) {
+            let next: string | null = null;
+            if (edge.source === curr) {
+              next = edge.target;
+            } else if (!directed && edge.target === curr) {
+              next = edge.source;
+            }
+
+            if (next && !visited.has(next)) {
+              visited.add(next);
+              parent.set(next, { prev: curr, edgeId: edge.id });
+              queue.push(next);
+            }
+          }
+        }
+
+        if (!visited.has(endNode.id)) return null;
+
+        const pathNodes: string[] = [];
+        const pathEdges: string[] = [];
+        let curr = endNode.id;
+        while (curr !== startNode.id) {
+          pathNodes.unshift(curr);
+          const p = parent.get(curr)!;
+          pathEdges.unshift(p.edgeId);
+          curr = p.prev;
+        }
+        pathNodes.unshift(startNode.id);
+        return { pathNodes, pathEdges };
+      };
+
+      const path = findPath(true) ?? findPath(false);
+
+      if (path) {
+        routes.push({
+          id: "main-process-route",
+          name: "Rota Principal de Processo",
+          purpose: `Trajeto dinâmico gerado por BFS da alimentação (${startNode.label}) até o destino (${endNode.label}).`,
+          nodeIds: path.pathNodes,
+          edgeIds: path.pathEdges,
+        });
+      } else {
+        routes.push({
+          id: "main-process-route",
+          name: "Rota Principal de Processo",
+          purpose: `Segmento de processo a partir da entrada (${startNode.label}).`,
+          nodeIds: [startNode.id],
+          edgeIds: [],
+        });
+      }
+    }
+  }
+
+  return { nodes, edges, routes };
+}
+
+/**
+ * Caminhamento em grafo de processo para cálculo de vizinhança montante (upstream)
+ * e jusante (downstream).
+ */
+export function calculateImpactNeighborhood(
+  nodeId: string,
+  edges: TopologyEdge[] = activeGraph.edges,
+): { upstream: string[]; downstream: string[] } {
+  const processEdges = edges.filter((edge) => edge.kind === "process");
+
+  const walk = (startId: string, direction: "upstream" | "downstream"): string[] => {
+    const visited = new Set<string>();
+    const queue = [startId];
+
+    while (queue.length) {
+      const current = queue.shift();
+      if (!current) continue;
+      for (const edge of processEdges) {
+        const matches = direction === "downstream" ? edge.source === current : edge.target === current;
+        if (!matches) continue;
+        const next = direction === "downstream" ? edge.target : edge.source;
+        if (next === startId || visited.has(next)) continue;
+        visited.add(next);
+        queue.push(next);
+      }
+    }
+
+    return Array.from(visited);
+  };
+
+  return {
+    upstream: walk(nodeId, "upstream"),
+    downstream: walk(nodeId, "downstream"),
+  };
+}
+
+/**
+ * Calcula a vizinhança de impacto de um nó.
+ * Aceita um conjunto de arestas customizado ou um objeto de grafo,
+ * ou utiliza as arestas do grafo ativo (padrão 16.jpg se não alterado).
+ */
+export function getImpactNeighborhood(
+  nodeId: string,
+  customEdgesOrGraph?: TopologyEdge[] | { edges: TopologyEdge[] },
+): { upstream: string[]; downstream: string[] } {
+  let edgesToUse: TopologyEdge[] = activeGraph.edges;
+  if (customEdgesOrGraph) {
+    if (Array.isArray(customEdgesOrGraph)) {
+      edgesToUse = customEdgesOrGraph;
+    } else if ("edges" in customEdgesOrGraph && Array.isArray(customEdgesOrGraph.edges)) {
+      edgesToUse = customEdgesOrGraph.edges;
+    }
+  }
+  return calculateImpactNeighborhood(nodeId, edgesToUse);
+}
+
+export const topologyNodeByDetection = (
+  detectionId: string | null,
+  customNodes?: unknown,
+): TopologyNode | null => {
+  const nodes = Array.isArray(customNodes) ? (customNodes as TopologyNode[]) : activeGraph.nodes;
+  return nodes.find((node) => node.detectionId === detectionId) ?? null;
 };
 
-export const getImpactNeighborhood = (nodeId: string) => ({
-  upstream: walk(nodeId, "upstream"),
-  downstream: walk(nodeId, "downstream"),
-});
+export const topologyNodeById = (
+  nodeId: string,
+  customNodes?: unknown,
+): TopologyNode | null => {
+  const nodes = Array.isArray(customNodes) ? (customNodes as TopologyNode[]) : activeGraph.nodes;
+  return nodes.find((node) => node.id === nodeId) ?? null;
+};
 
-export const topologyNodeByDetection = (detectionId: string | null) =>
-  topologyNodes.find((node) => node.detectionId === detectionId) ?? null;
-
-export const topologyNodeById = (nodeId: string) =>
-  topologyNodes.find((node) => node.id === nodeId) ?? null;
+/**
+ * Retorna a topologia apropriada para uma amostra.
+ * Amostras de referência preservam o fallback rico curado;
+ * quaisquer outras amostras utilizam a topologia gerada dinamicamente.
+ */
+export function getTopologyForSample(
+  sampleId: string,
+  detections: Detection[],
+  docWidth: number,
+  docHeight: number,
+): TopologyGraphData {
+  if (sampleId === "distillation-train" || sampleId === "16.jpg") {
+    return {
+      nodes: topologyNodes,
+      edges: topologyEdges,
+      routes: flowRoutes,
+    };
+  }
+  return generateTopologyFromDetections(detections, docWidth, docHeight);
+}

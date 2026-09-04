@@ -43,3 +43,6 @@ next-env.d.ts
 /.sites-runtime/
 /outputs/
 /work/
+crop-*.png
+reflux-ocr-parsed.json
+reflux-pumps.tsv
