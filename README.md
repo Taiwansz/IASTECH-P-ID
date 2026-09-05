@@ -284,6 +284,7 @@ Toda a engenharia do projeto está documentada em diretórios padronizados confo
 | **ADR-004: Política de Zero-Fallbacks** | [`docs/adr/ADR-004-ZERO-FALLBACK-POLICY.md`](docs/adr/ADR-004-ZERO-FALLBACK-POLICY.md) | Honestidade de dados e eliminação de TAGs sintéticos fantasmas |
 | **ADR-005: Parser Determinístico ISA** | [`docs/adr/ADR-005-ISA-51-DETERMINISTIC-PARSER.md`](docs/adr/ADR-005-ISA-51-DETERMINISTIC-PARSER.md) | Autômato sintático e suporte a válvulas críticas (SDV, BDV) |
 | **Slide Deck em PowerPoint (.pptx)** | [`docs/IASTECH_PID_Lens_Presentation.pptx`](docs/IASTECH_PID_Lens_Presentation.pptx) | Apresentação visual de 15 minutos formatada para projeção |
+| **Apresentação de Slides Rastro (HTML)** | [`rastro_presentation.html`](rastro_presentation.html) | Apresentação visual editorial 16:9 em arquivo único HTML |
 | **Roteiro dos Slides em Markdown** | [`docs/SLIDES.md`](docs/SLIDES.md) | Transcrição e roteiro slide a slide da apresentação |
 
 ---

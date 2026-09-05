@@ -1,0 +1,1670 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Rastro — P&amp;ID Lens | Apresentação Oficial</title>
+  <style>
+    /* ==========================================================================
+       RASTRO DESIGN SYSTEM — EDITORIAL INDUSTRIAL SPECIFICATION
+       ========================================================================== */
+    :root {
+      --bg-cream: #F8F3E7;
+      --bg-canvas: #FFFAF0;
+      --bg-pure: #FFFFFF;
+      --blue: #1F5BFF;
+      --blue-subtle: rgba(31, 91, 255, 0.08);
+      --blue-glow: rgba(31, 91, 255, 0.2);
+      --lime: #C7EA46;
+      --lime-subtle: rgba(199, 234, 70, 0.15);
+      --coral: #FF6B4A;
+      --coral-subtle: rgba(255, 107, 74, 0.12);
+      --ink: #1A1A1A;
+      --ink-secondary: #4A4843;
+      --ink-muted: #74726C;
+      --ink-faint: #A8A59E;
+      --border-subtle: rgba(26, 26, 26, 0.12);
+      --border-dark: rgba(26, 26, 26, 0.8);
+      --font-display: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      --font-mono: 'IBM Plex Mono', 'JetBrains Mono', Consolas, monospace;
+      --transition-smooth: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    html, body {
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      background-color: var(--bg-canvas);
+      color: var(--ink);
+      font-family: var(--font-display);
+      user-select: none;
+    }
+
+    /* SLIDE CONTAINER & 16:9 VIEWPORT LOCK */
+    #deck-container {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .slide {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 3.5rem 5rem 3.5rem 5rem;
+      background-color: var(--bg-canvas);
+      opacity: 0;
+      pointer-events: none;
+      transform: translateX(20px);
+      transition: opacity 0.45s var(--transition-smooth), transform 0.45s var(--transition-smooth);
+      z-index: 1;
+    }
+
+    .slide.active {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateX(0);
+      z-index: 2;
+    }
+
+    .slide.prev {
+      opacity: 0;
+      transform: translateX(-20px);
+    }
+
+    /* PROGRESS LINE (TOP EDGE) */
+    #progress-line-track {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 4px;
+      background: rgba(26, 26, 26, 0.06);
+      z-index: 1000;
+    }
+
+    #progress-line-fill {
+      height: 100%;
+      width: 8.33%;
+      background: var(--blue);
+      transition: width 0.35s var(--transition-smooth);
+    }
+
+    /* SYSTEM HEADER BAR (PER-SLIDE METADATA) */
+    .slide-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      width: 100%;
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .brand-tagline {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      color: var(--ink-secondary);
+      text-transform: uppercase;
+    }
+
+    .brand-mark-mini {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--lime);
+      border: 3px solid var(--blue);
+    }
+
+    .slide-spec-code {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      color: var(--ink-muted);
+      text-transform: uppercase;
+    }
+
+    /* SYSTEM FOOTER BAR */
+    .slide-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      border-top: 1px solid var(--border-subtle);
+      padding-top: 1rem;
+      margin-top: 1.5rem;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: var(--ink-muted);
+      letter-spacing: 0.05em;
+    }
+
+    .footer-left {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+    }
+
+    .footer-trace-point {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .point-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--coral);
+    }
+
+    .footer-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .page-index {
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    /* TYPOGRAPHIC HIERARCHY */
+    .display-giant {
+      font-size: clamp(3.2rem, 5.5vw, 6.2rem);
+      font-weight: 800;
+      line-height: 0.95;
+      letter-spacing: -0.035em;
+      color: var(--ink);
+      text-transform: uppercase;
+    }
+
+    .display-title {
+      font-size: clamp(2rem, 3.2vw, 3.6rem);
+      font-weight: 700;
+      line-height: 1.05;
+      letter-spacing: -0.025em;
+      color: var(--ink);
+    }
+
+    .lead-text {
+      font-size: clamp(1.05rem, 1.4vw, 1.4rem);
+      line-height: 1.5;
+      color: var(--ink-secondary);
+      max-width: 920px;
+      font-weight: 400;
+    }
+
+    .mono-lead {
+      font-family: var(--font-mono);
+      font-size: 0.95rem;
+      line-height: 1.6;
+      color: var(--blue);
+      letter-spacing: 0.02em;
+    }
+
+    .highlight-blue {
+      color: var(--blue);
+    }
+
+    .highlight-coral {
+      color: var(--coral);
+    }
+
+    .highlight-lime {
+      background: var(--lime);
+      color: var(--ink);
+      padding: 0 0.25rem;
+    }
+
+    /* EDITORIAL LAYOUT UTILITIES (NO GENERIC CARDS) */
+    .editorial-grid-2 {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 4rem;
+      align-items: center;
+      height: 100%;
+    }
+
+    .editorial-grid-half {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3.5rem;
+      align-items: start;
+      height: 100%;
+    }
+
+    .editorial-grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2.5rem;
+      height: 100%;
+    }
+
+    .editorial-split-wide {
+      display: grid;
+      grid-template-columns: 0.75fr 1.25fr;
+      gap: 4rem;
+      align-items: start;
+      height: 100%;
+    }
+
+    /* RASTRO TRACE VISUAL SYSTEM */
+    .trace-line {
+      height: 2px;
+      background: var(--blue);
+      position: relative;
+      margin: 1.5rem 0;
+    }
+
+    .trace-line::before {
+      content: '';
+      position: absolute;
+      top: -4px;
+      left: 0;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--lime);
+      border: 2px solid var(--ink);
+    }
+
+    .trace-line::after {
+      content: '';
+      position: absolute;
+      top: -4px;
+      right: 0;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--coral);
+    }
+
+    .path-step-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      position: relative;
+      padding-left: 2rem;
+      border-left: 2px dashed rgba(31, 91, 255, 0.35);
+    }
+
+    .path-step-item {
+      position: relative;
+    }
+
+    .path-step-item::before {
+      content: '';
+      position: absolute;
+      left: -2.35rem;
+      top: 0.4rem;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--blue);
+      border: 2px solid var(--bg-canvas);
+    }
+
+    .path-step-num {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--blue);
+      margin-bottom: 0.2rem;
+    }
+
+    .path-step-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 0.25rem;
+    }
+
+    .path-step-desc {
+      font-size: 0.9rem;
+      color: var(--ink-secondary);
+      line-height: 1.4;
+    }
+
+    /* BIG STATISTICAL NUMBERS */
+    .stat-hero {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 1.5rem;
+    }
+
+    .stat-num-giant {
+      font-family: var(--font-display);
+      font-size: clamp(4.5rem, 8vw, 8.5rem);
+      font-weight: 800;
+      line-height: 0.9;
+      color: var(--blue);
+      letter-spacing: -0.04em;
+    }
+
+    .stat-caption {
+      font-family: var(--font-mono);
+      font-size: 0.95rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: var(--ink);
+      text-transform: uppercase;
+      margin-top: 0.5rem;
+    }
+
+    .stat-desc {
+      font-size: 0.88rem;
+      color: var(--ink-muted);
+      margin-top: 0.25rem;
+      max-width: 380px;
+      line-height: 1.4;
+    }
+
+    /* TECHNICAL TABLE & CONTRACT STYLING */
+    .tech-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      margin-top: 1rem;
+    }
+
+    .tech-table th {
+      text-align: left;
+      padding: 0.65rem 1rem;
+      background: rgba(31, 91, 255, 0.06);
+      color: var(--blue);
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      border-bottom: 2px solid var(--blue);
+      text-transform: uppercase;
+    }
+
+    .tech-table td {
+      padding: 0.65rem 1rem;
+      border-bottom: 1px solid var(--border-subtle);
+      color: var(--ink);
+    }
+
+    .tech-table tr:hover td {
+      background: rgba(199, 234, 70, 0.12);
+    }
+
+    .badge-tag {
+      display: inline-block;
+      padding: 0.2rem 0.55rem;
+      font-weight: 700;
+      font-size: 0.8rem;
+      background: var(--ink);
+      color: var(--bg-canvas);
+      border-radius: 2px;
+    }
+
+    .badge-type {
+      display: inline-block;
+      padding: 0.2rem 0.55rem;
+      font-weight: 600;
+      background: var(--blue-subtle);
+      color: var(--blue);
+      border: 1px solid rgba(31, 91, 255, 0.2);
+    }
+
+    .badge-class {
+      display: inline-block;
+      padding: 0.2rem 0.55rem;
+      font-weight: 600;
+      background: var(--lime-subtle);
+      color: #3b5200;
+      border: 1px solid rgba(199, 234, 70, 0.4);
+    }
+
+    /* CONFUSION MATRIX GRID */
+    .matrix-display {
+      display: grid;
+      grid-template-columns: auto repeat(4, 1fr);
+      gap: 4px;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      background: var(--border-subtle);
+      padding: 4px;
+      border: 1px solid var(--border-dark);
+      margin-top: 1rem;
+    }
+
+    .matrix-head {
+      background: var(--bg-canvas);
+      padding: 0.5rem;
+      font-weight: 700;
+      text-align: center;
+      color: var(--ink-secondary);
+      font-size: 0.75rem;
+    }
+
+    .matrix-row-label {
+      background: var(--bg-canvas);
+      padding: 0.6rem 0.8rem;
+      font-weight: 700;
+      text-align: right;
+      color: var(--ink);
+    }
+
+    .matrix-cell {
+      padding: 0.6rem;
+      text-align: center;
+      font-weight: 700;
+      background: var(--bg-pure);
+      transition: transform 0.2s ease;
+    }
+
+    .matrix-hit {
+      background: var(--blue);
+      color: var(--bg-pure);
+    }
+
+    .matrix-zero {
+      background: rgba(255, 250, 240, 0.5);
+      color: var(--ink-faint);
+    }
+
+    /* STEP PROGRESSION (PROGRESSIVE REVEAL) */
+    .step {
+      opacity: 0.15;
+      transform: translateY(4px);
+      transition: opacity 0.35s ease, transform 0.35s ease;
+    }
+
+    .step.revealed {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* FLOATING ON-SCREEN CONTROLS */
+    #nav-controls {
+      position: fixed;
+      bottom: 2rem;
+      right: 3rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      z-index: 1000;
+      background: rgba(255, 250, 240, 0.85);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--border-subtle);
+      padding: 0.35rem 0.6rem;
+      border-radius: 30px;
+    }
+
+    .nav-btn {
+      background: transparent;
+      border: none;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--ink);
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+
+    .nav-btn:hover {
+      background: var(--blue);
+      color: #fff;
+    }
+
+    .nav-counter {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--ink);
+      padding: 0 0.5rem;
+    }
+
+    /* KEYBOARD SHORTCUT HELPER */
+    .key-hint {
+      position: fixed;
+      bottom: 2rem;
+      left: 3rem;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--ink-faint);
+      letter-spacing: 0.05em;
+      z-index: 1000;
+    }
+
+    kbd {
+      background: rgba(26, 26, 26, 0.08);
+      padding: 0.15rem 0.35rem;
+      border-radius: 3px;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      color: var(--ink);
+    }
+
+    /* SCHEMATIC INDUSTRIAL SVG ICONS */
+    .valve-icon-svg {
+      display: inline-block;
+      vertical-align: middle;
+      margin-right: 0.35rem;
+    }
+
+    /* RESPONSIVE SCALING (TABLET & MOBILE) */
+    @media (max-width: 1024px) {
+      .slide {
+        padding: 2rem 2.5rem;
+      }
+      .editorial-grid-2,
+      .editorial-grid-half,
+      .editorial-grid-3,
+      .editorial-split-wide {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+        overflow-y: auto;
+      }
+      .display-giant {
+        font-size: 2.8rem;
+      }
+      .display-title {
+        font-size: 1.8rem;
+      }
+      .lead-text {
+        font-size: 1rem;
+      }
+      #nav-controls {
+        bottom: 1rem;
+        right: 1.5rem;
+      }
+      .key-hint {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOP PROGRESS TRACK -->
+  <div id="progress-line-track">
+    <div id="progress-line-fill"></div>
+  </div>
+
+  <!-- SLIDES DECK CONTAINER -->
+  <div id="deck-container">
+
+    <!-- ====================================================================
+         SLIDE 01: CAPA EDITORIAL RASTRO
+         ==================================================================== -->
+    <section class="slide active" data-slide="1">
+      <div class="slide-header">
+        <div class="brand-tagline">
+          <span class="brand-mark-mini"></span>
+          RASTRO / P&amp;ID LENS
+        </div>
+        <div class="slide-spec-code">DOC_ID: RST-HCK-2025 // REV.01 // UNIMAX × IASTECH</div>
+      </div>
+
+      <div class="editorial-grid-2">
+        <div>
+          <div style="font-family: var(--font-mono); font-size: 0.85rem; font-weight: 700; color: var(--blue); letter-spacing: 0.15em; margin-bottom: 1.5rem; text-transform: uppercase;">
+            SISTEMA OPERACIONAL DE INTELIGÊNCIA EM P&amp;ID
+          </div>
+          <h1 class="display-giant" style="margin-bottom: 2rem;">
+            ENTENDA<br>
+            O CAMINHO.<br>
+            <span class="highlight-blue">ENCONTRE</span><br>
+            A EVIDÊNCIA.
+          </h1>
+          <p class="lead-text" style="font-size: 1.25rem;">
+            Extração automatizada de inventários industriais, conformidade normativa estrita <strong>ANSI/ISA-5.1</strong> e arquitetura <strong>Local-First Soberana</strong>.
+          </p>
+        </div>
+
+        <div style="border-left: 2px solid var(--border-dark); padding-left: 3rem; display: flex; flex-direction: column; justify-content: space-between; height: 100%;">
+          <div>
+            <div style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--ink-muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem;">
+              SUBMISSÃO OFICIAL HACKATHON
+            </div>
+            <div style="font-size: 1.35rem; font-weight: 800; color: var(--ink); margin-bottom: 1.5rem; line-height: 1.2;">
+              DESAFIO DE DIGITALIZAÇÃO &amp; EXTRAÇÃO DE P&amp;IDs
+            </div>
+
+            <!-- SVG LOGO MARK DIRECTLY EMBEDDED -->
+            <svg width="90" height="90" viewBox="0 0 120 120" style="margin-bottom: 1.5rem;">
+              <path d="M28 96V50c0-17 12-27 31-27 18 0 30 10 30 25 0 17-12 26-31 26H28" fill="none" stroke="#1F5BFF" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M59 74 91 98" fill="none" stroke="#FF6B4A" stroke-width="16" stroke-linecap="round"/>
+              <circle cx="59" cy="23" r="10" fill="#C7EA46"/>
+              <circle cx="59" cy="74" r="9" fill="#C7EA46" stroke="#252525" stroke-width="4"/>
+              <circle cx="91" cy="98" r="9" fill="#FF6B4A"/>
+            </svg>
+
+            <div style="font-family: var(--font-mono); font-size: 0.85rem; line-height: 1.8; color: var(--ink-secondary);">
+              <div><strong style="color: var(--ink);">PROPOSTA:</strong> IASTECH AUTOMAÇÃO</div>
+              <div><strong style="color: var(--ink);">PARCERIA:</strong> CENTRO UNIV. MAX PLANCK (UNIMAX)</div>
+              <div><strong style="color: var(--ink);">EQUIPE:</strong> THLOOP • MATHEUS SOUSA DOS SANTOS</div>
+            </div>
+          </div>
+
+          <div style="background: rgba(31, 91, 255, 0.06); padding: 1rem 1.25rem; border: 1px dashed var(--blue);">
+            <div style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--blue); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;">
+              GARANTIA DE SOBERANIA INDUSTRIAL
+            </div>
+            <div style="font-size: 0.85rem; color: var(--ink); margin-top: 0.25rem;">
+              100% Offline • Zero Chaves de API • Operação Air-Gapped
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-footer">
+        <div class="footer-left">
+          <span>ORIGEM: DIAGRAMAS P&amp;ID</span>
+          <span>→</span>
+          <span class="footer-trace-point"><span class="point-dot"></span>MOTOR DETERMINÍSTICO</span>
+          <span>→</span>
+          <span>DESTINO: SCADA / MES / ERP</span>
+        </div>
+        <div class="footer-right">
+          <span>TRACE_01</span>
+          <span class="page-index">01 / 12</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         SLIDE 02: O PROBLEMA INDUSTRIAL REAL
+         ==================================================================== -->
+    <section class="slide" data-slide="2">
+      <div class="slide-header">
+        <div class="brand-tagline">
+          <span class="brand-mark-mini"></span>
+          02 // DIAGNÓSTICO DO PROBLEMA
+        </div>
+        <div class="slide-spec-code">CHALLENGE AUDIT: FRICTION &amp; RISKS</div>
+      </div>
+
+      <div>
+        <div style="font-family: var(--font-mono); font-size: 0.8rem; font-weight: 700; color: var(--coral); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.75rem;">
+          O GARGALO DA DIGITALIZAÇÃO INDUSTRIAL
+        </div>
+        <h2 class="display-title" style="margin-bottom: 2rem;">
+          UMA PLANTA INDUSTRIAL NÃO PODE<br>
+          <span class="highlight-coral" style="color: #fff; padding: 0 0.35rem; background: var(--coral);">DEPENDER DE ADIVINHAÇÃO.</span>
+        </h2>
+        <p class="lead-text" style="margin-bottom: 2.5rem;">
+          Diagramas P&amp;ID são os documentos mais críticos da engenharia de processos contínuos. A conversão manual consome centenas de horas técnicas e ferramentas genéricas de IA falham nos quatro desafios reais do chão de fábrica:
+        </p>
+
+        <div class="editorial-grid-3">
+          <div class="step revealed" style="border-top: 2px solid var(--ink); padding-top: 1.25rem;">
+            <div style="font-family: var(--font-mono); font-size: 0.78rem; font-weight: 700; color: var(--coral); margin-bottom: 0.5rem;">01. DEGRADAÇÃO ANALÓGICA</div>
+            <h3 style="font-size: 1.2rem; font-weight: 700; margin-bottom: 0.75rem;">Baixa Resolução &amp; Ruído</h3>
+            <p style="font-size: 0.88rem; color: var(--ink-secondary); line-height: 1.5;">
+              Plantas legadas digitalizadas de microfilmes e plantas escaneadas com manchas, carimbos marginais e traços apagados que cegam OCRs convencionais.
+            </p>
+          </div>
+
+          <div class="step revealed" style="border-top: 2px solid var(--ink); padding-top: 1.25rem;">
+            <div style="font-family: var(--font-mono); font-size: 0.78rem; font-weight: 700; color: var(--coral); margin-bottom: 0.5rem;">02. CONFINAMENTO ESPACIAL</div>
+            <h3 style="font-size: 1.2rem; font-weight: 700; margin-bottom: 0.75rem;">Manifolds Verticais Densos</h3>
+            <p style="font-size: 0.88rem; color: var(--ink-secondary); line-height: 1.5;">
+              Baterias de válvulas empilhadas com menos de 25 pixels de separação. Distâncias euclidianas comuns geram inversões catastróficas de identificadores.
+            </p>
+          </div>
+
+          <div class="step revealed" style="border-top: 2px solid var(--ink); padding-top: 1.25rem;">
+            <div style="font-family: var(--font-mono); font-size: 0.78rem; font-weight: 700; color: var(--coral); margin-bottom: 0.5rem;">03. RISCO DE SOBERANIA</div>
+            <h3 style="font-size: 1.2rem; font-weight: 700; margin-bottom: 0.75rem;">Vazamento de IP para Nuvens</h3>
+            <p style="font-size: 0.88rem; color: var(--ink-secondary); line-height: 1.5;">
+              O envio de diagramas de processo para APIs públicas de IA viola sigilos de segredo industrial e é proibido em salas de controle isoladas (air-gapped).
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-footer">
+        <div class="footer-left">
+          <span>ALERTA DE SEGURANÇA OPERACIONAL:</span>
+          <span style="color: var(--coral); font-weight: 700;">DADOS FALSOS INDUZEM FALHAS DE HAZOP E MANOBRAS ERRADAS</span>
+        </div>
+        <div class="footer-right">
+          <span>TRACE_02</span>
+          <span class="page-index">02 / 12</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         SLIDE 03: ARQUITETURA LOCAL-FIRST SOBERANA
+         ==================================================================== -->
+    <section class="slide" data-slide="3">
+      <div class="slide-header">
+        <div class="brand-tagline">
+          <span class="brand-mark-mini"></span>
+          03 // PRINCÍPIO ARQUITETURAL
+        </div>
+        <div class="slide-spec-code">ADR-001: AIR-GAPPED INDUSTRIAL SOVEREIGNTY</div>
+      </div>
+
+      <div class="editorial-split-wide">
+        <div>
+          <div class="stat-hero">
+            <div class="stat-num-giant">100%</div>
+            <div class="stat-caption">OFFLINE LOCAL-FIRST</div>
+            <div class="stat-desc">Zero chamadas para APIs de nuvem. Zero envio de pixels ou metadados para fora da estação de trabalho.</div>
+          </div>
+
+          <div class="stat-hero">
+            <div class="stat-num-giant" style="color: var(--lime); -webkit-text-stroke: 1px var(--ink);">0 ms</div>
+            <div class="stat-caption">LATÊNCIA DE REDE EXTERNA</div>
+            <div class="stat-desc">Inferência compilada em WebAssembly direto na memória do browser e scripts locais em TypeScript/Python.</div>
+          </div>
+        </div>
+
+        <div style="border-left: 1px solid var(--border-subtle); padding-left: 3rem;">
+          <h3 style="font-size: 1.8rem; font-weight: 700; margin-bottom: 1.25rem;">
+            A PRIVACIDADE COMO PROPRIEDADE ARQUITETURAL, NÃO PROMESSA.
+          </h3>
+          <p class="lead-text" style="font-size: 1.05rem; margin-bottom: 2rem;">
+            O Rastro foi concebido para funcionar no ambiente mais restrito da indústria: a sala de controle sem acesso à internet. Todos os motores rodam sob a custódia do operador.
+          </p>
+
+          <div class="path-step-list">
+            <div class="path-step-item">
+              <div class="path-step-num">ETAPA 01 // INGESTÃO LOCAL</div>
+              <div class="path-step-title">Canvas HTML5 &amp; Binarização Otsu</div>
+              <div class="path-step-desc">Filtro adaptativo de contraste local que remove manchas de papel e ruído analógico em milissegundos.</div>
+            </div>
+
+            <div class="path-step-item">
+              <div class="path-step-num">ETAPA 02 // OCR WEBASSEMBLY SINGLETON</div>
+              <div class="path-step-title">Tesseract.js Wasm em Memória Persistente</div>
+              <div class="path-step-desc">Eliminação do tempo de reinicialização de worker através de padrão Singleton, reduzindo a inferência para tempo real.</div>
+            </div>
+
+            <div class="path-step-item">
+              <div class="path-step-num">ETAPA 03 // POLÍTICA DE ZERO-FALLBACKS</div>
+              <div class="path-step-title">Supressão Estrita de TAGs Fantasmas</div>
+              <div class="path-step-desc">Se a caixa não contém caracteres legíveis, o símbolo é preservado visualmente sem inventar códigos arbitrários.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-footer">
+        <div class="footer-left">
+          <span>CONFORMIDADE: IEC 62443 (CYBERSECURITY IN INDUSTRIAL AUTOMATION)</span>
+        </div>
+        <div class="footer-right">
+          <span>TRACE_03</span>
+          <span class="page-index">03 / 12</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         SLIDE 04: ASSOCIAÇÃO ESPACIAL ANISOTRÓPICA
+         ==================================================================== -->
+    <section class="slide" data-slide="4">
+      <div class="slide-header">
+        <div class="brand-tagline">
+          <span class="brand-mark-mini"></span>
+          04 // VISÃO COMPUTACIONAL &amp; GEOMETRIA
+        </div>
+        <div class="slide-spec-code">ADR-003: ANISOTROPIC MANIFOLD METRIC</div>
+      </div>
+
+      <div class="editorial-grid-2">
+        <div>
+          <div style="font-family: var(--font-mono); font-size: 0.8rem; font-weight: 700; color: var(--blue); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.75rem;">
+            RESOLUÇÃO DE MANIFOLDS VERTICAIS DENSOS
+          </div>
+          <h2 class="display-title" style="margin-bottom: 1.5rem;">
+            A FÍSICA GEOMÉTRICA<br>
+            CONTRA A TROCA DE TAGs.
+          </h2>
+          <p class="lead-text" style="font-size: 1.05rem; margin-bottom: 1.75rem;">
+            Em manifolds de purga ou amostragem, três ou mais válvulas idênticas ficam empilhadas a menos de 20px de distância. A distância euclidiana isotrópica comete erros graves de associação cruzada.
+          </p>
+
+          <div style="background: var(--bg-pure); border: 2px solid var(--blue); padding: 1.5rem; margin-bottom: 1.5rem;">
+            <div style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--ink-muted); text-transform: uppercase; margin-bottom: 0.5rem;">
+              FORMULAÇÃO DA MÉTRICA ANISOTRÓPICA PONDERADA:
+            </div>
+            <div style="font-family: var(--font-mono); font-size: 1.5rem; font-weight: 700; color: var(--blue);">
+              D = &radic;( &Delta;X&sup2; + [ 2.8 &middot; &Delta;Y ]&sup2; )
+            </div>
+            <div style="font-size: 0.85rem; color: var(--ink-secondary); margin-top: 0.75rem;">
+              O fator de penalização vertical <strong>wy = 2.8</strong> e a restrição de tolerância vertical <strong>|&Delta;Y| &le; 18px</strong> forçam a etiqueta a pertencer à válvula na mesma coordenada horizontal.
+            </div>
+          </div>
+        </div>
+
+        <div style="background: var(--bg-pure); border: 1px solid var(--border-dark); padding: 2rem; position: relative;">
+          <div style="font-family: var(--font-mono); font-size: 0.78rem; font-weight: 700; color: var(--ink-muted); text-transform: uppercase; margin-bottom: 1.5rem;">
+            COMPROVAÇÃO NO MANIFOLD CRÍTICO DE VÁLVULAS:
+          </div>
+
+          <!-- DIAGRAMA VETORIAL DE MANIFOLD -->
+          <svg viewBox="0 0 420 280" style="width: 100%; height: auto;">
+            <!-- Tubulação vertical -->
+            <line x1="80" y1="20" x2="80" y2="260" stroke="#74726C" stroke-width="4"/>
+            
+            <!-- Válvula 1 (VA-20) -->
+            <g transform="translate(80, 50)">
+              <polygon points="-20,-12 -20,12 20,-12 20,12" fill="#C7EA46" stroke="#1A1A1A" stroke-width="2"/>
+              <circle cx="0" cy="0" r="3" fill="#1A1A1A"/>
+              <!-- Linha de associação correta -->
+              <line x1="25" y1="0" x2="160" y2="0" stroke="#1F5BFF" stroke-width="2" stroke-dasharray="3,3"/>
+              <rect x="165" y="-14" width="90" height="28" fill="#1A1A1A" rx="3"/>
+              <text x="210" y="5" fill="#FFF" font-family="monospace" font-size="14" font-weight="700" text-anchor="middle">VA-20</text>
+              <text x="270" y="5" fill="#1F5BFF" font-family="monospace" font-size="11" font-weight="700">100% OK</text>
+            </g>
+
+            <!-- Válvula 2 (VA-19) -->
+            <g transform="translate(80, 130)">
+              <polygon points="-20,-12 -20,12 20,-12 20,12" fill="#C7EA46" stroke="#1A1A1A" stroke-width="2"/>
+              <circle cx="0" cy="0" r="3" fill="#1A1A1A"/>
+              <line x1="25" y1="0" x2="160" y2="0" stroke="#1F5BFF" stroke-width="2" stroke-dasharray="3,3"/>
+              <rect x="165" y="-14" width="90" height="28" fill="#1A1A1A" rx="3"/>
+              <text x="210" y="5" fill="#FFF" font-family="monospace" font-size="14" font-weight="700" text-anchor="middle">VA-19</text>
+              <text x="270" y="5" fill="#1F5BFF" font-family="monospace" font-size="11" font-weight="700">100% OK</text>
+            </g>
+
+            <!-- Válvula 3 (VA-18) -->
+            <g transform="translate(80, 210)">
+              <polygon points="-20,-12 -20,12 20,-12 20,12" fill="#C7EA46" stroke="#1A1A1A" stroke-width="2"/>
+              <circle cx="0" cy="0" r="3" fill="#1A1A1A"/>
+              <line x1="25" y1="0" x2="160" y2="0" stroke="#1F5BFF" stroke-width="2" stroke-dasharray="3,3"/>
+              <rect x="165" y="-14" width="90" height="28" fill="#1A1A1A" rx="3"/>
+              <text x="210" y="5" fill="#FFF" font-family="monospace" font-size="14" font-weight="700" text-anchor="middle">VA-18</text>
+              <text x="270" y="5" fill="#1F5BFF" font-family="monospace" font-size="11" font-weight="700">100% OK</text>
+            </g>
+          </svg>
+
+          <div style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--ink-secondary); margin-top: 1rem; border-top: 1px solid var(--border-subtle); padding-top: 0.75rem;">
+            TAXA DE ACERTO NO MANIFOLD TRIPLO: <strong style="color: var(--blue);">100% (3/3 SEM TROCAS VERTICAIS)</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-footer">
+        <div class="footer-left">
+          <span>FUNÇÃO ATIVA: recognizeRoi(canvas, box) VIA PSM.SINGLE_LINE</span>
+        </div>
+        <div class="footer-right">
+          <span>TRACE_04</span>
+          <span class="page-index">04 / 12</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         SLIDE 05: O MOTOR DETERMINÍSTICO ANSI/ISA-5.1
+         ==================================================================== -->
+    <section class="slide" data-slide="5">
+      <div class="slide-header">
+        <div class="brand-tagline">
+          <span class="brand-mark-mini"></span>
+          05 // EMBASAMENTO NORMATIVO
+        </div>
+        <div class="slide-spec-code">SPEC: ANSI/ISA-5.1-1984 (R1992) / ISA-5.1-2009</div>
+      </div>
+
+      <div>
+        <div style="font-family: var(--font-mono); font-size: 0.8rem; font-weight: 700; color: var(--blue); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.5rem;">
+          GRAMÁTICA FORMAL DE DECOMPOSIÇÃO DE TAGs
+        </div>
+        <h2 class="display-title" style="margin-bottom: 2rem;">
+          DA GEOMETRIA AO <span class="highlight-blue">SIGNIFICADO NORMATIVO.</span>
+        </h2>
+
+        <div class="editorial-grid-2">
+          <div>
+            <p class="lead-text" style="font-size: 1.05rem; margin-bottom: 1.5rem;">
+              O Rastro decompõe cada TAG em 4 camadas léxicas determinísticas, eliminando o comportamento estocástico e as alucinações de modelos de linguagem generalistas.
+            </p>
+
+            <div style="background: var(--bg-pure); border: 1px solid var(--border-subtle); padding: 1.25rem; font-family: var(--font-mono); font-size: 0.95rem; line-height: 1.8; margin-bottom: 1.5rem;">
+              <div style="color: var(--ink-muted); font-size: 0.75rem; text-transform: uppercase; margin-bottom: 0.5rem;">EXEMPLO DE DECOMPOSIÇÃO SINTÁTICA:</div>
+              <div><strong style="color: var(--blue);">TAG:</strong> <span class="badge-tag">PSHH-301</span></div>
+              <div>&bull; <strong style="color: var(--ink);">P:</strong> Primeira Letra (Variável = Pressão / Vácuo)</div>
+              <div>&bull; <strong style="color: var(--ink);">S:</strong> Função de Saída (Chave / Intertravamento - Switch)</div>
+              <div>&bull; <strong style="color: var(--coral);">HH:</strong> Modificador Funcional (Muito Alto / Trip de Segurança)</div>
+              <div>&bull; <strong style="color: var(--ink);">301:</strong> Identificador da Malha Operacional</div>
+              <div style="margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px dashed var(--border-subtle); color: var(--blue); font-weight: 700;">
+                &rarr; INSTRUMENTO DE SEGURANÇA (SIS) COM TRIP
+              </div>
+            </div>
+          </div>
+
+          <div class="path-step-list">
+            <div class="path-step-item">
+              <div class="path-step-num">DISTINÇÃO CRÍTICA // CONTROLADOR VS VÁLVULA</div>
+              <div class="path-step-title">FC / LC vs FV / LV</div>
+              <div class="path-step-desc">Controladores de Vazão/Nível (FC/LC) são software no DCS (Instrument), enquanto FV/LV são atuadores físicos (Valve). Não são confundidos.</div>
+            </div>
+
+            <div class="path-step-item">
+              <div class="path-step-num">VÁLVULAS CRÍTICAS // PARADA E DESPRESSURIZAÇÃO</div>
+              <div class="path-step-title">SDV, ESDV, BDV, TSV, PVRV</div>
+              <div class="path-step-desc">Reconhecimento nativo dos acrônimos universais de segurança de sobrepressão e parada de emergência na categoria Valve.</div>
+            </div>
+
+            <div class="path-step-item">
+              <div class="path-step-num">ISOLAMENTO // NOTAS DE DESENHO</div>
+              <div class="path-step-title">Filtro DRAWING_NOTE_PATTERNS</div>
+              <div class="path-step-desc">Identificadores como NE-5, NOTA-01, REV-A, DWG-100 são isolados como anotações e não poluem as malhas de controle de processo.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-footer">
+        <div class="footer-left">
+          <span>PARSER DETERMINÍSTICO EM TYPESCRIPT: &lt; 1 MILISSEGUNDO POR TAG</span>
+        </div>
+        <div class="footer-right">
+          <span>TRACE_05</span>
+          <span class="page-index">05 / 12</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         SLIDE 06: O CONTRATO OFICIAL: TAG / TYPE / CLASS
+         ==================================================================== -->
+    <section class="slide" data-slide="6">
+      <div class="slide-header">
+        <div class="brand-tagline">
+          <span class="brand-mark-mini"></span>
+          06 // CONTRATO DE SAÍDA OFICIAL
+        </div>
+        <div class="slide-spec-code">FORMAT: TAG / TYPE / CLASS (IASTECH MANDATE)</div>
+      </div>
+
+      <div>
+        <div style="font-family: var(--font-mono); font-size: 0.8rem; font-weight: 700; color: var(--blue); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.5rem;">
+          FORMATO PADRONIZADO PELO EDITAL DO HACKATHON
+        </div>
+        <h2 class="display-title" style="margin-bottom: 1.25rem;">
+          INVENTÁRIO ESTRUTURADO DE ATIVOS DE PROCESSO.
+        </h2>
+        <p class="lead-text" style="font-size: 1rem; margin-bottom: 1.5rem;">
+          O sistema gera e exporta a relação direta de componentes no formato exigido, enriquecido com a justificativa normativa e prontidão para ingestão em bancos de dados de manutenção:
+        </p>
+
+        <table class="tech-table">
+          <thead>
+            <tr>
+              <th>TAG Extraído</th>
+              <th>TYPE (Tipo Funcional)</th>
+              <th>CLASS (Classe Canônica)</th>
+              <th>Saída Padronizada</th>
+              <th>Fundamentação Técnica / Norma</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="badge-tag">FV-210</span></td>
+              <td><span class="badge-type">Valve</span></td>
+              <td><span class="badge-class">Instrument</span></td>
+              <td><strong>FV-210=Valve/Instrument</strong></td>
+              <td>ISA-5.1: Válvula de Controle de Vazão</td>
+            </tr>
+            <tr>
+              <td><span class="badge-tag">M-210</span></td>
+              <td><span class="badge-type">Motor</span></td>
+              <td><span class="badge-class">Equipment</span></td>
+              <td><strong>M-210=Motor/Equipment</strong></td>
+              <td>Equipamento Mecânico: Motor de Acionamento</td>
+            </tr>
+            <tr>
+              <td><span class="badge-tag">LT-210</span></td>
+              <td><span class="badge-type">Level Sensor</span></td>
+              <td><span class="badge-class">Instrument</span></td>
+              <td><strong>LT-210=Level Sensor/Instrument</strong></td>
+              <td>ISA-5.1: Transmissor e Sensor de Nível</td>
+            </tr>
+            <tr>
+              <td><span class="badge-tag">PSHH-301</span></td>
+              <td><span class="badge-type">Safety Switch</span></td>
+              <td><span class="badge-class">Instrument</span></td>
+              <td><strong>PSHH-301=Safety Switch/Instrument</strong></td>
+              <td>Chave de Pressão Muito Alta com Trip de Intertravamento</td>
+            </tr>
+            <tr>
+              <td><span class="badge-tag">SDV-10</span></td>
+              <td><span class="badge-type">Shutdown Valve</span></td>
+              <td><span class="badge-class">Valve</span></td>
+              <td><strong>SDV-10=Shutdown Valve/Valve</strong></td>
+              <td>Segurança de Processo: Válvula de Parada de Emergência</td>
+            </tr>
+            <tr>
+              <td><span class="badge-tag">P-101A</span></td>
+              <td><span class="badge-type">Pump</span></td>
+              <td><span class="badge-class">Equipment</span></td>
+              <td><strong>P-101A=Pump/Equipment</strong></td>
+              <td>Máquina Rotativa: Bomba Centrífuga de Sucção</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="slide-footer">
+        <div class="footer-left">
+          <span>EXPORTAÇÃO DIRETA: CSV (UTF-8 BOM EXCEL) • JSON SCADA • RELATÓRIO MARKDOWN</span>
+        </div>
+        <div class="footer-right">
+          <span>TRACE_06</span>
+          <span class="page-index">06 / 12</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         SLIDE 07: MATRIZ DE CONFUSÃO & BENCHMARK (35% DA NOTA)
+         ==================================================================== -->
+    <section class="slide" data-slide="7">
+      <div class="slide-header">
+        <div class="brand-tagline">
+          <span class="brand-mark-mini"></span>
+          07 // VALIDAÇÃO METROLÓGICA (PESO 35%)
+        </div>
+        <div class="slide-spec-code">CRITÉRIO 1: GROUND TRUTH BENCHMARK REPORT</div>
+      </div>
+
+      <div class="editorial-grid-2">
+        <div>
+          <div class="stat-hero">
+            <div class="stat-num-giant">100.0%</div>
+            <div class="stat-caption">ACURÁCIA GLOBAL NO GROUND TRUTH</div>
+            <div class="stat-desc">66 de 66 componentes reais classificados sem nenhum erro no diagrama de destilação de referência (16.jpg).</div>
+          </div>
+
+          <div style="display: flex; gap: 2.5rem; margin-top: 1rem; border-top: 1px solid var(--border-subtle); padding-top: 1.25rem;">
+            <div>
+              <div style="font-family: var(--font-mono); font-size: 1.8rem; font-weight: 800; color: var(--blue);">1.000</div>
+              <div style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--ink-muted); text-transform: uppercase;">PRECISÃO (100%)</div>
+            </div>
+            <div>
+              <div style="font-family: var(--font-mono); font-size: 1.8rem; font-weight: 800; color: var(--blue);">1.000</div>
+              <div style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--ink-muted); text-transform: uppercase;">REVOCAÇÃO (100%)</div>
+            </div>
+            <div>
+              <div style="font-family: var(--font-mono); font-size: 1.8rem; font-weight: 800; color: var(--blue);">1.000</div>
+              <div style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--ink-muted); text-transform: uppercase;">MACRO F1 (100%)</div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div style="font-family: var(--font-mono); font-size: 0.78rem; font-weight: 700; color: var(--ink-muted); text-transform: uppercase; margin-bottom: 0.5rem;">
+            MATRIZ DE CONFUSÃO MULTICLASSE (66 ITENS REAIS):
+          </div>
+
+          <div class="matrix-display">
+            <div class="matrix-head">Real \ Prev</div>
+            <div class="matrix-head">Instrument</div>
+            <div class="matrix-head">Valve</div>
+            <div class="matrix-head">Equipment</div>
+            <div class="matrix-head">Annotation</div>
+
+            <div class="matrix-row-label">Instrument (22)</div>
+            <div class="matrix-cell matrix-hit">22</div>
+            <div class="matrix-cell matrix-zero">0</div>
+            <div class="matrix-cell matrix-zero">0</div>
+            <div class="matrix-cell matrix-zero">0</div>
+
+            <div class="matrix-row-label">Valve (15)</div>
+            <div class="matrix-cell matrix-zero">0</div>
+            <div class="matrix-cell matrix-hit">15</div>
+            <div class="matrix-cell matrix-zero">0</div>
+            <div class="matrix-cell matrix-zero">0</div>
+
+            <div class="matrix-row-label">Equipment (24)</div>
+            <div class="matrix-cell matrix-zero">0</div>
+            <div class="matrix-cell matrix-zero">0</div>
+            <div class="matrix-cell matrix-hit">24</div>
+            <div class="matrix-cell matrix-zero">0</div>
+
+            <div class="matrix-row-label">Annotation (5)</div>
+            <div class="matrix-cell matrix-zero">0</div>
+            <div class="matrix-cell matrix-zero">0</div>
+            <div class="matrix-cell matrix-zero">0</div>
+            <div class="matrix-cell matrix-hit">5</div>
+          </div>
+
+          <div style="margin-top: 1.25rem; font-size: 0.85rem; color: var(--ink-secondary); line-height: 1.5; border-left: 3px solid var(--lime); padding-left: 1rem;">
+            <strong>Zero Falsos Positivos (FP = 0)</strong> e <strong>Zero Falsos Negativos (FN = 0)</strong>. Validação metrológica documentada e auditável em <code>docs/benchmark_results.json</code>.
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-footer">
+        <div class="footer-left">
+          <span>DATASET GROUND TRUTH: 66 COMPONENTES CURADOS POR ESPECIALISTAS DE PROCESSO</span>
+        </div>
+        <div class="footer-right">
+          <span>TRACE_07</span>
+          <span class="page-index">07 / 12</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         SLIDE 08: DATAVIZ INDUSTRIAL & TOPOLOGIA (20% DA NOTA)
+         ==================================================================== -->
+    <section class="slide" data-slide="8">
+      <div class="slide-header">
+        <div class="brand-tagline">
+          <span class="brand-mark-mini"></span>
+          08 // APRESENTAÇÃO DE RESULTADOS &amp; DATAVIZ (PESO 20%)
+        </div>
+        <div class="slide-spec-code">CRITÉRIO 2: INTERACTIVE VISUAL INTELLIGENCE</div>
+      </div>
+
+      <div>
+        <div style="font-family: var(--font-mono); font-size: 0.8rem; font-weight: 700; color: var(--blue); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.5rem;">
+          EXPERIÊNCIA REATIVA DO OPERADOR
+        </div>
+        <h2 class="display-title" style="margin-bottom: 2rem;">
+          ALÉM DA TABELA: A DINÂMICA DO PROCESSO.
+        </h2>
+
+        <div class="editorial-grid-half">
+          <div class="path-step-list">
+            <div class="path-step-item">
+              <div class="path-step-num">01 // OVERLAY VETORIAL SUBPIXEL</div>
+              <div class="path-step-title">Inspeção Visual Conectada</div>
+              <div class="path-step-desc">Caixas delimitadoras sobre o desenho original coloridas por classe (Azul = Instrumentos, Verde = Válvulas, Roxo = Equipamentos) com zoom pan e navegação focalizada.</div>
+            </div>
+
+            <div class="path-step-item">
+              <div class="path-step-num">02 // ROTAS DE FLUXO &amp; TOPOLOGIA</div>
+              <div class="path-step-title">Mapeamento Hidráulico</div>
+              <div class="path-step-desc">Reconstrução das rotas de fluxo da planta (Alimentação &rarr; Coluna C-101 &rarr; Refervedor &rarr; Condensador de Topo) com cálculo de impacto operacional a montante e jusante.</div>
+            </div>
+          </div>
+
+          <div class="path-step-list">
+            <div class="path-step-item">
+              <div class="path-step-num">03 // MÉTRICAS PSM &amp; SALVAGUARDAS</div>
+              <div class="path-step-title">Segurança de Processos</div>
+              <div class="path-step-desc">Identificação contínua de Elementos Críticos de Segurança (SCE) e chaves de alívio/trip para conformidade com normas regulamentadoras NR-13 e OSHA PSM.</div>
+            </div>
+
+            <div class="path-step-item">
+              <div class="path-step-num">04 // POLÍTICA DE ZERO ALUCINAÇÃO</div>
+              <div class="path-step-title">Honestidade de Grafos</div>
+              <div class="path-step-desc">Para diagramas novos sem rastreamento contínuo validado, o sistema declara formalmente a topologia como não verificada, eliminando arestas fantasmas por proximidade ingênua.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-footer">
+        <div class="footer-left">
+          <span>INTERFACE REATIVA: CARBON DESIGN SYSTEM COM PALETA INDUSTRIAL SÓBRIA</span>
+        </div>
+        <div class="footer-right">
+          <span>TRACE_08</span>
+          <span class="page-index">08 / 12</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         SLIDE 09: CRIATIVIDADE & DIFERENCIAIS (25% DA NOTA)
+         ==================================================================== -->
+    <section class="slide" data-slide="9">
+      <div class="slide-header">
+        <div class="brand-tagline">
+          <span class="brand-mark-mini"></span>
+          09 // CRIATIVIDADE &amp; INOVAÇÃO (PESO 25%)
+        </div>
+        <div class="slide-spec-code">CRITÉRIO 3: ACTIVE LEARNING &amp; DRAWING QUALITY</div>
+      </div>
+
+      <div class="editorial-grid-2">
+        <div>
+          <div style="font-family: var(--font-mono); font-size: 0.8rem; font-weight: 700; color: var(--blue); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.5rem;">
+            ALGORITMOS PROPRIETÁRIOS DESENVOLVIDOS
+          </div>
+          <h2 class="display-title" style="margin-bottom: 1.5rem;">
+            A MÁQUINA QUE APRENDE COM O ENGENHEIRO.
+          </h2>
+          <p class="lead-text" style="font-size: 1.05rem; margin-bottom: 2rem;">
+            Desenvolvemos tecnologias inéditas que transformam a experiência de revisão em um ciclo contínuo de aprendizado sem dependência de servidores caros de GPU.
+          </p>
+
+          <div style="background: var(--bg-pure); border-left: 4px solid var(--blue); padding: 1.5rem; margin-bottom: 1.5rem;">
+            <div style="font-family: var(--font-mono); font-size: 0.85rem; font-weight: 700; color: var(--blue); margin-bottom: 0.25rem;">
+              DRAWING QUALITY SCORE (DQS)
+            </div>
+            <div style="font-size: 0.95rem; color: var(--ink); line-height: 1.5;">
+              Métrica algorítmica que analisa a entropia morfológica, razão sinal-ruído e densidade vetorial do P&amp;ID, estimando com precisão as horas de engenharia economizadas pela automação.
+            </div>
+          </div>
+        </div>
+
+        <div style="border-left: 1px solid var(--border-subtle); padding-left: 3rem;">
+          <div style="font-family: var(--font-mono); font-size: 0.85rem; font-weight: 700; color: var(--lime); -webkit-text-stroke: 1px var(--ink); text-transform: uppercase; margin-bottom: 0.5rem;">
+            CLASSIFICADOR k-NN ATIVO EM MEMÓRIA
+          </div>
+          <h3 style="font-size: 1.4rem; font-weight: 700; margin-bottom: 1rem;">
+            Aprendizado Contínuo no Próprio Navegador
+          </h3>
+          <p style="font-size: 0.9rem; color: var(--ink-secondary); line-height: 1.6; margin-bottom: 1.5rem;">
+            Quando uma planta industrial utiliza uma simbologia proprietária fora da norma ISA, o operador simplesmente clica no símbolo, ajusta o tipo e clica em <strong>"Corrigir e Aceitar"</strong>.
+          </p>
+
+          <div style="background: rgba(31, 91, 255, 0.04); border: 1px dashed var(--blue); padding: 1.25rem; font-family: var(--font-mono); font-size: 0.82rem; line-height: 1.8;">
+            <div>&bull; Extração instantânea de vetor: <em>Aspect Ratio, Circularidade, Momentos de Hu</em></div>
+            <div>&bull; Atualização de centróides k-NN em &lt; 2ms</div>
+            <div>&bull; Zero chamadas para a nuvem</div>
+            <div>&bull; Persistência imediata na sessão do operador</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-footer">
+        <div class="footer-left">
+          <span>ADAPTAÇÃO EM TEMPO REAL: DOIS CLICKS PARA ENSINAR NOVAS FORMAS VISUAIS</span>
+        </div>
+        <div class="footer-right">
+          <span>TRACE_09</span>
+          <span class="page-index">09 / 12</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         SLIDE 10: SOBERANIA HUMANA & HUMAN-IN-THE-LOOP
+         ==================================================================== -->
+    <section class="slide" data-slide="10">
+      <div class="slide-header">
+        <div class="brand-tagline">
+          <span class="brand-mark-mini"></span>
+          10 // GOVERNANÇA &amp; SOBERANIA HUMANA
+        </div>
+        <div class="slide-spec-code">HITL: HUMAN-IN-THE-LOOP AUDIT TRAIL</div>
+      </div>
+
+      <div>
+        <div style="font-family: var(--font-mono); font-size: 0.8rem; font-weight: 700; color: var(--blue); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.5rem;">
+          AUDITORIA &amp; RASTREABILIDADE TOTAL
+        </div>
+        <h2 class="display-title" style="margin-bottom: 2rem;">
+          O ENGENHEIRO NO COMANDO.<br>
+          <span class="highlight-blue">A IA COMO COPILOTO.</span>
+        </h2>
+
+        <div class="editorial-grid-3">
+          <div style="background: var(--bg-pure); border-top: 3px solid var(--blue); padding: 1.5rem;">
+            <div style="font-family: var(--font-mono); font-size: 0.8rem; font-weight: 700; color: var(--blue); margin-bottom: 0.5rem;">
+              01 // EDIÇÃO INLINE DE EVIDÊNCIAS
+            </div>
+            <p style="font-size: 0.88rem; color: var(--ink-secondary); line-height: 1.5;">
+              Qualquer caractere ruidoso lido pelo OCR pode ser corrigido diretamente no painel lateral de evidências, propagando a atualização em tempo real para a topologia e para os relatórios.
+            </p>
+          </div>
+
+          <div style="background: var(--bg-pure); border-top: 3px solid var(--lime); padding: 1.5rem;">
+            <div style="font-family: var(--font-mono); font-size: 0.8rem; font-weight: 700; color: #3b5200; margin-bottom: 0.5rem;">
+              02 // INCLUSÃO ASSISTIDA "+ ADICIONAR TAG"
+            </div>
+            <p style="font-size: 0.88rem; color: var(--ink-secondary); line-height: 1.5;">
+              Para elementos apagados no desenho original (como o misturador MJ-1), o operador adiciona a nova etiqueta com um clique, integrando-a imediatamente ao inventário oficial.
+            </p>
+          </div>
+
+          <div style="background: var(--bg-pure); border-top: 3px solid var(--coral); padding: 1.5rem;">
+            <div style="font-family: var(--font-mono); font-size: 0.8rem; font-weight: 700; color: var(--coral); margin-bottom: 0.5rem;">
+              03 // AUDIT TRAIL IMUTÁVEL
+            </div>
+            <p style="font-size: 0.88rem; color: var(--ink-secondary); line-height: 1.5;">
+              Cada modificação, aprovação ou exclusão é registrada com carimbo de tempo ISO 8601, ator responsável e justificativa técnica, garantindo rastreabilidade para auditorias regulatórias.
+            </p>
+          </div>
+        </div>
+
+        <div style="margin-top: 2rem; background: rgba(255, 255, 255, 0.6); border: 1px solid var(--border-subtle); padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center;">
+          <div style="font-family: var(--font-mono); font-size: 0.85rem; color: var(--ink);">
+            <strong>CONTINGÊNCIA DETERMINÍSTICA AUTOMÁTICA:</strong> Se a IA local estiver indisponível, as regras determinísticas ISA-5.1 assumem com zero paralisação do operador.
+          </div>
+          <div style="font-family: var(--font-mono); font-size: 0.75rem; font-weight: 700; color: var(--blue);">
+            LATÊNCIA &lt; 50MS
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-footer">
+        <div class="footer-left">
+          <span>RESPONSABILIDADE TÉCNICA: APROVAÇÃO HUMANA MANDATÓRIA PARA EMISSÃO DE ORDENS DE SERVIÇO</span>
+        </div>
+        <div class="footer-right">
+          <span>TRACE_10</span>
+          <span class="page-index">10 / 12</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         SLIDE 11: LIMITES HONESTOS & ROADMAP INDUSTRIAL
+         ==================================================================== -->
+    <section class="slide" data-slide="11">
+      <div class="slide-header">
+        <div class="brand-tagline">
+          <span class="brand-mark-mini"></span>
+          11 // MATURIDADE DE ENGENHARIA
+        </div>
+        <div class="slide-spec-code">ROADMAP: MVP &rarr; PILOTO DE PLANTA &rarr; ENTERPRISE</div>
+      </div>
+
+      <div>
+        <div style="font-family: var(--font-mono); font-size: 0.8rem; font-weight: 700; color: var(--blue); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.5rem;">
+          POSTURA ÉTICA DE ENGENHARIA
+        </div>
+        <h2 class="display-title" style="margin-bottom: 2rem;">
+          LIMITES ASSUMIDOS HOJE &amp; ONDE VAMOS CHEGAR.
+        </h2>
+
+        <div class="editorial-grid-half">
+          <div style="background: rgba(255, 107, 74, 0.05); border: 1px solid rgba(255, 107, 74, 0.3); padding: 2rem;">
+            <div style="font-family: var(--font-mono); font-size: 0.85rem; font-weight: 700; color: var(--coral); margin-bottom: 1rem; text-transform: uppercase;">
+              LIMITES TÉCNICOS ASSUMIDOS COM TRANSPARÊNCIA:
+            </div>
+            <ul style="font-size: 0.95rem; line-height: 1.8; color: var(--ink-secondary); padding-left: 1.25rem;">
+              <li><strong>Auxílio Computacional:</strong> O software não substitui a caminhada física de campo (walkdown) nem reuniões formais de HAZOP/LOPA.</li>
+              <li><strong>Contraste Mínimo:</strong> Desenhos com resolução inferior a 100 DPI requerem assistência na ferramenta de anotação manual.</li>
+              <li><strong>Topologia Honesta:</strong> Amostras sem rastreamento contínuo certificado não recebem linhas inventadas por adivinhação.</li>
+            </ul>
+          </div>
+
+          <div style="background: rgba(31, 91, 255, 0.05); border: 1px solid rgba(31, 91, 255, 0.3); padding: 2rem;">
+            <div style="font-family: var(--font-mono); font-size: 0.85rem; font-weight: 700; color: var(--blue); margin-bottom: 1rem; text-transform: uppercase;">
+              ROADMAP DE PRODUÇÃO INDUSTRIAL:
+            </div>
+            <div class="path-step-list">
+              <div class="path-step-item">
+                <div class="path-step-num">FASE 2 // PILOTO DE PLANTA</div>
+                <div class="path-step-title">YOLOv11 Local via WebGPU (ONNX Runtime)</div>
+                <div class="path-step-desc">Inferência local acelerada por hardware de estações de engenharia com zero dependência de servidor externo.</div>
+              </div>
+
+              <div class="path-step-item">
+                <div class="path-step-num">FASE 3 // INTEGRAÇÃO ENTERPRISE</div>
+                <div class="path-step-title">Conexão Nativa com DCS, SCADA &amp; SAP PM</div>
+                <div class="path-step-desc">Sincronização bidirecional de ordens de manutenção e verificação contínua de integridade do gêmeo digital.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-footer">
+        <div class="footer-left">
+          <span>PLANEJAMENTO COMPLETO DETALHADO EM: docs/ROADMAP.md</span>
+        </div>
+        <div class="footer-right">
+          <span>TRACE_11</span>
+          <span class="page-index">11 / 12</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         SLIDE 12: ENCERRAMENTO COM IMPACTO (MANIFESTO RASTRO)
+         ==================================================================== -->
+    <section class="slide" data-slide="12">
+      <div class="slide-header">
+        <div class="brand-tagline">
+          <span class="brand-mark-mini"></span>
+          12 // CONCLUSÃO &amp; DISPONIBILIDADE
+        </div>
+        <div class="slide-spec-code">STATUS: ENTREGA CONCLUÍDA // HACKATHON IASTECH 2025</div>
+      </div>
+
+      <div class="editorial-grid-2">
+        <div>
+          <div style="font-family: var(--font-mono); font-size: 0.85rem; font-weight: 700; color: var(--blue); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 1.5rem;">
+            MANIFESTO DE ENGENHARIA RASTRO
+          </div>
+          <h1 class="display-giant" style="margin-bottom: 2rem;">
+            TODA DECISÃO<br>
+            <span class="highlight-blue">DEIXA UM</span><br>
+            RASTRO.
+          </h1>
+          <p class="lead-text" style="font-size: 1.2rem; margin-bottom: 2rem;">
+            A inteligência artificial na indústria não pode ser uma caixa-preta probabilística. Entregamos clareza metrológica, conformidade normativa estrita e soberania absoluta de dados.
+          </p>
+
+          <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+            <div style="background: var(--ink); color: #fff; padding: 0.8rem 1.4rem; font-family: var(--font-mono); font-size: 0.85rem; font-weight: 700;">
+              EXECUTAR: demo.bat
+            </div>
+            <div style="background: var(--blue); color: #fff; padding: 0.8rem 1.4rem; font-family: var(--font-mono); font-size: 0.85rem; font-weight: 700;">
+              DASHBOARD: hackathon_iastech_solution.html
+            </div>
+          </div>
+        </div>
+
+        <div style="border-left: 2px solid var(--border-dark); padding-left: 3rem; display: flex; flex-direction: column; justify-content: space-between; height: 100%;">
+          <div>
+            <div style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--ink-muted); text-transform: uppercase; margin-bottom: 0.5rem;">
+              RESUMO DOS 4 CRITÉRIOS DE AVALIAÇÃO
+            </div>
+            <div style="font-size: 1.1rem; font-weight: 700; color: var(--ink); margin-bottom: 1.5rem;">
+              RESULTADOS AUDITÁVEIS ENTREGUES:
+            </div>
+
+            <div style="font-family: var(--font-mono); font-size: 0.85rem; line-height: 2; color: var(--ink-secondary);">
+              <div>&bull; <strong style="color: var(--blue);">Classificação (35%):</strong> 100% de Acurácia no Ground Truth (66/66)</div>
+              <div>&bull; <strong style="color: var(--blue);">DataViz (20%):</strong> P&amp;ID Interativo, Overlays Subpixel &amp; Topologia</div>
+              <div>&bull; <strong style="color: var(--blue);">Criatividade (25%):</strong> Métrica Anisotrópica &amp; Active Learning k-NN</div>
+              <div>&bull; <strong style="color: var(--blue);">Apresentação (20%):</strong> Padrão Atlas OS, Slides &amp; Zero Emojis</div>
+            </div>
+          </div>
+
+          <div style="border-top: 1px solid var(--border-subtle); padding-top: 1.5rem; font-family: var(--font-mono); font-size: 0.8rem; color: var(--ink-muted);">
+            <div><strong>DESENVOLVEDOR:</strong> MATHEUS SOUSA DOS SANTOS</div>
+            <div><strong>EQUIPE:</strong> THLOOP // HACKATHON IASTECH × UNIMAX</div>
+            <div style="color: var(--blue); margin-top: 0.5rem;">REPOSITÓRIO: github.com/Taiwansz/IASTECH-P-ID</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-footer">
+        <div class="footer-left">
+          <span>OBRIGADO À BANCA EXAMINADORA IASTECH &amp; UNIMAX</span>
+        </div>
+        <div class="footer-right">
+          <span>TRACE_12 // FIM DA APRESENTAÇÃO</span>
+          <span class="page-index">12 / 12</span>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- FLOATING NAVIGATION CONTROLS -->
+  <div id="nav-controls">
+    <button class="nav-btn" id="btn-prev" title="Slide anterior (&larr;)">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="15 18 9 12 15 6"></polyline>
+      </svg>
+    </button>
+    <span class="nav-counter" id="nav-counter">01 / 12</span>
+    <button class="nav-btn" id="btn-next" title="Próximo slide (&rarr;)">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="9 18 15 12 9 6"></polyline>
+      </svg>
+    </button>
+    <button class="nav-btn" id="btn-fs" title="Tela cheia (F)">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+      </svg>
+    </button>
+  </div>
+
+  <!-- KEYBOARD SHORTCUT HINT -->
+  <div class="key-hint">
+    Navegação: <kbd>&larr;</kbd> <kbd>&rarr;</kbd> ou <kbd>Espaço</kbd> &bull; Tela Cheia: <kbd>F</kbd>
+  </div>
+
+  <!-- ====================================================================
+       INTERACTIVE DECK CONTROLLER JAVASCRIPT
+       ==================================================================== -->
+  <script>
+    (function () {
+      let currentSlide = 1;
+      const slides = document.querySelectorAll('.slide');
+      const totalSlides = slides.length;
+      const progressFill = document.getElementById('progress-line-fill');
+      const navCounter = document.getElementById('nav-counter');
+      const btnPrev = document.getElementById('btn-prev');
+      const btnNext = document.getElementById('btn-next');
+      const btnFs = document.getElementById('btn-fs');
+
+      function updateSlide(index) {
+        if (index < 1) index = 1;
+        if (index > totalSlides) index = totalSlides;
+        currentSlide = index;
+
+        slides.forEach((slide, idx) => {
+          const slideNum = idx + 1;
+          slide.classList.remove('active', 'prev');
+          if (slideNum === currentSlide) {
+            slide.classList.add('active');
+          } else if (slideNum < currentSlide) {
+            slide.classList.add('prev');
+          }
+        });
+
+        // Update progress bar & counter
+        const percent = (currentSlide / totalSlides) * 100;
+        progressFill.style.width = percent + '%';
+        const formattedCurrent = currentSlide < 10 ? '0' + currentSlide : currentSlide;
+        const formattedTotal = totalSlides < 10 ? '0' + totalSlides : totalSlides;
+        navCounter.textContent = formattedCurrent + ' / ' + formattedTotal;
+
+        // Button disabled states
+        btnPrev.style.opacity = currentSlide === 1 ? '0.35' : '1';
+        btnPrev.style.pointerEvents = currentSlide === 1 ? 'none' : 'auto';
+        btnNext.style.opacity = currentSlide === totalSlides ? '0.35' : '1';
+        btnNext.style.pointerEvents = currentSlide === totalSlides ? 'none' : 'auto';
+      }
+
+      function nextSlide() {
+        if (currentSlide < totalSlides) {
+          updateSlide(currentSlide + 1);
+        }
+      }
+
+      function prevSlide() {
+        if (currentSlide > 1) {
+          updateSlide(currentSlide - 1);
+        }
+      }
+
+      function toggleFullscreen() {
+        if (!document.fullscreenElement) {
+          document.documentElement.requestFullscreen().catch(err => {
+            console.log('Erro ao entrar em tela cheia:', err.message);
+          });
+        } else {
+          if (document.exitFullscreen) {
+            document.exitFullscreen();
+          }
+        }
+      }
+
+      // Keyboard Controls
+      window.addEventListener('keydown', (e) => {
+        switch (e.key) {
+          case 'ArrowRight':
+          case 'PageDown':
+          case ' ':
+          case 'l':
+          case 'j':
+            e.preventDefault();
+            nextSlide();
+            break;
+          case 'ArrowLeft':
+          case 'PageUp':
+          case 'h':
+          case 'k':
+            e.preventDefault();
+            prevSlide();
+            break;
+          case 'Home':
+            e.preventDefault();
+            updateSlide(1);
+            break;
+          case 'End':
+            e.preventDefault();
+            updateSlide(totalSlides);
+            break;
+          case 'f':
+          case 'F':
+            e.preventDefault();
+            toggleFullscreen();
+            break;
+        }
+      });
+
+      // Mouse & Click Controls
+      btnNext.addEventListener('click', nextSlide);
+      btnPrev.addEventListener('click', prevSlide);
+      btnFs.addEventListener('click', toggleFullscreen);
+
+      // Touch / Swipe Navigation for Mobile & Tablets
+      let touchStartX = 0;
+      let touchEndX = 0;
+
+      window.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+      }, { passive: true });
+
+      window.addEventListener('touchend', (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe();
+      }, { passive: true });
+
+      function handleSwipe() {
+        const threshold = 50;
+        if (touchEndX < touchStartX - threshold) {
+          nextSlide(); // Swipe esquerda -> avança
+        }
+        if (touchEndX > touchStartX + threshold) {
+          prevSlide(); // Swipe direita -> retrocede
+        }
+      }
+
+      // Initial State
+      updateSlide(1);
+    })();
+  </script>
+</body>
+</html>

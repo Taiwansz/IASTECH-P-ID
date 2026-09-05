@@ -58,5 +58,6 @@ Os **Architecture Decision Records (ADRs)** registram formalmente o contexto, as
 |---|---|---|
 | **Matriz de Confusão & Benchmark (35%)** | [`docs/benchmark_results.json`](benchmark_results.json) | 66 componentes curados com 100% de acurácia |
 | **Apresentação Oficial (Slide Deck)** | [`docs/IASTECH_PID_Lens_Presentation.pptx`](IASTECH_PID_Lens_Presentation.pptx) | PowerPoint profissional gerado com roteiro |
+| **Apresentação de Slides Rastro (HTML)** | [`rastro_presentation.html`](../rastro_presentation.html) | Apresentação editorial interativa em arquivo único HTML (16:9) |
 | **Roteiro dos Slides (Markdown)** | [`docs/SLIDES.md`](SLIDES.md) | Conteúdo detalhado slide a slide da apresentação |
 | **Dashboard Standalone da Solução** | [`hackathon_iastech_solution.html`](../hackathon_iastech_solution.html) | Dashboard executivo interativo em arquivo único HTML |
