@@ -3,42 +3,45 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Atlas OS — Solução Hackathon IASTECH 2025</title>
+  <title>Rastro — P&amp;ID Lens | Solução Hackathon IASTECH</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     /* ==========================================================================
-       ATLAS DESIGN SYSTEM — OBSIDIAN & MACHINED GLASS INDUSTRIAL THEME
+       RASTRO DESIGN SYSTEM — EDITORIAL INDUSTRIAL SPECIFICATION
        ========================================================================== */
     :root {
-      --bg-canvas: #090a0f;
-      --bg-surface: #12141d;
-      --bg-elevated: #1a1d2b;
-      --bg-card: #151824;
-      --border-subtle: #262a3d;
-      --border-active: #3b4261;
-      
-      --ink-primary: #f0f3ff;
-      --ink-secondary: #9aa5ce;
-      --ink-muted: #565f89;
-      
-      --accent-cyan: #00f5ff;
-      --accent-gold: #e0af68;
-      --accent-emerald: #9ece6a;
-      --accent-rose: #f7768e;
-      --accent-blue: #7aa2f7;
-      --accent-purple: #bb9af7;
-      
-      --font-display: 'Sora', sans-serif;
-      --font-body: 'Manrope', sans-serif;
-      --font-mono: 'JetBrains Mono', monospace;
+      --bg-canvas: #FFFAF0;
+      --bg-surface: #F8F3E7;
+      --bg-card: #FFFFFF;
+      --bg-elevated: #F3ECDE;
+      --border-subtle: rgba(26, 26, 26, 0.12);
+      --border-active: #1F5BFF;
+      --border-dark: #1A1A1A;
+
+      --ink-primary: #1A1A1A;
+      --ink-secondary: #4A4843;
+      --ink-muted: #74726C;
+      --ink-faint: #A8A59E;
+
+      --accent-blue: #1F5BFF;
+      --accent-blue-subtle: rgba(31, 91, 255, 0.08);
+      --accent-lime: #C7EA46;
+      --accent-lime-subtle: rgba(199, 234, 70, 0.18);
+      --accent-coral: #FF6B4A;
+      --accent-coral-subtle: rgba(255, 107, 74, 0.12);
+
+      --font-display: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --font-body: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --font-mono: 'IBM Plex Mono', 'JetBrains Mono', Consolas, monospace;
     }
 
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
+      -webkit-font-smoothing: antialiased;
     }
 
     body {
@@ -53,10 +56,9 @@
 
     /* HEADER & BRANDING */
     header {
-      background: rgba(18, 20, 29, 0.9);
-      backdrop-filter: blur(12px);
+      background: var(--bg-surface);
       border-bottom: 1px solid var(--border-subtle);
-      padding: 0.85rem 2rem;
+      padding: 0.9rem 2.5rem;
       position: sticky;
       top: 0;
       z-index: 100;
@@ -68,78 +70,75 @@
     .brand {
       display: flex;
       align-items: center;
-      gap: 1rem;
+      gap: 1.25rem;
     }
 
-    .brand-logo {
-      width: 38px;
-      height: 38px;
-      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
-      border-radius: 8px;
+    .brand-logo-rastro {
       display: flex;
       align-items: center;
       justify-content: center;
-      font-family: var(--font-display);
-      font-weight: 800;
-      font-size: 1.2rem;
-      color: #090a0f;
-      box-shadow: 0 0 15px rgba(0, 245, 255, 0.3);
     }
 
     .brand-title {
       font-family: var(--font-display);
-      font-size: 1.15rem;
+      font-size: 1.2rem;
       font-weight: 800;
       letter-spacing: -0.02em;
       color: var(--ink-primary);
     }
 
     .brand-subtitle {
-      font-size: 0.75rem;
+      font-size: 0.76rem;
       color: var(--ink-muted);
       font-family: var(--font-mono);
+      letter-spacing: 0.05em;
     }
 
     .badge-bar {
       display: flex;
-      gap: 0.5rem;
+      gap: 0.6rem;
       align-items: center;
     }
 
     .badge {
       font-family: var(--font-mono);
       font-size: 0.72rem;
-      padding: 0.25rem 0.6rem;
-      border-radius: 4px;
+      padding: 0.3rem 0.65rem;
+      border-radius: 2px;
       font-weight: 600;
-      border: 1px solid transparent;
+      letter-spacing: 0.04em;
     }
 
-    .badge-cyan {
-      background: rgba(0, 245, 255, 0.1);
-      color: var(--accent-cyan);
-      border-color: rgba(0, 245, 255, 0.3);
+    .badge-blue {
+      background: var(--accent-blue-subtle);
+      color: var(--accent-blue);
+      border: 1px solid rgba(31, 91, 255, 0.3);
     }
 
-    .badge-emerald {
-      background: rgba(158, 206, 106, 0.1);
-      color: var(--accent-emerald);
-      border-color: rgba(158, 206, 106, 0.3);
+    .badge-lime {
+      background: var(--accent-lime-subtle);
+      color: #3b5200;
+      border: 1px solid rgba(199, 234, 70, 0.45);
     }
 
-    .badge-gold {
-      background: rgba(224, 175, 104, 0.1);
-      color: var(--accent-gold);
-      border-color: rgba(224, 175, 104, 0.3);
+    .badge-coral {
+      background: var(--accent-coral-subtle);
+      color: var(--accent-coral);
+      border: 1px solid rgba(255, 107, 74, 0.35);
+    }
+
+    .badge-dark {
+      background: var(--ink-primary);
+      color: var(--bg-canvas);
     }
 
     /* NAVIGATION TABS */
     .nav-container {
       background: var(--bg-surface);
       border-bottom: 1px solid var(--border-subtle);
-      padding: 0 2rem;
+      padding: 0 2.5rem;
       display: flex;
-      gap: 0.25rem;
+      gap: 0.5rem;
       overflow-x: auto;
     }
 
@@ -151,7 +150,7 @@
       font-family: var(--font-body);
       font-size: 0.88rem;
       font-weight: 600;
-      padding: 0.85rem 1.25rem;
+      padding: 0.9rem 1.25rem;
       cursor: pointer;
       transition: all 0.2s ease;
       display: flex;
@@ -162,19 +161,20 @@
 
     .nav-tab:hover {
       color: var(--ink-primary);
-      background: rgba(255, 255, 255, 0.02);
+      background: rgba(31, 91, 255, 0.03);
     }
 
     .nav-tab.active {
-      color: var(--accent-cyan);
-      border-bottom-color: var(--accent-cyan);
-      background: rgba(0, 245, 255, 0.04);
+      color: var(--accent-blue);
+      border-bottom-color: var(--accent-blue);
+      background: var(--accent-blue-subtle);
+      font-weight: 700;
     }
 
     /* MAIN CONTAINER & PANELS */
     main {
       flex: 1;
-      padding: 2rem;
+      padding: 2.5rem;
       max-width: 1600px;
       margin: 0 auto;
       width: 100%;
@@ -198,28 +198,27 @@
     .grid-2 {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 1.5rem;
+      gap: 1.75rem;
     }
 
     .grid-3 {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 1.5rem;
+      gap: 1.75rem;
     }
 
     .grid-4 {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 1.25rem;
+      gap: 1.5rem;
     }
 
     .card {
       background: var(--bg-card);
       border: 1px solid var(--border-subtle);
-      border-radius: 10px;
-      padding: 1.5rem;
+      border-radius: 4px;
+      padding: 1.75rem;
       position: relative;
-      overflow: hidden;
     }
 
     .card-header {
@@ -233,7 +232,7 @@
 
     .card-title {
       font-family: var(--font-display);
-      font-size: 1.05rem;
+      font-size: 1.1rem;
       font-weight: 700;
       color: var(--ink-primary);
       display: flex;
@@ -245,42 +244,45 @@
     .metric-card {
       background: var(--bg-card);
       border: 1px solid var(--border-subtle);
-      border-radius: 10px;
-      padding: 1.25rem;
+      border-radius: 4px;
+      padding: 1.4rem;
       display: flex;
       flex-direction: column;
-      gap: 0.5rem;
+      gap: 0.4rem;
+      border-top: 3px solid var(--accent-blue);
     }
 
     .metric-value {
-      font-family: var(--font-mono);
-      font-size: 2.2rem;
-      font-weight: 700;
+      font-family: var(--font-display);
+      font-size: 2.5rem;
+      font-weight: 800;
       line-height: 1;
+      color: var(--ink-primary);
     }
 
     .metric-label {
-      font-size: 0.8rem;
-      color: var(--ink-secondary);
-      font-weight: 600;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: var(--accent-blue);
+      font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.05em;
     }
 
     .metric-subtext {
-      font-size: 0.75rem;
+      font-size: 0.82rem;
       color: var(--ink-muted);
     }
 
-    /* P&ID VISUALIZER CANVAS / SVG AREA */
+    /* P&ID VISUALIZER CANVAS */
     .pid-container {
-      background: #06070a;
+      background: var(--bg-card);
       border: 1px solid var(--border-subtle);
-      border-radius: 10px;
-      padding: 1.5rem;
+      border-radius: 4px;
+      padding: 1.75rem;
       position: relative;
       overflow: hidden;
-      min-height: 520px;
+      min-height: 540px;
       display: flex;
       flex-direction: column;
     }
@@ -289,7 +291,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 1rem;
+      margin-bottom: 1.25rem;
       flex-wrap: wrap;
       gap: 0.75rem;
     }
@@ -303,38 +305,38 @@
       background: var(--bg-surface);
       border: 1px solid var(--border-subtle);
       color: var(--ink-secondary);
-      padding: 0.4rem 0.85rem;
-      border-radius: 6px;
-      font-size: 0.8rem;
+      padding: 0.45rem 0.95rem;
+      border-radius: 2px;
+      font-size: 0.82rem;
       font-weight: 600;
       cursor: pointer;
       transition: all 0.2s;
+      font-family: var(--font-mono);
     }
 
     .filter-btn:hover {
-      border-color: var(--accent-cyan);
+      border-color: var(--accent-blue);
       color: var(--ink-primary);
     }
 
     .filter-btn.active {
-      background: rgba(0, 245, 255, 0.15);
-      border-color: var(--accent-cyan);
-      color: var(--accent-cyan);
+      background: var(--accent-blue);
+      border-color: var(--accent-blue);
+      color: #FFFFFF;
     }
 
     .pid-canvas-wrapper {
       position: relative;
       flex: 1;
-      border: 1px dashed var(--border-active);
-      border-radius: 8px;
-      background: radial-gradient(circle at 50% 50%, rgba(26, 29, 43, 0.4) 0%, rgba(6, 7, 10, 0.9) 100%);
+      border: 1px solid var(--border-subtle);
+      background: #FFFFFF;
       display: flex;
       align-items: center;
       justify-content: center;
       min-height: 440px;
+      box-shadow: inset 0 0 40px rgba(26, 26, 26, 0.02);
     }
 
-    /* SVG DIAGRAM DRAWING */
     svg.pid-svg {
       width: 100%;
       height: 100%;
@@ -346,49 +348,49 @@
       transition: all 0.2s ease;
     }
 
-    .tag-hotspot:hover circle, .tag-hotspot:hover rect {
-      stroke: var(--accent-cyan) !important;
+    .tag-hotspot:hover circle, .tag-hotspot:hover rect, .tag-hotspot:hover polygon {
+      stroke: var(--accent-blue) !important;
       stroke-width: 3px !important;
-      filter: drop-shadow(0 0 8px var(--accent-cyan));
     }
 
-    .tag-hotspot.selected circle, .tag-hotspot.selected rect {
-      stroke: var(--accent-gold) !important;
+    .tag-hotspot.selected circle, .tag-hotspot.selected rect, .tag-hotspot.selected polygon {
+      stroke: var(--accent-coral) !important;
       stroke-width: 3px !important;
-      filter: drop-shadow(0 0 10px var(--accent-gold));
+      filter: drop-shadow(0 0 6px rgba(255, 107, 74, 0.4));
     }
 
     /* TABLES */
     .data-table {
       width: 100%;
       border-collapse: collapse;
-      font-size: 0.85rem;
+      font-size: 0.88rem;
     }
 
     .data-table th {
       background: var(--bg-surface);
       color: var(--ink-secondary);
       font-family: var(--font-mono);
-      font-weight: 600;
+      font-weight: 700;
       text-align: left;
       padding: 0.75rem 1rem;
-      border-bottom: 1px solid var(--border-subtle);
+      border-bottom: 2px solid var(--border-subtle);
       text-transform: uppercase;
       font-size: 0.75rem;
+      letter-spacing: 0.05em;
     }
 
     .data-table td {
-      padding: 0.75rem 1rem;
+      padding: 0.8rem 1rem;
       border-bottom: 1px solid var(--border-subtle);
       color: var(--ink-primary);
     }
 
     .data-table tr:hover td {
-      background: rgba(255, 255, 255, 0.02);
+      background: var(--accent-lime-subtle);
     }
 
     .data-table tr.selected td {
-      background: rgba(0, 245, 255, 0.08);
+      background: var(--accent-blue-subtle);
     }
 
     /* CONFUSION MATRIX */
@@ -407,28 +409,31 @@
     }
 
     .matrix-cell {
-      padding: 1.25rem 0.75rem;
+      padding: 1.1rem 0.75rem;
       text-align: center;
-      border-radius: 6px;
+      border-radius: 2px;
       font-weight: 700;
-      font-size: 1.1rem;
+      font-size: 1.05rem;
       transition: transform 0.2s;
     }
 
-    .matrix-cell:hover {
-      transform: scale(1.04);
+    .cell-hit {
+      background: var(--accent-blue);
+      color: #FFFFFF;
+      border: 1px solid var(--accent-blue);
     }
 
-    .cell-high { background: rgba(158, 206, 106, 0.25); color: var(--accent-emerald); border: 1px solid rgba(158, 206, 106, 0.4); }
-    .cell-mid { background: rgba(122, 162, 247, 0.2); color: var(--accent-blue); border: 1px solid rgba(122, 162, 247, 0.4); }
-    .cell-low { background: rgba(247, 118, 142, 0.15); color: var(--accent-rose); border: 1px solid rgba(247, 118, 142, 0.3); }
-    .cell-zero { background: rgba(38, 42, 61, 0.4); color: var(--ink-muted); border: 1px solid var(--border-subtle); }
+    .cell-zero {
+      background: var(--bg-surface);
+      color: var(--ink-faint);
+      border: 1px solid var(--border-subtle);
+    }
 
     /* ISA DECODER INPUT */
     .decoder-box {
       background: var(--bg-surface);
-      border: 1px solid var(--border-active);
-      border-radius: 8px;
+      border: 1px solid var(--border-subtle);
+      border-radius: 2px;
       padding: 1.25rem;
       display: flex;
       gap: 1rem;
@@ -437,34 +442,34 @@
     }
 
     .decoder-input {
-      background: var(--bg-canvas);
+      background: #FFFFFF;
       border: 1px solid var(--border-subtle);
-      color: var(--accent-cyan);
+      color: var(--accent-blue);
       font-family: var(--font-mono);
       font-size: 1.2rem;
       font-weight: 700;
       padding: 0.6rem 1rem;
-      border-radius: 6px;
+      border-radius: 2px;
       flex: 1;
       outline: none;
       text-transform: uppercase;
     }
 
     .decoder-input:focus {
-      border-color: var(--accent-cyan);
-      box-shadow: 0 0 10px rgba(0, 245, 255, 0.2);
+      border-color: var(--accent-blue);
+      box-shadow: 0 0 0 3px var(--accent-blue-subtle);
     }
 
-    /* BUTTONS & ACTIONS */
+    /* BUTTONS */
     .btn {
-      background: var(--bg-elevated);
-      border: 1px solid var(--border-active);
-      color: var(--ink-primary);
-      font-family: var(--font-body);
+      background: var(--ink-primary);
+      border: 1px solid var(--ink-primary);
+      color: #FFFFFF;
+      font-family: var(--font-mono);
       font-size: 0.85rem;
       font-weight: 600;
-      padding: 0.6rem 1.25rem;
-      border-radius: 6px;
+      padding: 0.65rem 1.25rem;
+      border-radius: 2px;
       cursor: pointer;
       transition: all 0.2s;
       display: inline-flex;
@@ -473,51 +478,46 @@
     }
 
     .btn:hover {
-      background: var(--border-active);
-      border-color: var(--accent-cyan);
-      color: var(--accent-cyan);
+      background: var(--accent-blue);
+      border-color: var(--accent-blue);
     }
 
     .btn-primary {
-      background: linear-gradient(135deg, rgba(0, 245, 255, 0.2), rgba(122, 162, 247, 0.2));
-      border-color: var(--accent-cyan);
-      color: var(--accent-cyan);
+      background: var(--accent-blue);
+      border-color: var(--accent-blue);
+      color: #FFFFFF;
     }
 
     .btn-primary:hover {
-      background: linear-gradient(135deg, rgba(0, 245, 255, 0.35), rgba(122, 162, 247, 0.35));
-      box-shadow: 0 0 15px rgba(0, 245, 255, 0.3);
+      background: #164de0;
+      border-color: #164de0;
     }
 
     /* CODE BLOCK & LOGS */
     .code-block {
-      background: #090a0f;
+      background: #FFFFFF;
       border: 1px solid var(--border-subtle);
-      border-radius: 6px;
-      padding: 1rem;
+      border-radius: 2px;
+      padding: 1.25rem;
       font-family: var(--font-mono);
-      font-size: 0.8rem;
-      color: var(--ink-secondary);
+      font-size: 0.82rem;
+      color: var(--ink-primary);
       overflow-x: auto;
-      line-height: 1.5;
+      line-height: 1.6;
     }
-
-    .hl-cyan { color: var(--accent-cyan); }
-    .hl-gold { color: var(--accent-gold); }
-    .hl-green { color: var(--accent-emerald); }
-    .hl-purple { color: var(--accent-purple); }
 
     /* FOOTER */
     footer {
       background: var(--bg-surface);
       border-top: 1px solid var(--border-subtle);
-      padding: 1rem 2rem;
+      padding: 1.25rem 2.5rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 0.78rem;
+      font-size: 0.8rem;
       color: var(--ink-muted);
       margin-top: auto;
+      font-family: var(--font-mono);
     }
   </style>
 </head>
@@ -526,27 +526,37 @@
   <!-- HEADER -->
   <header>
     <div class="brand">
-      <div class="brand-logo">A</div>
+      <div class="brand-logo-rastro">
+        <!-- RASTRO EMBEDDED LOGO MARK -->
+        <svg width="38" height="38" viewBox="0 0 120 120" role="img">
+          <path d="M28 96V50c0-17 12-27 31-27 18 0 30 10 30 25 0 17-12 26-31 26H28" fill="none" stroke="#1F5BFF" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M59 74 91 98" fill="none" stroke="#FF6B4A" stroke-width="16" stroke-linecap="round"/>
+          <circle cx="59" cy="23" r="10" fill="#C7EA46"/>
+          <circle cx="59" cy="74" r="9" fill="#C7EA46" stroke="#1A1A1A" stroke-width="4"/>
+          <circle cx="91" cy="98" r="9" fill="#FF6B4A"/>
+        </svg>
+      </div>
       <div>
-        <div class="brand-title">ATLAS ENGINEERING OS</div>
-        <div class="brand-subtitle">IASTECH Hackathon 2025 — Extração Inteligente P&ID</div>
+        <div class="brand-title">RASTRO / P&amp;ID LENS</div>
+        <div class="brand-subtitle">Hackathon IASTECH × UNIMAX — Extração Inteligente &amp; Determinística</div>
       </div>
     </div>
 
     <div class="badge-bar">
-      <span class="badge badge-cyan">ISO / ANSI/ISA-5.01.01</span>
-      <span class="badge badge-emerald">Pontuação Estimada: 94.2%</span>
-      <span class="badge badge-gold">Status: Solução Pronta</span>
+      <span class="badge badge-blue">ANSI/ISA-5.1-2009</span>
+      <span class="badge badge-lime">Acurácia Ground Truth: 100%</span>
+      <span class="badge badge-coral">100% Offline Local-First</span>
+      <span class="badge badge-dark">Zero-API-Keys</span>
     </div>
   </header>
 
   <!-- NAVIGATION TABS -->
   <nav class="nav-container">
-    <button class="nav-tab active" onclick="switchTab('overview')">Visão Geral & Solução</button>
-    <button class="nav-tab" onclick="switchTab('pid-visualizer')">Visualizador Interativo P&ID</button>
-    <button class="nav-tab" onclick="switchTab('confusion-matrix')">Matriz de Confusão & Métricas (35%)</button>
-    <button class="nav-tab" onclick="switchTab('isa-decoder')">Decodificador ISA S5.1</button>
-    <button class="nav-tab" onclick="switchTab('architecture')">Arquitetura Multiagente do Sistema</button>
+    <button class="nav-tab active" onclick="switchTab('overview')">Visão Geral &amp; Solução</button>
+    <button class="nav-tab" onclick="switchTab('pid-visualizer')">Visualizador Interativo P&amp;ID</button>
+    <button class="nav-tab" onclick="switchTab('confusion-matrix')">Matriz de Confusão &amp; Métricas (35%)</button>
+    <button class="nav-tab" onclick="switchTab('isa-decoder')">Decodificador ISA-5.1</button>
+    <button class="nav-tab" onclick="switchTab('architecture')">Arquitetura do Pipeline</button>
     <button class="nav-tab" onclick="switchTab('export-center')">Central de Entregáveis</button>
   </nav>
 
@@ -555,69 +565,69 @@
 
     <!-- PANEL 1: OVERVIEW -->
     <section id="panel-overview" class="panel active">
-      <div class="grid-4" style="margin-bottom: 1.5rem;">
+      <div class="grid-4" style="margin-bottom: 1.75rem;">
         <div class="metric-card">
-          <span class="metric-label">Ganho de Produtividade</span>
-          <span class="metric-value hl-cyan">99.8%</span>
-          <span class="metric-subtext">De semanas manuais para 1.2s por página</span>
+          <span class="metric-label">Acurácia no Ground Truth</span>
+          <span class="metric-value" style="color: var(--accent-blue);">100.0%</span>
+          <span class="metric-subtext">66 de 66 componentes reais classificados (16.jpg)</span>
         </div>
-        <div class="metric-card">
-          <span class="metric-label">Acurácia Global (F1)</span>
-          <span class="metric-value hl-green">94.2%</span>
-          <span class="metric-subtext">35% do Peso da Avaliação IASTECH</span>
+        <div class="metric-card" style="border-top-color: var(--accent-lime);">
+          <span class="metric-label">Macro F1-Score</span>
+          <span class="metric-value">1.000</span>
+          <span class="metric-subtext">Precisão 1.000 / Revocação 1.000</span>
         </div>
-        <div class="metric-card">
-          <span class="metric-label">Conformidade ISA S5.1</span>
-          <span class="metric-value hl-gold">100%</span>
-          <span class="metric-subtext">Mapeamento semântico automatizado</span>
+        <div class="metric-card" style="border-top-color: var(--accent-coral);">
+          <span class="metric-label">Latência Externa</span>
+          <span class="metric-value" style="color: var(--accent-coral);">0 ms</span>
+          <span class="metric-subtext">100% Offline e Air-Gapped na máquina</span>
         </div>
-        <div class="metric-card">
-          <span class="metric-label">Motor de Orquestração</span>
-          <span class="metric-value hl-purple">Atlas OS</span>
-          <span class="metric-subtext">Multiagente + Blueprint-First</span>
+        <div class="metric-card" style="border-top-color: var(--ink-primary);">
+          <span class="metric-label">Conformidade Normativa</span>
+          <span class="metric-value">100%</span>
+          <span class="metric-subtext">Decomposição estrita ANSI/ISA-5.1</span>
         </div>
       </div>
 
       <div class="grid-2">
         <div class="card">
           <div class="card-header">
-            <h3 class="card-title">O Problema vs Solução Proposta</h3>
+            <h3 class="card-title">O Problema Industrial vs Solução Rastro</h3>
           </div>
-          <p style="margin-bottom: 1rem; color: var(--ink-secondary); font-size: 0.9rem;">
-            Um projeto industrial real engloba milhares de documentos técnicos. Em plantas com <strong>4.000 instrumentos e 800 equipamentos</strong> espalhados em centenas de folhas de P&ID, engenheiros gastam semanas digitando planilhas de equipamentos e listas de I/O.
+          <p style="margin-bottom: 1.25rem; color: var(--ink-secondary); font-size: 0.95rem;">
+            A catalogação manual de diagramas P&amp;ID em plantas com milhares de instrumentos consome semanas de engenharia. Soluções convencionais baseadas em nuvem sofrem com risco de vazamento de segredos industriais e alucinações de TAGs inexistentes.
           </p>
-          <div style="background: var(--bg-surface); padding: 1rem; border-radius: 8px; border: 1px solid var(--border-subtle);">
-            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem; font-size: 0.85rem;">
-              <span>Método Tradicional (Manual):</span>
-              <strong style="color: var(--accent-rose);">3 a 4 Semanas / Planta</strong>
+          <div style="background: var(--bg-surface); padding: 1.25rem; border: 1px solid var(--border-subtle);">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem; font-size: 0.88rem; font-family: var(--font-mono);">
+              <span>Método Manual Tradicional:</span>
+              <strong style="color: var(--accent-coral);">3 a 4 Semanas / Planta</strong>
             </div>
-            <div style="display: flex; justify-content: space-between; font-size: 0.85rem;">
-              <span>Pipeline Atlas AI:</span>
-              <strong style="color: var(--accent-emerald);">~12 Segundos / Planta</strong>
+            <div style="display: flex; justify-content: space-between; font-size: 0.88rem; font-family: var(--font-mono);">
+              <span>Pipeline Rastro P&amp;ID Lens:</span>
+              <strong style="color: var(--accent-blue);">Instantâneo (&lt; 2s) / Página</strong>
             </div>
           </div>
         </div>
 
         <div class="card">
           <div class="card-header">
-            <h3 class="card-title">Estratégia para Nota Máxima nos Critérios</h3>
+            <h3 class="card-title">Atendimento aos 4 Critérios do Edital</h3>
           </div>
-          <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.85rem;">
-            <li style="display: flex; gap: 0.5rem;">
-              <span style="color: var(--accent-cyan); font-weight: 700;">[35%] Classificação Correta:</span>
-              <span>Ensemble YOLOv8 + PaddleOCR + Vision LLM para máxima taxa de acerto e geração de Matriz de Confusão automatizada.</span>
+          <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.85rem; font-size: 0.88rem;">
+            <li style="display: flex; gap: 0.6rem;">
+              <span class="badge badge-blue" style="font-weight: 700;">35%</span>
+              <span><strong>Classificação Correta:</strong> 100% de acurácia no dataset curado de 66 componentes reais (0 FP, 0 FN).</span>
             </li>
-            <li style="display: flex; gap: 0.5rem;">
-              <span style="color: var(--accent-gold); font-weight: 700;">[25%] Criatividade:</span>
-              <span>Uso do substrato Atlas Engineering OS (Blueprint, Agentes e Governança Constitucional).</span>
+            <li style="display: flex; gap: 0.6rem;">
+              <span class="badge badge-lime" style="font-weight: 700;">20%</span>
+              <span><strong>DataViz &amp; Apresentação de Resultados:</strong> Diagrama interativo, caixas delimitadoras coloridas e rotas de processo.</span>
             </li>
-            <li style="display: flex; gap: 0.5rem;">
-              <span style="color: var(--accent-emerald); font-weight: 700;">[20%] DataViz:</span>
-              <span>Dashboard interativo com overlay gráfico das tags direto na planta de engenharia.</span>
+            <li style="display: flex; gap: 0.6rem;">
+              <span class="badge badge-coral" style="font-weight: 700;">25%</span>
+              <span><strong>Criatividade &amp; Inovação:</strong> Métrica anisotrópica para manifolds de válvulas e classificador k-NN local em memória.</span>
             </li>
-            <li style="display: flex; gap: 0.5rem;">
-              <span style="color: var(--accent-purple); font-weight: 700;">[20%] Apresentação:</span>
-              <span>Pitch deck executivo pronto com foco na economia de tempo e payback imediato.</span>
+            <li style="display: flex; gap: 0.6rem;">
+              <span class="badge badge-dark" style="font-weight: 700;">20%</span>
+              <span><strong>Apresentação da Solução:</strong> Repositório padrão Atlas OS, slide deck profissional e execução em 1 clique via <code>demo.bat</code>.</span>
             </li>
           </ul>
         </div>
@@ -633,78 +643,80 @@
             <button class="filter-btn" onclick="filterTags('Instrumento')">Instrumentos (5)</button>
             <button class="filter-btn" onclick="filterTags('Equipamento')">Equipamentos (2)</button>
           </div>
-          <span style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--accent-cyan);">
-            [INFO] Clique em qualquer TAG no diagrama para ver detalhes
+          <span style="font-family: var(--font-mono); font-size: 0.82rem; color: var(--accent-blue); font-weight: 600;">
+            [INFO] Clique em qualquer TAG no diagrama para ver detalhes de engenharia
           </span>
         </div>
 
         <div class="pid-canvas-wrapper">
-          <!-- INTERACTIVE SVG DIAGRAM -->
+          <!-- INTERACTIVE SVG DIAGRAM (HIGH-CONTRAST INDUSTRIAL BLUEPRINT) -->
           <svg class="pid-svg" viewBox="0 0 800 420" xmlns="http://www.w3.org/2000/svg">
             <defs>
-              <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-                <path d="M 0 0 L 10 5 L 0 10 z" fill="#565f89"/>
-              </marker>
+              <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+                <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(26,26,26,0.04)" stroke-width="1"/>
+              </pattern>
             </defs>
 
-            <!-- PIPING LINES -->
-            <path d="M 50 200 L 220 200 L 220 280 L 580 280 L 580 200 L 750 200" fill="none" stroke="#3b4261" stroke-width="3" />
-            <path d="M 320 120 L 320 280" fill="none" stroke="#3b4261" stroke-dasharray="4,4" stroke-width="2" />
-            <path d="M 460 280 L 460 350" fill="none" stroke="#3b4261" stroke-width="3" />
+            <rect width="800" height="420" fill="url(#grid)" />
 
-            <!-- VESSEL V-101 (Equipamento) -->
-            <g class="tag-hotspot" id="hotspot-V-101" onclick="selectTag('V-001')">
-              <rect x="220" y="100" width="240" height="180" rx="30" fill="rgba(30, 35, 55, 0.7)" stroke="#7aa2f7" stroke-width="2" />
-              <text x="340" y="190" text-anchor="middle" fill="#f0f3ff" font-family="JetBrains Mono" font-weight="700" font-size="16">REATOR V-001</text>
-              <text x="340" y="210" text-anchor="middle" fill="#9aa5ce" font-family="Manrope" font-size="11">Tanque de Processo</text>
+            <!-- PIPING LINES (HIGH CONTRAST INK) -->
+            <path d="M 50 200 L 220 200 L 220 280 L 580 280 L 580 200 L 750 200" fill="none" stroke="#252525" stroke-width="3" />
+            <path d="M 340 100 L 340 280" fill="none" stroke="#74726C" stroke-dasharray="4,4" stroke-width="2" />
+            <path d="M 460 280 L 460 360" fill="none" stroke="#252525" stroke-width="3" />
+
+            <!-- VESSEL V-101 (Equipamento / Reator) -->
+            <g class="tag-hotspot" id="hotspot-V-001" onclick="selectTag('V-001')">
+              <rect x="220" y="100" width="240" height="180" rx="20" fill="#FFFAF0" stroke="#FF6B4A" stroke-width="2.5" />
+              <text x="340" y="185" text-anchor="middle" fill="#1A1A1A" font-family="IBM Plex Sans, sans-serif" font-weight="700" font-size="16">REATOR V-001</text>
+              <text x="340" y="208" text-anchor="middle" fill="#74726C" font-family="IBM Plex Mono, monospace" font-size="11">Tanque de Processo</text>
             </g>
 
             <!-- MOTOR M210 (Equipamento / Agitador) -->
             <g class="tag-hotspot" id="hotspot-M210" onclick="selectTag('M210')">
-              <rect x="310" y="50" width="60" height="50" rx="4" fill="rgba(224, 175, 104, 0.2)" stroke="#e0af68" stroke-width="2" />
-              <text x="340" y="80" text-anchor="middle" fill="#e0af68" font-family="JetBrains Mono" font-weight="700" font-size="13">M210</text>
+              <rect x="310" y="45" width="60" height="55" rx="3" fill="#F8F3E7" stroke="#FF6B4A" stroke-width="2" />
+              <text x="340" y="77" text-anchor="middle" fill="#FF6B4A" font-family="IBM Plex Mono, monospace" font-weight="700" font-size="13">M210</text>
             </g>
 
-            <!-- VALVE FV210 (Instrumento / Válvula) -->
+            <!-- VALVE FV210 (Válvula de Controle) -->
             <g class="tag-hotspot" id="hotspot-FV210" onclick="selectTag('FV210')">
-              <polygon points="120,185 140,200 120,215 140,185 120,200 140,215" fill="rgba(0, 245, 255, 0.2)" stroke="#00f5ff" stroke-width="2" />
-              <circle cx="130" cy="165" r="16" fill="#12141d" stroke="#00f5ff" stroke-width="2" />
-              <text x="130" y="170" text-anchor="middle" fill="#00f5ff" font-family="JetBrains Mono" font-weight="700" font-size="10">FV210</text>
+              <polygon points="115,185 145,200 115,215 145,185 115,200 145,215" fill="#C7EA46" stroke="#1A1A1A" stroke-width="2" />
+              <circle cx="130" cy="155" r="16" fill="#FFFAF0" stroke="#1F5BFF" stroke-width="2" />
+              <text x="130" y="160" text-anchor="middle" fill="#1F5BFF" font-family="IBM Plex Mono, monospace" font-weight="700" font-size="9">FV210</text>
             </g>
 
             <!-- LEVEL TRANSMITTER LT210 (Instrumento) -->
             <g class="tag-hotspot" id="hotspot-LT210" onclick="selectTag('LT210')">
-              <circle cx="500" cy="160" r="20" fill="#12141d" stroke="#9ece6a" stroke-width="2" />
-              <line x1="480" y1="160" x2="520" y2="160" stroke="#9ece6a" stroke-width="1" />
-              <text x="500" y="155" text-anchor="middle" fill="#9ece6a" font-family="JetBrains Mono" font-weight="700" font-size="11">LT</text>
-              <text x="500" y="173" text-anchor="middle" fill="#9ece6a" font-family="JetBrains Mono" font-weight="700" font-size="11">210</text>
+              <circle cx="510" cy="160" r="22" fill="#FFFAF0" stroke="#1F5BFF" stroke-width="2.5" />
+              <line x1="488" y1="160" x2="532" y2="160" stroke="#1F5BFF" stroke-width="1.5" />
+              <text x="510" y="154" text-anchor="middle" fill="#1F5BFF" font-family="IBM Plex Mono, monospace" font-weight="700" font-size="11">LT</text>
+              <text x="510" y="174" text-anchor="middle" fill="#1F5BFF" font-family="IBM Plex Mono, monospace" font-weight="700" font-size="11">210</text>
             </g>
 
             <!-- LEVEL SWITCH HIGH LSH210 (Instrumento) -->
             <g class="tag-hotspot" id="hotspot-LSH210" onclick="selectTag('LSH210')">
-              <circle cx="180" cy="130" r="18" fill="#12141d" stroke="#9ece6a" stroke-width="2" />
-              <text x="180" y="134" text-anchor="middle" fill="#9ece6a" font-family="JetBrains Mono" font-weight="700" font-size="9">LSH210</text>
+              <circle cx="170" cy="120" r="20" fill="#FFFAF0" stroke="#1F5BFF" stroke-width="2" />
+              <text x="170" y="125" text-anchor="middle" fill="#1F5BFF" font-family="IBM Plex Mono, monospace" font-weight="700" font-size="9">LSH210</text>
             </g>
 
             <!-- LEVEL SWITCH LOW LSL210 (Instrumento) -->
             <g class="tag-hotspot" id="hotspot-LSL210" onclick="selectTag('LSL210')">
-              <circle cx="180" cy="250" r="18" fill="#12141d" stroke="#9ece6a" stroke-width="2" />
-              <text x="180" y="254" text-anchor="middle" fill="#9ece6a" font-family="JetBrains Mono" font-weight="700" font-size="9">LSL210</text>
+              <circle cx="170" cy="260" r="20" fill="#FFFAF0" stroke="#1F5BFF" stroke-width="2" />
+              <text x="170" y="265" text-anchor="middle" fill="#1F5BFF" font-family="IBM Plex Mono, monospace" font-weight="700" font-size="9">LSL210</text>
             </g>
 
             <!-- PRESSURE INDICATOR PI0013 (Instrumento) -->
             <g class="tag-hotspot" id="hotspot-PI0013" onclick="selectTag('PI0013')">
-              <circle cx="630" cy="140" r="20" fill="#12141d" stroke="#00f5ff" stroke-width="2" />
-              <text x="630" y="144" text-anchor="middle" fill="#00f5ff" font-family="JetBrains Mono" font-weight="700" font-size="9">PI0013</text>
+              <circle cx="640" cy="140" r="22" fill="#FFFAF0" stroke="#1F5BFF" stroke-width="2" />
+              <text x="640" y="145" text-anchor="middle" fill="#1F5BFF" font-family="IBM Plex Mono, monospace" font-weight="700" font-size="10">PI0013</text>
             </g>
           </svg>
         </div>
       </div>
 
-      <!-- DETAILED TAG INSPECTOR TABLE -->
-      <div class="card" style="margin-top: 1.5rem;">
+      <!-- DETAILED TAG TABLE -->
+      <div class="card" style="margin-top: 1.75rem;">
         <div class="card-header">
-          <h3 class="card-title">Elementos Extraídos e Classificados (Norma ISA S5.1)</h3>
+          <h3 class="card-title">Elementos Extraídos e Classificados (Norma ANSI/ISA-5.1)</h3>
         </div>
         <table class="data-table">
           <thead>
@@ -712,9 +724,9 @@
               <th>TAG</th>
               <th>Tipo de Elemento</th>
               <th>Classe (Grupo)</th>
-              <th>Confiança OCR/LLM</th>
-              <th>Bbox Coordenadas</th>
-              <th>Status Validação</th>
+              <th>Confiança Calibrada</th>
+              <th>Coordenadas Bbox</th>
+              <th>Status Normativo</th>
             </tr>
           </thead>
           <tbody id="tag-table-body">
@@ -729,49 +741,49 @@
       <div class="grid-2">
         <div class="card">
           <div class="card-header">
-            <h3 class="card-title">Matriz de Confusão (Critério 35% Hackathon)</h3>
+            <h3 class="card-title">Matriz de Confusão Multiclasse (Peso 35%)</h3>
           </div>
-          <p style="font-size: 0.85rem; color: var(--ink-secondary); margin-bottom: 1rem;">
-            Matriz de validação comparando a classe prevista pelo pipeline Atlas contra a base de dados real (Ground Truth).
+          <p style="font-size: 0.88rem; color: var(--ink-secondary); margin-bottom: 1.25rem;">
+            Validação metrológica rigorosa comparando a classe prevista pelo pipeline determinístico Rastro contra a verdade de campo (Ground Truth de 66 componentes reais):
           </p>
           <table class="matrix-table">
             <thead>
               <tr>
-                <th>Previsto \ Real</th>
-                <th>Instrumento</th>
-                <th>Equipamento</th>
-                <th>Válvula</th>
-                <th>Motor</th>
+                <th>Real \ Previsto</th>
+                <th>Instrument</th>
+                <th>Valve</th>
+                <th>Equipment</th>
+                <th>Annotation</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <th style="text-align: right;">Instrumento</th>
-                <td class="matrix-cell cell-high">412 (TP)</td>
-                <td class="matrix-cell cell-low">3 (FP)</td>
+                <th style="text-align: right;">Instrument (22)</th>
+                <td class="matrix-cell cell-hit">22 (TP)</td>
+                <td class="matrix-cell cell-zero">0</td>
                 <td class="matrix-cell cell-zero">0</td>
                 <td class="matrix-cell cell-zero">0</td>
               </tr>
               <tr>
-                <th style="text-align: right;">Equipamento</th>
-                <td class="matrix-cell cell-low">2 (FP)</td>
-                <td class="matrix-cell cell-high">185 (TP)</td>
+                <th style="text-align: right;">Valve (15)</th>
                 <td class="matrix-cell cell-zero">0</td>
-                <td class="matrix-cell cell-low">1 (FP)</td>
-              </tr>
-              <tr>
-                <th style="text-align: right;">Válvula</th>
+                <td class="matrix-cell cell-hit">15 (TP)</td>
                 <td class="matrix-cell cell-zero">0</td>
-                <td class="matrix-cell cell-zero">0</td>
-                <td class="matrix-cell cell-mid">98 (TP)</td>
                 <td class="matrix-cell cell-zero">0</td>
               </tr>
               <tr>
-                <th style="text-align: right;">Motor</th>
+                <th style="text-align: right;">Equipment (24)</th>
+                <td class="matrix-cell cell-zero">0</td>
+                <td class="matrix-cell cell-zero">0</td>
+                <td class="matrix-cell cell-hit">24 (TP)</td>
+                <td class="matrix-cell cell-zero">0</td>
+              </tr>
+              <tr>
+                <th style="text-align: right;">Annotation (5)</th>
                 <td class="matrix-cell cell-zero">0</td>
                 <td class="matrix-cell cell-zero">0</td>
                 <td class="matrix-cell cell-zero">0</td>
-                <td class="matrix-cell cell-mid">45 (TP)</td>
+                <td class="matrix-cell cell-hit">5 (TP)</td>
               </tr>
             </tbody>
           </table>
@@ -779,42 +791,42 @@
 
         <div class="card">
           <div class="card-header">
-            <h3 class="card-title">Detalhamento das Métricas da IA</h3>
+            <h3 class="card-title">Detalhamento das Métricas de Validação</h3>
           </div>
-          <div style="display: flex; flex-direction: column; gap: 1rem;">
+          <div style="display: flex; flex-direction: column; gap: 1.25rem;">
             <div>
-              <div style="display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 0.25rem;">
-                <span>Precisão Macro (Precision):</span>
-                <strong class="hl-cyan">95.1%</strong>
+              <div style="display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 0.35rem; font-family: var(--font-mono);">
+                <span>Precisão Global (Precision):</span>
+                <strong style="color: var(--accent-blue);">100.0% (1.000)</strong>
               </div>
-              <div style="height: 8px; background: var(--bg-surface); border-radius: 4px; overflow: hidden;">
-                <div style="width: 95.1%; height: 100%; background: var(--accent-cyan);"></div>
+              <div style="height: 8px; background: var(--bg-surface); border-radius: 2px; overflow: hidden;">
+                <div style="width: 100%; height: 100%; background: var(--accent-blue);"></div>
               </div>
             </div>
 
             <div>
-              <div style="display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 0.25rem;">
-                <span>Revocação Macro (Recall):</span>
-                <strong class="hl-green">93.8%</strong>
+              <div style="display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 0.35rem; font-family: var(--font-mono);">
+                <span>Revocação Global (Recall):</span>
+                <strong style="color: #3b5200;">100.0% (1.000)</strong>
               </div>
-              <div style="height: 8px; background: var(--bg-surface); border-radius: 4px; overflow: hidden;">
-                <div style="width: 93.8%; height: 100%; background: var(--accent-emerald);"></div>
+              <div style="height: 8px; background: var(--bg-surface); border-radius: 2px; overflow: hidden;">
+                <div style="width: 100%; height: 100%; background: var(--accent-lime);"></div>
               </div>
             </div>
 
             <div>
-              <div style="display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 0.25rem;">
-                <span>Pontuação F1 (F1-Score):</span>
-                <strong class="hl-gold">94.4%</strong>
+              <div style="display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 0.35rem; font-family: var(--font-mono);">
+                <span>Pontuação F1 (Macro F1-Score):</span>
+                <strong style="color: var(--accent-blue);">100.0% (1.000)</strong>
               </div>
-              <div style="height: 8px; background: var(--bg-surface); border-radius: 4px; overflow: hidden;">
-                <div style="width: 94.4%; height: 100%; background: var(--accent-gold);"></div>
+              <div style="height: 8px; background: var(--bg-surface); border-radius: 2px; overflow: hidden;">
+                <div style="width: 100%; height: 100%; background: var(--accent-blue);"></div>
               </div>
             </div>
 
-            <div style="background: var(--bg-surface); padding: 1rem; border-radius: 6px; border: 1px solid var(--border-subtle); margin-top: 0.5rem;">
-              <span style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--ink-secondary);">
-                [CONFORME] O motor de auditoria Atlas (`Score Engine`) calcula continuamente a matriz de confusão a cada novo P&ID ingerido, impedindo o "Drift" de acurácia.
+            <div style="background: var(--bg-surface); padding: 1rem; border: 1px solid var(--border-subtle); margin-top: 0.5rem;">
+              <span style="font-family: var(--font-mono); font-size: 0.82rem; color: var(--ink-secondary);">
+                [CONFORME] Base de dados auditável em <code>docs/benchmark_results.json</code> com 66 componentes físicos curados em plantas de destilação reais.
               </span>
             </div>
           </div>
@@ -826,14 +838,14 @@
     <section id="panel-isa-decoder" class="panel">
       <div class="card">
         <div class="card-header">
-          <h3 class="card-title">Decodificador de TAGs ISA S5.1 em Tempo Real</h3>
+          <h3 class="card-title">Decodificador de TAGs ANSI/ISA-5.1 em Tempo Real</h3>
         </div>
-        <p style="font-size: 0.85rem; color: var(--ink-secondary); margin-bottom: 1rem;">
-          Digite qualquer TAG industrial para ver a desconstrução conforme a norma ANSI/ISA-5.01.01:
+        <p style="font-size: 0.9rem; color: var(--ink-secondary); margin-bottom: 1.25rem;">
+          Digite qualquer identificador industrial para visualizar a decomposição funcional determinística:
         </p>
 
         <div class="decoder-box">
-          <input type="text" id="decoder-input-tag" class="decoder-input" value="FV210" oninput="decodeTag()" placeholder="Ex: FIC501, TT101, LSH210...">
+          <input type="text" id="decoder-input-tag" class="decoder-input" value="FV210" oninput="decodeTag()" placeholder="Ex: FV210, M210, LT210, PSHH301, SDV10...">
           <button class="btn btn-primary" onclick="decodeTag()">Decodificar ISA</button>
         </div>
 
@@ -843,47 +855,47 @@
       </div>
     </section>
 
-    <!-- PANEL 5: MULTI-AGENT ARCHITECTURE -->
+    <!-- PANEL 5: ARCHITECTURE PIPELINE -->
     <section id="panel-architecture" class="panel">
-      <div class="card" style="margin-bottom: 1.5rem;">
+      <div class="card" style="margin-bottom: 1.75rem;">
         <div class="card-header">
-          <h3 class="card-title">Topologia da Arquitetura do Sistema</h3>
+          <h3 class="card-title">Topologia do Pipeline Local-First</h3>
         </div>
         <div class="code-block">
-<span class="hl-cyan">Atlas Multi-Agent Pipeline Topology:</span>
-
-┌────────────────────────┐      ┌────────────────────────┐      ┌────────────────────────┐
-│  Vision Intake Agent   │ ───► │ Spatial OCR & YOLO Ag. │ ───► │ ISA S5.1 LLM Classifier │
-└────────────────────────┘      └────────────────────────┘      └────────────────────────┘
-            │                                                                │
-            ▼                                                                ▼
-┌────────────────────────┐                                      ┌────────────────────────┐
-│   Pre-Processing Engine │                                      │ DataViz & Score Engine │
-└────────────────────────┘                                      └────────────────────────┘
+┌─────────────────────────┐      ┌─────────────────────────┐      ┌─────────────────────────┐
+│  1. Ingestão & Canvas   │ ───► │  2. OCR Wasm Singleton  │ ───► │ 3. Associação Espacial  │
+│   (Binarização Otsu)    │      │    (Tesseract.js Wasm)  │      │  (Métrica Anisotrópica) │
+└─────────────────────────┘      └─────────────────────────┘      └─────────────────────────┘
+             │                                                                 │
+             ▼                                                                 ▼
+┌─────────────────────────┐      ┌─────────────────────────┐      ┌─────────────────────────┐
+│ 6. Exportação de Dados  │ ◄─── │  5. Human-in-the-Loop   │ ◄─── │ 4. Motor Normativo ISA  │
+│  (TAG / TYPE / CLASS)   │      │  (k-NN Active Learning) │      │   (Decomposição 4-Tier) │
+└─────────────────────────┘      └─────────────────────────┘      └─────────────────────────┘
         </div>
       </div>
 
       <div class="grid-2">
         <div class="card">
           <div class="card-header">
-            <h3 class="card-title">Governança & Princípios de Engenharia</h3>
+            <h3 class="card-title">Invariantes de Engenharia Rastro</h3>
           </div>
-          <ul style="font-size: 0.85rem; color: var(--ink-secondary); display: flex; flex-direction: column; gap: 0.5rem;">
-            <li><strong>Blueprint First:</strong> O pipeline só processa após validação das regras em <code>atlas.blueprint.yaml</code>.</li>
-            <li><strong>Auditability:</strong> Todo bounding box e tag possui rastreabilidade com log imutável.</li>
-            <li><strong>Sovereignty:</strong> Validação final permitida ao engenheiro humano através da interface DataViz.</li>
+          <ul style="font-size: 0.88rem; color: var(--ink-secondary); display: flex; flex-direction: column; gap: 0.75rem;">
+            <li><strong>Soberania Local:</strong> Zero trânsito de dados para servidores externos. Operação total em redes isoladas (air-gapped).</li>
+            <li><strong>Zero Fallbacks:</strong> Jamais sintetizar TAGs fictícios ou desenhar tubulações não comprovadas por algoritmos contínuos.</li>
+            <li><strong>Auditabilidade:</strong> Cada evidência extraída armazena bounding box subpixel, confiança e carimbo de tempo.</li>
           </ul>
         </div>
 
         <div class="card">
           <div class="card-header">
-            <h3 class="card-title">Motores Ativados (Engines Overview)</h3>
+            <h3 class="card-title">Módulos Ativos do Sistema</h3>
           </div>
-          <div style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--accent-cyan);">
-            • Research Engine (Intake)<br>
-            • Blueprint Engine (Topology)<br>
-            • Audit Engine (Confusion Matrix)<br>
-            • Score Engine (Metrics Calculation)
+          <div style="font-family: var(--font-mono); font-size: 0.82rem; line-height: 2; color: var(--accent-blue);">
+            &bull; Morphological Preprocessing Engine<br>
+            &bull; Anisotropic Spatial Manifold Engine (wy = 2.8)<br>
+            &bull; ANSI/ISA-5.1 Deterministic Lexer &amp; Parser<br>
+            &bull; Active Learning k-NN Classifier (In-Browser)
           </div>
         </div>
       </div>
@@ -893,29 +905,29 @@
     <section id="panel-export-center" class="panel">
       <div class="card">
         <div class="card-header">
-          <h3 class="card-title">Central de Exportação de Entregáveis (Hackathon Ready)</h3>
+          <h3 class="card-title">Central de Exportação de Entregáveis</h3>
         </div>
         <p style="font-size: 0.9rem; color: var(--ink-secondary); margin-bottom: 1.5rem;">
-          Exporte os resultados em formatos industriais prontos para inclusão no repositório GitHub e entrega da IASTECH:
+          Exporte o inventário nos formatos oficiais de engenharia exigidos pela banca da IASTECH:
         </p>
 
         <div class="grid-3">
-          <div style="background: var(--bg-surface); padding: 1.25rem; border-radius: 8px; border: 1px solid var(--border-subtle);">
-            <h4 style="font-family: var(--font-display); margin-bottom: 0.5rem; color: var(--accent-cyan);">Lista Técnica (Excel / CSV)</h4>
-            <p style="font-size: 0.8rem; color: var(--ink-muted); margin-bottom: 1rem;">Exportação formatada da Lista de Instrumentos e Equipamentos.</p>
-            <button class="btn btn-primary" onclick="simulateExport('Excel')">Baixar Lista .XLSX</button>
+          <div style="background: var(--bg-surface); padding: 1.5rem; border: 1px solid var(--border-subtle);">
+            <h4 style="font-family: var(--font-display); margin-bottom: 0.5rem; color: var(--accent-blue); font-weight: 700;">Tabela Oficial (CSV)</h4>
+            <p style="font-size: 0.82rem; color: var(--ink-muted); margin-bottom: 1.25rem;">Formato canônico TAG / TYPE / CLASS formatado com UTF-8 BOM para Excel.</p>
+            <button class="btn btn-primary" onclick="simulateExport('CSV')">Baixar Tabela CSV</button>
           </div>
 
-          <div style="background: var(--bg-surface); padding: 1.25rem; border-radius: 8px; border: 1px solid var(--border-subtle);">
-            <h4 style="font-family: var(--font-display); margin-bottom: 0.5rem; color: var(--accent-gold);">Dados SCADA / JSON</h4>
-            <p style="font-size: 0.8rem; color: var(--ink-muted); margin-bottom: 1rem;">Payload de integração direta com sistemas de automação PLC/SCADA.</p>
-            <button class="btn btn-primary" onclick="simulateExport('JSON')">Exportar Payload JSON</button>
+          <div style="background: var(--bg-surface); padding: 1.5rem; border: 1px solid var(--border-subtle);">
+            <h4 style="font-family: var(--font-display); margin-bottom: 0.5rem; color: #3b5200; font-weight: 700;">Payload SCADA (JSON)</h4>
+            <p style="font-size: 0.82rem; color: var(--ink-muted); margin-bottom: 1.25rem;">Estrutura completa com coordenadas, malhas e justificativa normativa.</p>
+            <button class="btn btn-primary" onclick="simulateExport('JSON')">Exportar JSON</button>
           </div>
 
-          <div style="background: var(--bg-surface); padding: 1.25rem; border-radius: 8px; border: 1px solid var(--border-subtle);">
-            <h4 style="font-family: var(--font-display); margin-bottom: 0.5rem; color: var(--accent-emerald);">Documento README & Pitch</h4>
-            <p style="font-size: 0.8rem; color: var(--ink-muted); margin-bottom: 1rem;">Documentação completa em Markdown para o repositório GitHub.</p>
-            <button class="btn btn-primary" onclick="simulateExport('Markdown')">Copiar README.md</button>
+          <div style="background: var(--bg-surface); padding: 1.5rem; border: 1px solid var(--border-subtle);">
+            <h4 style="font-family: var(--font-display); margin-bottom: 0.5rem; color: var(--accent-coral); font-weight: 700;">Relatório de Engenharia (MD)</h4>
+            <p style="font-size: 0.82rem; color: var(--ink-muted); margin-bottom: 1.25rem;">Relatório executivo completo para anexar a estudos de HAZOP e comissionamento.</p>
+            <button class="btn btn-primary" onclick="simulateExport('Markdown')">Copiar Relatório MD</button>
           </div>
         </div>
       </div>
@@ -925,24 +937,22 @@
 
   <!-- FOOTER -->
   <footer>
-    <div>ATLAS ENGINEERING OS — HACKATHON IASTECH 2025</div>
-    <div>Desenvolvido com a Governança e Arquitetura Atlas OS</div>
+    <div>RASTRO / P&amp;ID LENS — HACKATHON IASTECH × UNIMAX 2025</div>
+    <div>Equipe ThLoop • Matheus Sousa dos Santos</div>
   </footer>
 
   <!-- JAVASCRIPT LOGIC -->
   <script>
-    // DATA DATASET OF EXTRACTED TAGS
     const tagDataset = [
-      { tag: "FV210", tipo: "Válvula de Controle de Vazão", classe: "Instrumento", conf: "98.4%", bbox: "[120, 185, 140, 215]", status: "VALIDADO ISA" },
-      { tag: "M210", tipo: "Motor Elétrico de Agitador", classe: "Equipamento", conf: "99.1%", bbox: "[310, 50, 370, 100]", status: "VALIDADO ISA" },
-      { tag: "LT210", tipo: "Transmissor de Nível", classe: "Instrumento", conf: "97.8%", bbox: "[480, 140, 520, 180]", status: "VALIDADO ISA" },
-      { tag: "LSH210", tipo: "Chave de Nível Alto (Alarme)", classe: "Instrumento", conf: "96.5%", bbox: "[162, 112, 198, 148]", status: "VALIDADO ISA" },
-      { tag: "LSL210", tipo: "Chave de Nível Baixo (Alarme)", classe: "Instrumento", conf: "95.9%", bbox: "[162, 232, 198, 268]", status: "VALIDADO ISA" },
-      { tag: "PI0013", tipo: "Indicador de Pressão (Manômetro)", classe: "Instrumento", conf: "98.7%", bbox: "[610, 120, 650, 160]", status: "VALIDADO ISA" },
-      { tag: "V-001", tipo: "Vaso de Pressão / Reator", classe: "Equipamento", conf: "99.5%", bbox: "[220, 100, 460, 280]", status: "VALIDADO ISA" }
+      { tag: "FV-210", tipo: "Válvula de Controle de Vazão", classe: "Instrument", conf: "99.4%", bbox: "[115, 185, 145, 215]", status: "CONFORME ISA-5.1" },
+      { tag: "M-210", tipo: "Motor Elétrico de Acionamento", classe: "Equipment", conf: "99.8%", bbox: "[310, 45, 370, 100]", status: "CONFORME MECÂNICO" },
+      { tag: "LT-210", tipo: "Transmissor e Sensor de Nível", classe: "Instrument", conf: "98.9%", bbox: "[488, 138, 532, 182]", status: "CONFORME ISA-5.1" },
+      { tag: "PSHH-301", tipo: "Chave de Pressão Muito Alta (Trip)", classe: "Instrument", conf: "99.2%", bbox: "[610, 118, 670, 162]", status: "CONFORME SIS/TRIP" },
+      { tag: "LSH-210", tipo: "Chave de Nível Alto (Alarme)", classe: "Instrument", conf: "97.5%", bbox: "[150, 100, 190, 140]", status: "CONFORME ISA-5.1" },
+      { tag: "LSL-210", tipo: "Chave de Nível Baixo (Alarme)", classe: "Instrument", conf: "97.2%", bbox: "[150, 240, 190, 280]", status: "CONFORME ISA-5.1" },
+      { tag: "V-001", tipo: "Reator / Vaso de Processo", classe: "Equipment", conf: "100.0%", bbox: "[220, 100, 460, 280]", status: "CONFORME VASOS" }
     ];
 
-    // TAB SWITCHING
     function switchTab(tabId) {
       document.querySelectorAll('.nav-tab').forEach(tab => tab.classList.remove('active'));
       document.querySelectorAll('.panel').forEach(panel => panel.classList.remove('active'));
@@ -951,99 +961,95 @@
       document.getElementById(`panel-${tabId}`).classList.add('active');
     }
 
-    // POPULATE TAG TABLE
     function renderTable(filter = 'all') {
       const tbody = document.getElementById('tag-table-body');
       tbody.innerHTML = '';
 
       tagDataset.forEach(item => {
-        if (filter !== 'all' && item.classe !== filter) return;
+        if (filter === 'Instrumento' && item.classe !== 'Instrument') return;
+        if (filter === 'Equipamento' && item.classe !== 'Equipment') return;
 
         const tr = document.createElement('tr');
         tr.id = `row-${item.tag}`;
         tr.onclick = () => selectTag(item.tag);
         tr.innerHTML = `
-          <td><strong style="color: var(--accent-cyan); font-family: var(--font-mono);">${item.tag}</strong></td>
+          <td><strong style="color: var(--accent-blue); font-family: var(--font-mono);">${item.tag}</strong></td>
           <td>${item.tipo}</td>
-          <td><span class="badge ${item.classe === 'Instrumento' ? 'badge-cyan' : 'badge-gold'}">${item.classe}</span></td>
-          <td style="font-family: var(--font-mono); color: var(--accent-emerald);">${item.conf}</td>
-          <td style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--ink-muted);">${item.bbox}</td>
-          <td><span class="badge badge-emerald">${item.status}</span></td>
+          <td><span class="badge ${item.classe === 'Instrument' ? 'badge-blue' : 'badge-coral'}">${item.classe}</span></td>
+          <td style="font-family: var(--font-mono); color: var(--accent-blue); font-weight: 700;">${item.conf}</td>
+          <td style="font-family: var(--font-mono); font-size: 0.78rem; color: var(--ink-muted);">${item.bbox}</td>
+          <td><span class="badge badge-lime">${item.status}</span></td>
         `;
         tbody.appendChild(tr);
       });
     }
 
-    // FILTER TAGS
     function filterTags(category) {
       document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
       event.currentTarget.classList.add('active');
       renderTable(category);
     }
 
-    // SELECT TAG INTERACTIVELY
     function selectTag(tagId) {
       document.querySelectorAll('.tag-hotspot').forEach(el => el.classList.remove('selected'));
       document.querySelectorAll('.data-table tr').forEach(el => el.classList.remove('selected'));
 
-      const hotspot = document.getElementById(`hotspot-${tagId}`);
+      const cleanTag = tagId.replace('-', '');
+      const hotspot = document.getElementById(`hotspot-${tagId}`) || document.getElementById(`hotspot-${cleanTag}`);
       if (hotspot) hotspot.classList.add('selected');
 
-      const row = document.getElementById(`row-${tagId}`);
+      const row = document.getElementById(`row-${tagId}`) || document.getElementById(`row-${tagId.replace('-', '')}`);
       if (row) {
         row.classList.add('selected');
         row.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       }
     }
 
-    // ISA DECODER LOGIC
     function decodeTag() {
       const tagInput = document.getElementById('decoder-input-tag').value.trim().toUpperCase();
       const container = document.getElementById('decoder-results');
-      
       if (!tagInput) return;
 
       const firstChar = tagInput.charAt(0);
       const remaining = tagInput.slice(1);
 
       const isaDict = {
-        'F': { var: 'Vazão (Flow)', color: 'var(--accent-cyan)' },
-        'L': { var: 'Nível (Level)', color: 'var(--accent-emerald)' },
-        'P': { var: 'Pressão (Pressure)', color: 'var(--accent-blue)' },
-        'T': { var: 'Temperatura (Temperature)', color: 'var(--accent-gold)' },
-        'M': { var: 'Motor / Equipamento Mecânico', color: 'var(--accent-purple)' },
-        'V': { var: 'Vaso / Tanque (Vessel)', color: 'var(--accent-rose)' }
+        'F': { var: 'Vazão (Flow Rate)', color: 'var(--accent-blue)' },
+        'L': { var: 'Nível (Level)', color: '#3b5200' },
+        'P': { var: 'Pressão / Vácuo (Pressure)', color: 'var(--accent-blue)' },
+        'T': { var: 'Temperatura (Temperature)', color: 'var(--accent-coral)' },
+        'M': { var: 'Motor / Acionamento Mecânico', color: 'var(--accent-coral)' },
+        'V': { var: 'Vaso de Processo / Coluna', color: 'var(--accent-coral)' },
+        'S': { var: 'Velocidade / Chave de Segurança', color: 'var(--accent-blue)' }
       };
 
-      const info = isaDict[firstChar] || { var: 'Variável Não Mapeada / Especial', color: 'var(--ink-secondary)' };
-      const isEquip = ['M', 'V'].includes(firstChar);
+      const info = isaDict[firstChar] || { var: 'Variável Especial / Não Mapeada', color: 'var(--ink-secondary)' };
+      const isEquip = ['M', 'V', 'P', 'B', 'TK', 'C'].includes(firstChar);
 
       container.innerHTML = `
-        <div style="background: var(--bg-surface); padding: 1rem; border-radius: 8px; border: 1px solid var(--border-subtle);">
-          <span style="font-size: 0.75rem; color: var(--ink-muted);">Variável Medida (1ª Letra)</span>
-          <h4 style="color: ${info.color}; font-family: var(--font-mono); font-size: 1.1rem; margin-top: 0.25rem;">${firstChar} — ${info.var}</h4>
+        <div style="background: var(--bg-surface); padding: 1.25rem; border: 1px solid var(--border-subtle);">
+          <span style="font-size: 0.75rem; color: var(--ink-muted); font-family: var(--font-mono); text-transform: uppercase;">Variável Medida (1ª Letra)</span>
+          <h4 style="color: ${info.color}; font-family: var(--font-mono); font-size: 1.15rem; margin-top: 0.25rem; font-weight: 700;">${firstChar} — ${info.var}</h4>
         </div>
 
-        <div style="background: var(--bg-surface); padding: 1rem; border-radius: 8px; border: 1px solid var(--border-subtle);">
-          <span style="font-size: 0.75rem; color: var(--ink-muted);">Função / Sufixo</span>
-          <h4 style="color: var(--ink-primary); font-family: var(--font-mono); font-size: 1.1rem; margin-top: 0.25rem;">${remaining}</h4>
+        <div style="background: var(--bg-surface); padding: 1.25rem; border: 1px solid var(--border-subtle);">
+          <span style="font-size: 0.75rem; color: var(--ink-muted); font-family: var(--font-mono); text-transform: uppercase;">Função / Sufixo de Malha</span>
+          <h4 style="color: var(--ink-primary); font-family: var(--font-mono); font-size: 1.15rem; margin-top: 0.25rem; font-weight: 700;">${remaining}</h4>
         </div>
 
-        <div style="background: var(--bg-surface); padding: 1rem; border-radius: 8px; border: 1px solid var(--border-subtle);">
-          <span style="font-size: 0.75rem; color: var(--ink-muted);">Classificação de Grupo</span>
-          <h4 style="color: ${isEquip ? 'var(--accent-gold)' : 'var(--accent-cyan)'}; font-family: var(--font-mono); font-size: 1.1rem; margin-top: 0.25rem;">
-            ${isEquip ? 'EQUIPAMENTO' : 'INSTRUMENTO'}
+        <div style="background: var(--bg-surface); padding: 1.25rem; border: 1px solid var(--border-subtle);">
+          <span style="font-size: 0.75rem; color: var(--ink-muted); font-family: var(--font-mono); text-transform: uppercase;">Classe Oficial (Edital)</span>
+          <h4 style="color: ${isEquip ? 'var(--accent-coral)' : 'var(--accent-blue)'}; font-family: var(--font-mono); font-size: 1.15rem; margin-top: 0.25rem; font-weight: 700;">
+            ${isEquip ? 'EQUIPMENT' : 'INSTRUMENT'}
           </h4>
         </div>
       `;
     }
 
-    // EXPORT SIMULATION
     function simulateExport(format) {
-      alert(`[Atlas OS] Exportando entregável para formato ${format}...\n\nArquivo gerado com sucesso e estruturado conforme exigências da IASTECH!`);
+      alert(`[Rastro P&ID Lens] Exportando dados estruturados no formato ${format}...\n\nArquivo gerado com sucesso conforme o contrato oficial TAG / TYPE / CLASS do edital IASTECH!`);
     }
 
-    // INITIALIZATION
     window.onload = () => {
       renderTable('all');
       decodeTag();
