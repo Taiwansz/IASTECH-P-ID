@@ -11,7 +11,7 @@
  */
 
 import type { Detection, DetectionKind } from "./demo-data.ts";
-import { detectControlLoops, parseIsaTag } from "./isa51-rules.ts";
+import { detectControlLoops, formatTagTypeClass, parseIsaTag } from "./isa51-rules.ts";
 import type { TopologyEdge, TopologyGraphData, TopologyNode } from "./topology-data.ts";
 
 export interface ConfusionMatrixData {
@@ -184,16 +184,16 @@ export function calculateConfusionMatrix(detections: Detection[]): ConfusionMatr
       labels,
       kinds,
       values,
-      accuracy: 100,
-      macroF1: 100,
+      accuracy: 0,
+      macroF1: 0,
       support: 0,
-      note: "Nenhuma detecção na sessão ativa para cálculo de matriz.",
+      note: "Matriz demonstrativa baseada na coerência da sessão e regras ISA-5.1. Requer Ground Truth rotulado para validação de benchmark.",
       classMetrics: kinds.map((kind) => ({
         kind,
         label: KIND_DISPLAY_LABELS[kind],
-        precision: 100,
-        recall: 100,
-        f1: 100,
+        precision: 0,
+        recall: 0,
+        f1: 0,
         support: 0,
       })),
     };
@@ -243,15 +243,15 @@ export function calculateConfusionMatrix(detections: Detection[]): ConfusionMatr
     };
   });
 
-  const accuracy = totalSamples > 0 ? Number(((totalCorrect / totalSamples) * 100).toFixed(1)) : 100;
+  const accuracy = totalSamples > 0 ? Number(((totalCorrect / totalSamples) * 100).toFixed(1)) : 0;
   const activeClasses = classMetrics.filter((c) => c.support > 0);
   const macroF1 =
     activeClasses.length > 0
       ? Number((activeClasses.reduce((sum, c) => sum + c.f1, 0) / activeClasses.length).toFixed(1))
-      : 100;
+      : 0;
 
-  const humanReviewedCount = detections.filter((d) => d.status !== "review").length;
-  const note = `Matriz calculada dinamicamente sobre ${totalSamples} detecções (${humanReviewedCount} validadas no gate humano, ${totalSamples - humanReviewedCount} em conformidade ISA-5.1).`;
+  const note =
+    "Matriz demonstrativa baseada na coerência da sessão e regras ISA-5.1. Requer Ground Truth rotulado para validação de benchmark.";
 
   return {
     labels,
@@ -401,7 +401,7 @@ export function calculateSafetyCriticalMetrics(detections: Detection[]): SafetyC
   for (const det of detections) {
     const label = det.label.toUpperCase();
     const isRelief =
-      /(?:PSV|PRV|PCV|ALIVIO|SAFETY|RUPTURE)/i.test(label) || /alívio|alivio|segurança|ruptura/i.test(det.group);
+      /(?:PSV|PRV|ALIVIO|SAFETY|RUPTURE)/i.test(label) || /alívio|alivio|segurança|ruptura/i.test(det.group);
     const isAlarmSwitch =
       /(?:PSH|PSHH|PSL|PSLL|TSH|TSHH|TSL|TAH|LAH|LAL|LSH|LSL|VE|VI|SE|\b(?:LS|PS|TS|FS|HS|ZS)\b|\b(?:LS|PS|TS|FS|HS|ZS)\s*\d+)/i.test(
         label,
@@ -419,8 +419,12 @@ export function calculateSafetyCriticalMetrics(detections: Detection[]): SafetyC
   }
 
   const equipmentCount = detections.filter((d) => d.kind === "equipment").length;
+  // A cobertura de salvaguardas requer análise formal de HAZOP/LOPA com rastreamento 1:1 comprovado.
+  // Sem matriz de causa e efeito validada, calcula a razão proporcional observada sem assumir 100% artificial.
   const safeguardCoveragePercent =
-    equipmentCount > 0 ? Math.min(100, Math.round((sceItems.length / equipmentCount) * 100)) : 100;
+    equipmentCount > 0 && sceItems.length > 0
+      ? Math.min(90, Math.round((sceItems.length / equipmentCount) * 100))
+      : 0;
 
   return {
     sceCount: sceItems.length,
@@ -484,9 +488,9 @@ export function calculateDrawingQualityScore(
   const total = detections.length;
   if (total === 0) {
     return {
-      score: 100,
-      maturityLevel: "Nível 3 (Engenharia Detalhada - IFC)",
-      breakdown: { isa: 100, confidence: 100, topology: 100, humanGate: 100 },
+      score: 0,
+      maturityLevel: "Nível 1 (Esboço/Draft)",
+      breakdown: { isa: 0, confidence: 0, topology: 0, humanGate: 0 },
       hoursSaved: 0,
     };
   }
@@ -565,7 +569,7 @@ export function calculateSessionMetrics(
   }
 
   const isaComplianceRate =
-    totalDetections > 0 ? Math.round((isaCompliantCount / totalDetections) * 100) : 100;
+    totalDetections > 0 ? Math.round((isaCompliantCount / totalDetections) * 100) : 0;
 
   // Detecção de Malhas de Controle ISA
   const loops = detectControlLoops(detections);
@@ -611,6 +615,10 @@ export function exportToJson(payload: ExportDataPayload): string {
   const metrics = calculateSessionMetrics(payload.detections, payload.topology);
   const controlLoops = detectControlLoops(payload.detections);
 
+  const isCurated =
+    payload.diagram.fileName === "16.jpg" || payload.diagram.id === "distillation-train";
+  const topologyStatus = isCurated ? "curated" : "unverified";
+
   const fullData = {
     metadata: {
       generator: "Rastro — P&ID Lens",
@@ -620,6 +628,8 @@ export function exportToJson(payload: ExportDataPayload): string {
       exportedAt: new Date().toISOString(),
       localExecutionOnly: true,
       securityGuarantee: "Zero data transmitted externally. All processing executed in local runtime.",
+      disclaimer:
+        "AVISO: Este relatório é um auxílio computacional e não substitui avaliação presencial de engenharia nem estudos formais de HAZOP/LOPA.",
     },
     diagram: {
       id: payload.diagram.id,
@@ -648,12 +658,18 @@ export function exportToJson(payload: ExportDataPayload): string {
     },
     detections: payload.detections.map((det) => {
       const isa = parseIsaTag(det.label);
+      const formatted = formatTagTypeClass(det.label);
       return {
         id: det.id,
         label: det.label,
         normalized: det.normalized,
         kind: det.kind,
         group: det.group,
+        tagTypeClass: {
+          type: formatted.type,
+          class: formatted.class,
+          formatted: formatted.formatted,
+        },
         confidence: det.confidence,
         status: det.status,
         source: det.source,
@@ -671,7 +687,7 @@ export function exportToJson(payload: ExportDataPayload): string {
       };
     }),
     topology: {
-      status: "verified-topological-graph",
+      status: topologyStatus,
       nodesCount: payload.topology.nodes.length,
       edgesCount: payload.topology.edges.length,
       routesCount: payload.topology.routes.length,
@@ -773,6 +789,7 @@ export function exportToCsv(
     "Tipo",
     "Classe ISA-5.1",
     "Descrição / Grupo",
+    "Formato Oficial (TAG=TYPE/CLASS)",
     "Variável Medida",
     "Função ISA",
     "Laço / Malha",
@@ -806,6 +823,7 @@ export function exportToCsv(
 
   for (const det of detections) {
     const isa = parseIsaTag(det.label);
+    const formatted = formatTagTypeClass(det.label);
     const connCount = connectionCounts.get(det.id) ?? 0;
 
     const row = [
@@ -813,6 +831,7 @@ export function exportToCsv(
       escapeCsv(KIND_DISPLAY_LABELS[det.kind] || det.kind),
       escapeCsv(isa.isaStandard ? "Conforme ANSI/ISA-5.1" : isa.kind === "equipment" ? "Equipamento de Engenharia" : "Não Classificado"),
       escapeCsv(det.group),
+      escapeCsv(formatted.formatted),
       escapeCsv(isa.variable || "N/A"),
       escapeCsv(isa.functionName || "N/A"),
       escapeCsv(isa.loopNumber || "Geral"),
@@ -943,7 +962,8 @@ export function exportToMarkdownReport(payload: ExportDataPayload): string {
     `> **Data de Emissão**: ${new Date().toLocaleString("pt-BR")}  `,
     `> **Arquivo Analisado**: \`${payload.diagram.fileName}\` (${payload.diagram.width} × ${payload.diagram.height} px)  `,
     `> **Plataforma**: Rastro P&ID Lens • Versão 0.1.0  `,
-    `> **Garantia de Privacidade**: Execução 100% offline no dispositivo do usuário. Zero dados externos.`,
+    `> **Garantia de Privacidade**: Execução 100% offline no dispositivo do usuário. Zero dados externos.  `,
+    `> **AVISO**: Este relatório é um auxílio computacional e não substitui avaliação presencial de engenharia nem estudos formais de HAZOP/LOPA.`,
     ``,
     `---`,
     ``,
@@ -1009,7 +1029,7 @@ export function exportToMarkdownReport(payload: ExportDataPayload): string {
 
   for (const loop of controlLoops.slice(0, 15)) {
     const parts = [loop.transmitter, loop.controller, loop.valve, ...loop.indicators].filter(Boolean);
-    lines.push(`| **Malha ${loop.loopId}** | ${loop.variable} | ${loop.isComplete ? "✅ Malha Fechada Completa" : "⚠️ Monitoramento / Indicador"} | ${parts.join(", ") || "Sem elementos"} |`);
+    lines.push(`| **Malha ${loop.loopId}** | ${loop.variable} | ${loop.isComplete ? "[CONFORME] Malha Fechada Completa" : "[REVISÃO] Malha Aberta / Incompleta"} | ${parts.join(", ") || "Sem elementos"} |`);
   }
 
   lines.push(
@@ -1042,6 +1062,13 @@ export function exportToMarkdownReport(payload: ExportDataPayload): string {
   for (const a of payload.audit.slice(0, 10)) {
     lines.push(`| ${a.time} | ${a.agent} | ${a.action} | ${a.status} |`);
   }
+
+  lines.push(
+    ``,
+    `---`,
+    ``,
+    `> **AVISO**: Este relatório é um auxílio computacional e não substitui avaliação presencial de engenharia nem estudos formais de HAZOP/LOPA.`,
+  );
 
   return lines.join("\n");
 }

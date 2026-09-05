@@ -179,11 +179,10 @@ export function resetActiveTopologyGraph(): void {
 }
 
 /**
- * Gera dinamicamente nós e arestas de topologia para qualquer conjunto de detecções e dimensões de diagrama.
+ * Gera dinamicamente nós de topologia a partir de qualquer conjunto de detecções e dimensões de diagrama.
  * - Converte centros das bounding boxes em coordenadas percentuais (0-100%).
- * - Conecta equipamentos de processo adjacentes (distância euclidiana < 220px) com fluxo montante->jusante.
- * - Conecta instrumentos aos seus equipamentos mais próximos (distância euclidiana < 220px) via sinal ISA.
- * - Constrói uma rota de fluxo dinâmica via BFS da entrada (menor coordenada X) até a saída (maior coordenada X).
+ * - Para amostras sem curadoria física manual ou sem rastreamento de tubulação verificado,
+ *   retorna grafo sem arestas fantasmas ({ nodes, edges: [], routes: [] }).
  */
 export function generateTopologyFromDetections(
   detections: Detection[],
@@ -229,189 +228,9 @@ export function generateTopologyFromDetections(
     };
   });
 
-  const getCenter = (det: Detection) => ({
-    x: det.box.x + det.box.width / 2,
-    y: det.box.y + det.box.height / 2,
-  });
-
-  const euclideanDistance = (d1: Detection, d2: Detection) => {
-    const c1 = getCenter(d1);
-    const c2 = getCenter(d2);
-    const dx = c1.x - c2.x;
-    const dy = c1.y - c2.y;
-    return Math.sqrt(dx * dx + dy * dy);
-  };
-
-  const edges: TopologyEdge[] = [];
-  const edgeSet = new Set<string>();
-
-  const processDetections = detections.filter(
-    (d) => d.kind === "equipment" || d.kind === "valve",
-  );
-  const instrumentDetections = detections.filter(
-    (d) => d.kind === "instrument" || d.kind === "tag",
-  );
-
-  // 2. Arestas de Processo: conecta equipamentos adjacentes (distância euclidiana < 220px)
-  for (let i = 0; i < processDetections.length; i++) {
-    for (let j = i + 1; j < processDetections.length; j++) {
-      const a = processDetections[i];
-      const b = processDetections[j];
-      const dist = euclideanDistance(a, b);
-
-      if (dist < 220) {
-        const ca = getCenter(a);
-        const cb = getCenter(b);
-        // Direcionamento ordenado do fluxo de processo (menor X -> maior X)
-        const [sourceDet, targetDet] =
-          ca.x !== cb.x
-            ? ca.x <= cb.x
-              ? [a, b]
-              : [b, a]
-            : ca.y <= cb.y
-            ? [a, b]
-            : [b, a];
-
-        const edgeId = `${sourceDet.id}-${targetDet.id}`;
-        if (!edgeSet.has(edgeId) && sourceDet.id !== targetDet.id) {
-          edgeSet.add(edgeId);
-          edges.push({
-            id: edgeId,
-            source: sourceDet.id,
-            target: targetDet.id,
-            kind: "process",
-            label: "Linha de Processo",
-          });
-        }
-      }
-    }
-  }
-
-  // 3. Arestas de Sinal: conecta instrumentos aos seus equipamentos mais próximos (distância euclidiana < 220px)
-  let equipmentTargets = detections.filter((d) => d.kind === "equipment");
-  if (equipmentTargets.length === 0) {
-    equipmentTargets = detections.filter((d) => d.kind === "valve");
-  }
-
-  for (const ins of instrumentDetections) {
-    let closestTarget: Detection | null = null;
-    let minDistance = Infinity;
-
-    for (const target of equipmentTargets) {
-      if (ins.id === target.id) continue;
-      const dist = euclideanDistance(ins, target);
-      if (dist < minDistance) {
-        minDistance = dist;
-        closestTarget = target;
-      }
-    }
-
-    if (closestTarget && minDistance < 220) {
-      const edgeId = `${ins.id}-${closestTarget.id}`;
-      if (!edgeSet.has(edgeId)) {
-        edgeSet.add(edgeId);
-        edges.push({
-          id: edgeId,
-          source: ins.id,
-          target: closestTarget.id,
-          kind: "signal",
-          label: "Sinal ISA",
-        });
-      }
-    }
-  }
-
-  // 4. Rota Dinâmica por BFS conectando equipamentos de menor coordenada X (entrada)
-  // até a maior coordenada X (saída/produto)
-  const routes: FlowRoute[] = [];
-
-  let routeCandidateNodes = nodes.filter((n) => n.kind === "equipment");
-  if (routeCandidateNodes.length === 0) {
-    routeCandidateNodes = nodes.filter((n) => n.kind === "valve");
-  }
-  if (routeCandidateNodes.length === 0) {
-    routeCandidateNodes = nodes;
-  }
-
-  if (routeCandidateNodes.length > 0) {
-    const sortedByX = [...routeCandidateNodes].sort((a, b) => (a.x !== b.x ? a.x - b.x : a.y - b.y));
-    const startNode = sortedByX[0];
-    const endNode = sortedByX[sortedByX.length - 1];
-
-    if (startNode.id === endNode.id) {
-      routes.push({
-        id: "main-process-route",
-        name: "Rota Principal de Processo",
-        purpose: `Ponto de processo isolado: ${startNode.label}.`,
-        nodeIds: [startNode.id],
-        edgeIds: [],
-      });
-    } else {
-      const processEdges = edges.filter((e) => e.kind === "process");
-
-      const findPath = (directed: boolean) => {
-        const queue: string[] = [startNode.id];
-        const parent = new Map<string, { prev: string; edgeId: string }>();
-        const visited = new Set<string>([startNode.id]);
-
-        while (queue.length > 0) {
-          const curr = queue.shift()!;
-          if (curr === endNode.id) break;
-
-          for (const edge of processEdges) {
-            let next: string | null = null;
-            if (edge.source === curr) {
-              next = edge.target;
-            } else if (!directed && edge.target === curr) {
-              next = edge.source;
-            }
-
-            if (next && !visited.has(next)) {
-              visited.add(next);
-              parent.set(next, { prev: curr, edgeId: edge.id });
-              queue.push(next);
-            }
-          }
-        }
-
-        if (!visited.has(endNode.id)) return null;
-
-        const pathNodes: string[] = [];
-        const pathEdges: string[] = [];
-        let curr = endNode.id;
-        while (curr !== startNode.id) {
-          pathNodes.unshift(curr);
-          const p = parent.get(curr)!;
-          pathEdges.unshift(p.edgeId);
-          curr = p.prev;
-        }
-        pathNodes.unshift(startNode.id);
-        return { pathNodes, pathEdges };
-      };
-
-      const path = findPath(true) ?? findPath(false);
-
-      if (path) {
-        routes.push({
-          id: "main-process-route",
-          name: "Rota Principal de Processo",
-          purpose: `Trajeto dinâmico gerado por BFS da alimentação (${startNode.label}) até o destino (${endNode.label}).`,
-          nodeIds: path.pathNodes,
-          edgeIds: path.pathEdges,
-        });
-      } else {
-        routes.push({
-          id: "main-process-route",
-          name: "Rota Principal de Processo",
-          purpose: `Segmento de processo a partir da entrada (${startNode.label}).`,
-          nodeIds: [startNode.id],
-          edgeIds: [],
-        });
-      }
-    }
-  }
-
-  return { nodes, edges, routes };
+  // Sem curadoria física manual ou algoritmo de rastreamento contínuo validado de tubulações,
+  // retorna grafo sem arestas fantasmas para evitar alucinações de conexões e inversões de fluxo.
+  return { nodes, edges: [], routes: [] };
 }
 
 /**

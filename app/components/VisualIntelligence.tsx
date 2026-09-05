@@ -284,9 +284,12 @@ export function TopologyWorkspace({
   edges?: TopologyEdge[];
   routes?: FlowRoute[];
 }) {
-  const routesToUse = routes && routes.length > 0 ? routes : flowRoutes;
-  const nodesToUse = nodes && nodes.length > 0 ? nodes : topologyNodes;
-  const edgesToUse = edges ?? topologyEdges;
+  const isReference = Boolean(sample.referenceReady);
+  const nodesToUse = nodes && nodes.length > 0 ? nodes : isReference ? topologyNodes : [];
+  const edgesToUse = edges !== undefined ? edges : isReference ? topologyEdges : [];
+  const routesToUse = routes !== undefined ? routes : isReference ? flowRoutes : [];
+  const hasEdges = edgesToUse.length > 0;
+
   const route = routesToUse.find((item) => item.id === routeId) ?? routesToUse[0];
   const routeDetectionIds = nodesToUse
     .filter((node) => route?.nodeIds.includes(node.id) && node.detectionId)
@@ -299,14 +302,32 @@ export function TopologyWorkspace({
           <FlowArrow size={19} />
           <span>
             <strong>Traçado de fluxo</strong>
-            <small>{sample.referenceReady ? "Relações curadas da referência 16.jpg" : `Topologia dinâmica (${nodesToUse.length} nós, ${edgesToUse.length} arestas)`}</small>
+            <small>
+              {isReference
+                ? "Relações curadas da referência 16.jpg"
+                : !hasEdges
+                ? "Topologia não verificada para esta amostra. Conexões de tubulação não inferidas para evitar alucinações."
+                : `Topologia dinâmica (${nodesToUse.length} nós, ${edgesToUse.length} arestas)`}
+            </small>
           </span>
         </div>
-        <div className="route-selector" role="group" aria-label="Selecionar rota de processo">
-          {routesToUse.map((item) => (
-            <button key={item.id} className={item.id === route?.id ? "active" : ""} onClick={() => onRoute(item.id)}>{item.name}</button>
-          ))}
-        </div>
+        {routesToUse.length > 0 ? (
+          <div className="route-selector" role="group" aria-label="Selecionar rota de processo">
+            {routesToUse.map((item) => (
+              <button
+                key={item.id}
+                className={item.id === route?.id ? "active" : ""}
+                onClick={() => onRoute(item.id)}
+              >
+                {item.name}
+              </button>
+            ))}
+          </div>
+        ) : (
+          <div className="route-selector-empty" style={{ fontSize: "0.8125rem", color: "var(--cds-text-02, #525252)", fontStyle: "italic" }}>
+            Nenhuma rota pré-definida sem validação física
+          </div>
+        )}
       </div>
 
       <div className="topology-dual">
@@ -328,8 +349,31 @@ export function TopologyWorkspace({
         <article className="sync-panel graph-panel">
           <div className="intelligence-panel-head">
             <span><Graph size={17} /> Topologia</span>
-            <strong>{sample.referenceReady ? "Camada demonstrativa" : "Topologia dinâmica"}</strong>
+            <strong>{isReference ? "Camada demonstrativa" : !hasEdges ? "Topologia não verificada" : "Topologia dinâmica"}</strong>
           </div>
+          {!hasEdges && (
+            <div
+              className="topology-unverified-banner"
+              role="status"
+              style={{
+                padding: "0.625rem 0.875rem",
+                margin: "0.5rem 0.75rem 0",
+                background: "rgba(241, 194, 27, 0.12)",
+                border: "1px solid rgba(241, 194, 27, 0.4)",
+                borderRadius: "4px",
+                fontSize: "0.8125rem",
+                color: "#8a6d00",
+                display: "flex",
+                alignItems: "center",
+                gap: "0.5rem",
+              }}
+            >
+              <Warning size={17} weight="fill" style={{ flexShrink: 0 }} />
+              <span>
+                <strong>Nenhuma tubulação física confirmada ainda.</strong> Topologia não verificada para esta amostra. Conexões de tubulação não inferidas para evitar alucinações.
+              </span>
+            </div>
+          )}
           <TopologyGraph
             detections={detections}
             selectedNodeId={selectedNodeId}
@@ -342,14 +386,27 @@ export function TopologyWorkspace({
         </article>
       </div>
 
-      {route && (
+      {route ? (
         <div className="route-ledger">
           <span><Path size={19} /></span>
           <div><strong>{route.name}</strong><p>{route.purpose}</p></div>
           <dl>
             <div><dt>Nós</dt><dd>{route.nodeIds.length}</dd></div>
             <div><dt>Conexões</dt><dd>{route.edgeIds.length}</dd></div>
-            <div><dt>Validação</dt><dd>{sample.referenceReady ? "Especialista" : "BFS Topológico"}</dd></div>
+            <div><dt>Validação</dt><dd>{isReference ? "Especialista" : "BFS Topológico"}</dd></div>
+          </dl>
+        </div>
+      ) : (
+        <div className="route-ledger unverified" style={{ borderLeftColor: "var(--cds-support-03, #f1c21b)" }}>
+          <span><Warning size={19} /></span>
+          <div>
+            <strong>Topologia não verificada</strong>
+            <p>Nenhuma tubulação física confirmada ainda. O grafo exibe os nós detectados sem conexões arbitrárias.</p>
+          </div>
+          <dl>
+            <div><dt>Nós mapeados</dt><dd>{nodesToUse.length}</dd></div>
+            <div><dt>Conexões</dt><dd>0 (não inferidas)</dd></div>
+            <div><dt>Validação</dt><dd>Sem curadoria física</dd></div>
           </dl>
         </div>
       )}
@@ -519,8 +576,8 @@ export function TopologyUnavailable({ onRestore, onRunOcr }: { onRestore: () => 
   return (
     <div className="topology-unavailable">
       <Graph size={34} />
-      <h2>Topologia dinâmica sob demanda</h2>
-      <p>Execute o OCR neural local para extrair os nós e traçar o grafo de processo e sinal deste documento.</p>
+      <h2>Amostra pronta para análise</h2>
+      <p>Amostra pronta para análise. Execute o OCR neural local para iniciar a extração de nós e componentes deste documento.</p>
       <div style={{ display: "flex", gap: "0.75rem", marginTop: "1rem", flexWrap: "wrap", justifyContent: "center" }}>
         {onRunOcr && (
           <button onClick={onRunOcr} style={{ background: "var(--cds-interactive, #0f62fe)", color: "#fff", border: "none", cursor: "pointer", padding: "0.6rem 1.2rem", borderRadius: "4px", display: "inline-flex", alignItems: "center", gap: "0.5rem" }}>

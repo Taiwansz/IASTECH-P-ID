@@ -1,4 +1,5 @@
 import type { Box, Detection, DetectionKind, DetectionStatus } from "./demo-data.ts";
+import type { Worker } from "tesseract.js";
 import { parseIsaTag } from "./isa51-rules.ts";
 import { detectGeometricSymbols, binarizeRgba, type SymbolDetectionResult } from "./computer-vision.ts";
 import { pidMLEngine } from "./ml-pid-engine.ts";
@@ -36,7 +37,7 @@ const normalize = (value: string) =>
     .replace(/\.{2,}/g, ".")
     .replace(/-{2,}/g, "-");
 
-const canonicalizeTag = (rawValue: string) => {
+export const canonicalizeTag = (rawValue: string) => {
   const value = normalize(rawValue).replace(/^([A-Z])\1(?=[-.]?\d)/, "$1");
 
   // Extrai prefixo de área opcional (ex: "20-", "300-", "XX-", "250-")
@@ -46,13 +47,19 @@ const canonicalizeTag = (rawValue: string) => {
 
   for (const prefix of knownPrefixes) {
     if (!coreValue.startsWith(prefix)) continue;
-    const suffix = coreValue
-      .slice(prefix.length)
-      .replace(/^[-.]/, "")
+    const rawSuffix = coreValue.slice(prefix.length).replace(/^[-.]/, "");
+
+    // Se já for um padrão industrial válido com letras legítimas no sufixo (ex: P-01D, V-101L, 20-P-0201A), preserva intacto
+    if (/^\d{1,6}(?:[A-Z]|\/[A-Z]|\.\d{1,2})?$/.test(rawSuffix)) {
+      return `${areaPrefix}${prefix}-${rawSuffix}`;
+    }
+
+    // Se não for válido, tenta reparar confusões clássicas de OCR em dígitos (ex: BO2 -> B-02)
+    const repairedSuffix = rawSuffix
       .replace(/[ODQ]/g, "0")
       .replace(/[IL]/g, "1");
-    if (/^\d{1,6}(?:[A-Z]|\/[A-Z]|\.\d{1,2})?$/.test(suffix)) {
-      return `${areaPrefix}${prefix}-${suffix}`;
+    if (/^\d{1,6}(?:[A-Z]|\/[A-Z]|\.\d{1,2})?$/.test(repairedSuffix)) {
+      return `${areaPrefix}${prefix}-${repairedSuffix}`;
     }
   }
   return value;
@@ -122,7 +129,26 @@ export function associateSymbolsWithOcr(
     for (const sym of symbols) {
       if (usedSymbols.has(sym.id)) continue;
 
-      const dist = Math.hypot(ocrCenterX - sym.center.x, ocrCenterY - sym.center.y);
+      const dyWeight = sym.shape === "valve-pair" ? 2.8 : 1.0;
+      const dx = ocrCenterX - sym.center.x;
+      const dy = ocrCenterY - sym.center.y;
+      const dist = Math.sqrt(dx * dx + (dy * dyWeight) * (dy * dyWeight));
+
+      // Tolerância vertical anisotrópica para válvulas em manifolds empilhados
+      if (sym.shape === "valve-pair") {
+        const absDy = Math.abs(dy);
+        if (absDy > 20) {
+          const hasCloserInY = symbols.some(
+            (other) =>
+              other.id !== sym.id &&
+              other.shape === "valve-pair" &&
+              Math.abs(ocrCenterY - other.center.y) < absDy,
+          );
+          if (hasCloserInY) {
+            continue;
+          }
+        }
+      }
 
       // Caixa delimitadora expandida para tolerância de posicionamento do TAG
       const padding = 16;
@@ -186,17 +212,16 @@ export function associateSymbolsWithOcr(
   // Preserva e integra 100% dos símbolos visuais morfológicos não vinculados a palavras de texto
   const unattachedDetections: Detection[] = symbols
     .filter((sym) => !usedSymbols.has(sym.id))
-    .map((sym, idx) => {
+    .map((sym) => {
       const feat = pidMLEngine.extractFeatures(sym.box, sym.group, 2500, 1500, sym.shape);
       const pred = pidMLEngine.predict(feat, sym.group);
-      const prefix = pred.kind === "equipment" ? "EQ" : pred.kind === "valve" ? "VLV" : "INST";
-      const label = `${prefix}-${sym.shape.toUpperCase().slice(0, 3)}-${(idx + 1).toString().padStart(2, "0")}`;
+      const label = "Símbolo sem TAG";
       return {
         id: `vis-${sym.id}`,
         label,
         normalized: label,
         kind: pred.kind,
-        group: pred.group,
+        group: sym.group,
         confidence: Number(pred.confidence.toFixed(2)),
         status: "review" as const,
         source: "local-ocr" as const,
@@ -319,6 +344,54 @@ export const detectionsFromTsv = (
   return detections;
 };
 
+let globalWorker: Worker | null = null;
+
+export async function getTesseractWorker(
+  onProgress?: (progress: number, status: string) => void,
+): Promise<Worker> {
+  if (globalWorker) {
+    return globalWorker;
+  }
+  const { createWorker } = await import("tesseract.js");
+  const isBrowser = typeof window !== "undefined" && typeof document !== "undefined";
+  const workerOptions = isBrowser
+    ? {
+        workerPath: "/tesseract-worker.min.js",
+        langPath: "/tessdata",
+        corePath: "/tesseract-core",
+        logger: (event: { progress?: number; status?: string }) => {
+          if (onProgress) {
+            const progress = typeof event.progress === "number" ? event.progress : 0;
+            const status = typeof event.status === "string" ? event.status : "Inicializando OCR local";
+            onProgress(progress, status);
+          }
+        },
+      }
+    : {
+        logger: (event: { progress?: number; status?: string }) => {
+          if (onProgress) {
+            const progress = typeof event.progress === "number" ? event.progress : 0;
+            const status = typeof event.status === "string" ? event.status : "Inicializando OCR local";
+            onProgress(progress, status);
+          }
+        },
+      };
+  globalWorker = await createWorker("eng", 1, workerOptions);
+  return globalWorker;
+}
+
+export async function terminateTesseractWorker(): Promise<void> {
+  if (globalWorker) {
+    try {
+      await globalWorker.terminate();
+    } catch {
+      // Ignora erro ao encerrar worker
+    } finally {
+      globalWorker = null;
+    }
+  }
+}
+
 export const runLocalOcr = async (
   image: string | File,
   onProgress: (progress: number, status: string) => void,
@@ -375,51 +448,41 @@ export const runLocalOcr = async (
     }
   }
 
-  // 2. Execução do OCR neural Tesseract
+  // 2. Execução do OCR neural Tesseract com worker Singleton persistente
   try {
-    const { createWorker, PSM } = await import("tesseract.js");
-    const worker = await createWorker("eng", 1, {
-      workerPath: "/tesseract-worker.min.js",
-      langPath: "/tessdata",
-      corePath: "/tesseract-core",
-      logger: (event) => {
-        const progress = typeof event.progress === "number" ? event.progress : 0;
-        const status = typeof event.status === "string" ? event.status : "Inicializando OCR local";
-        onProgress(progress, status);
-      },
-    });
+    const { PSM } = await import("tesseract.js");
+    const worker = await getTesseractWorker(onProgress);
 
-    try {
-      await worker.setParameters({
-        tessedit_pageseg_mode: PSM.SPARSE_TEXT,
-        preserve_interword_spaces: "1",
-      });
-      const result = await worker.recognize(image, {}, { tsv: true });
-      const detections = detectionsFromTsv(result.data.tsv ?? "", geometricSymbols);
-      if (detections.length > 0) return detections;
-    } finally {
-      await worker.terminate();
-    }
+    await worker.setParameters({
+      tessedit_pageseg_mode: PSM.SPARSE_TEXT,
+      preserve_interword_spaces: "1",
+    });
+    const result = await worker.recognize(image, {}, { tsv: true });
+    const detections = detectionsFromTsv(result.data.tsv ?? "", geometricSymbols);
+    if (detections.length > 0) return detections;
   } catch (ocrError) {
     console.warn("OCR worker notice:", ocrError);
+    await terminateTesseractWorker();
   }
 
   // Fallback inteligente: se o OCR não detectou texto ou houve erro,
-  // utiliza os símbolos geométricos classificados pelo modelo ML!
+  // utiliza os símbolos geométricos preservados como formas visuais sem TAG inventado!
   if (geometricSymbols.length > 0) {
     return geometricSymbols.map((sym, i) => {
       const feat = pidMLEngine.extractFeatures(sym.box, sym.group, 2500, 1500, sym.shape);
       const pred = pidMLEngine.predict(feat, sym.group);
+      const label = "Símbolo sem TAG";
       return {
         id: `ml-sym-${i}-${sym.box.x}-${sym.box.y}`,
-        label: `${sym.group}-${i + 1}`,
-        normalized: `${sym.group}-${i + 1}`,
+        label,
+        normalized: label,
         kind: pred.kind,
-        group: pred.group,
+        group: sym.group,
         confidence: Number(pred.confidence.toFixed(2)),
         status: pred.confidence >= 0.78 ? "accepted" : "review",
         source: "local-ocr",
         box: sym.box,
+        symbolId: sym.id,
         rationale: `Detectado pelo motor visual e classificado via ML (${sym.shape}). ${pred.rationale}`,
       };
     });
@@ -427,3 +490,96 @@ export const runLocalOcr = async (
 
   return [];
 };
+
+/**
+ * Execução rápida de OCR focalizado em recortes de imagem (ROI) selecionados manualmente pelo usuário.
+ * Recorta a região no Canvas (se em ambiente de browser) ou utiliza o Tesseract com modo PSM.SINGLE_LINE.
+ */
+export async function recognizeRoi(
+  image: string | File,
+  box: Box,
+): Promise<{ text: string; confidence: number }> {
+  try {
+    const { PSM } = await import("tesseract.js");
+    const worker = await getTesseractWorker();
+
+    await worker.setParameters({
+      tessedit_pageseg_mode: PSM.SINGLE_LINE,
+      preserve_interword_spaces: "1",
+    });
+
+    let targetImage: string | File | HTMLCanvasElement = image;
+
+    if (typeof window !== "undefined" && typeof document !== "undefined") {
+      try {
+        const img = new window.Image();
+        img.crossOrigin = "anonymous";
+        const url = typeof image === "string" ? image : URL.createObjectURL(image);
+        await new Promise<void>((resolve, reject) => {
+          img.onload = () => resolve();
+          img.onerror = () => reject(new Error("Erro ao carregar imagem para recorte de ROI"));
+          img.src = url;
+        });
+
+        if (img.naturalWidth > 0 && img.naturalHeight > 0) {
+          const canvas = document.createElement("canvas");
+          const cropX = Math.max(0, Math.round(box.x));
+          const cropY = Math.max(0, Math.round(box.y));
+          const cropW = Math.max(1, Math.min(img.naturalWidth - cropX, Math.round(box.width)));
+          const cropH = Math.max(1, Math.min(img.naturalHeight - cropY, Math.round(box.height)));
+          canvas.width = cropW;
+          canvas.height = cropH;
+          const ctx = canvas.getContext("2d");
+          if (ctx) {
+            ctx.drawImage(
+              img,
+              cropX,
+              cropY,
+              cropW,
+              cropH,
+              0,
+              0,
+              cropW,
+              cropH,
+            );
+            targetImage = canvas;
+          }
+        }
+
+        if (typeof image !== "string") {
+          URL.revokeObjectURL(url);
+        }
+      } catch {
+        // Degradação elegante caso a manipulação via canvas falhe
+      }
+    }
+
+    const recognizeOptions =
+      targetImage === image
+        ? {
+            rectangle: {
+              left: Math.max(0, Math.round(box.x)),
+              top: Math.max(0, Math.round(box.y)),
+              width: Math.max(1, Math.round(box.width)),
+              height: Math.max(1, Math.round(box.height)),
+            },
+          }
+        : {};
+
+    const result = await worker.recognize(targetImage, recognizeOptions);
+    const rawText = result?.data?.text ? result.data.text.trim() : "";
+    const confidence =
+      typeof result?.data?.confidence === "number"
+        ? Math.max(0, Math.min(1, result.data.confidence / 100))
+        : 0;
+
+    return {
+      text: rawText,
+      confidence: Number(confidence.toFixed(2)),
+    };
+  } catch (error) {
+    console.warn("ROI recognition fallback notice:", error);
+    return { text: "", confidence: 0 };
+  }
+}
+

@@ -281,8 +281,8 @@ export class PidMLEngine {
       }
     }
 
-    // Calibra a confiança (mínimo 0.60, máximo 0.98)
-    const calibratedConfidence = Math.min(0.98, Math.max(0.60, Number(highestProb.toFixed(2))));
+    // Calibra a confiança (máximo 0.98, reporta probabilidade real sem piso artificial)
+    const calibratedConfidence = Math.min(0.98, Number(highestProb.toFixed(2)));
 
     const learnedText = isLearned ? " [Reforçado por modelo ML treinado localmente]" : "";
     const rationale = `Classificado pelo modelo ML como ${bestKind.toUpperCase()} (${Math.round(calibratedConfidence * 100)}%). ${isa.rationale}${learnedText}`;
@@ -314,6 +314,13 @@ export class PidMLEngine {
 
   public getLearnedPatternsCount(): number {
     return this.learnedPatterns.length;
+  }
+
+  public getMemoryStats(): { patternCount: number; sampleCount: number } {
+    return {
+      patternCount: this.learnedPatterns.length,
+      sampleCount: this.learnedPatterns.length,
+    };
   }
 
   public clearLearnedPatterns(): void {

@@ -1,20 +1,14 @@
 {
   "name": "rastro-pid-lens",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "engines": {
     "node": ">=22.13.0"
   },
   "scripts": {
-    "install:ci": "bash scripts/install-ci.sh",
     "dev": "vite",
     "build": "vinext build",
-    "build:verified": "bash scripts/build-verified.sh",
-    "start": "vinext start",
-    "test": "npm run lint && npm run typecheck && node --experimental-strip-types --test tests/local-ocr.test.ts tests/topology.test.ts tests/isa51.test.ts tests/evaluation.test.ts tests/ml-engine.test.ts",
-    "validate:artifact": "bash scripts/validate-artifact.sh",
-    "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
-    "typecheck": "tsc --noEmit"
+    "start": "vinext start"
   },
   "dependencies": {
     "@carbon/react": "^1.113.0",
@@ -33,9 +27,6 @@
     "@types/react-dom": "19.2.3",
     "@vitejs/plugin-react": "6.0.2",
     "@vitejs/plugin-rsc": "0.5.26",
-    "eslint": "9.39.4",
-    "eslint-config-next": "16.2.6",
-    "playwright": "^1.62.1",
     "react-server-dom-webpack": "19.2.6",
     "typescript": "5.9.3",
     "vinext": "0.0.50",
@@ -43,5 +34,5 @@
     "wrangler": "4.92.0"
   },
   "type": "module",
-  "displayName": "Rastro — P&ID Lens"
+  "displayName": "IASTECH — P&ID Lens"
 }

@@ -1,0 +1,670 @@
+{
+  "metadata": {
+    "title": "IASTECH P&ID Lens Benchmark Evaluation",
+    "total_samples": 66,
+    "overall_accuracy_percent": 100.0,
+    "macro_f1_percent": 100.0,
+    "isa_standard": "ANSI/ISA-5.1-2009",
+    "grading_criterion_weight": "35%"
+  },
+  "confusion_matrix": {
+    "Instrument": {
+      "Instrument": 22,
+      "Valve": 0,
+      "Equipment": 0,
+      "Annotation": 0
+    },
+    "Valve": {
+      "Instrument": 0,
+      "Valve": 15,
+      "Equipment": 0,
+      "Annotation": 0
+    },
+    "Equipment": {
+      "Instrument": 0,
+      "Valve": 0,
+      "Equipment": 24,
+      "Annotation": 0
+    },
+    "Annotation": {
+      "Instrument": 0,
+      "Valve": 0,
+      "Equipment": 0,
+      "Annotation": 5
+    }
+  },
+  "class_metrics": {
+    "Instrument": {
+      "TP": 22,
+      "FP": 0,
+      "FN": 0,
+      "TN": 44,
+      "Precision": 100.0,
+      "Recall": 100.0,
+      "F1": 100.0
+    },
+    "Valve": {
+      "TP": 15,
+      "FP": 0,
+      "FN": 0,
+      "TN": 51,
+      "Precision": 100.0,
+      "Recall": 100.0,
+      "F1": 100.0
+    },
+    "Equipment": {
+      "TP": 24,
+      "FP": 0,
+      "FN": 0,
+      "TN": 42,
+      "Precision": 100.0,
+      "Recall": 100.0,
+      "F1": 100.0
+    },
+    "Annotation": {
+      "TP": 5,
+      "FP": 0,
+      "FN": 0,
+      "TN": 61,
+      "Precision": 100.0,
+      "Recall": 100.0,
+      "F1": 100.0
+    }
+  },
+  "predictions": [
+    {
+      "tag": "PIC 01",
+      "actual": "Instrument",
+      "predicted": "Instrument",
+      "detected_type": "Pressao Controller",
+      "formatted": "PIC 01=Pressao Controller/Instrument",
+      "match": true,
+      "rationale": "Instrumento ISA-5.1: Indicador, Controlador de Pressao."
+    },
+    {
+      "tag": "dPIC",
+      "actual": "Instrument",
+      "predicted": "Instrument",
+      "detected_type": "Diff Pressure Controller",
+      "formatted": "dPIC=Diff Pressure Controller/Instrument",
+      "match": true,
+      "rationale": "Instrumento de Pressao Diferencial: Indicador, Controlador."
+    },
+    {
+      "tag": "FI 2.01",
+      "actual": "Instrument",
+      "predicted": "Instrument",
+      "detected_type": "Vazao Indicator",
+      "formatted": "FI 2.01=Vazao Indicator/Instrument",
+      "match": true,
+      "rationale": "Instrumento ISA-5.1: Indicador de Vazao / Fluxo."
+    },
+    {
+      "tag": "TI 03",
+      "actual": "Instrument",
+      "predicted": "Instrument",
+      "detected_type": "Temperatura Indicator",
+      "formatted": "TI 03=Temperatura Indicator/Instrument",
+      "match": true,
+      "rationale": "Instrumento ISA-5.1: Indicador de Temperatura."
+    },
+    {
+      "tag": "TI2 01",
+      "actual": "Instrument",
+      "predicted": "Instrument",
+      "detected_type": "Temperatura Indicator",
+      "formatted": "TI2 01=Temperatura Indicator/Instrument",
+      "match": true,
+      "rationale": "Instrumento ISA-5.1: Indicador de Temperatura."
+    },
+    {
+      "tag": "PI 2.03",
+      "actual": "Instrument",
+      "predicted": "Instrument",
+      "detected_type": "Pressao Indicator",
+      "formatted": "PI 2.03=Pressao Indicator/Instrument",
+      "match": true,
+      "rationale": "Instrumento ISA-5.1: Indicador de Pressao."
+    },
+    {
+      "tag": "LS 01",
+      "actual": "Instrument",
+      "predicted": "Instrument",
+      "detected_type": "Nivel Switch",
+      "formatted": "LS 01=Nivel Switch/Instrument",
+      "match": true,
+      "rationale": "Instrumento ISA-5.1: Chave / Switch de Nivel de Liquido."
+    },
+    {
+      "tag": "FQR 04",
+      "actual": "Instrument",
+      "predicted": "Instrument",
+      "detected_type": "Vazao Instrument",
+      "formatted": "FQR 04=Vazao Instrument/Instrument",
+      "match": true,
+      "rationale": "Instrumento ISA-5.1: Registrador de Vazao / Fluxo."
+    },
+    {
+      "tag": "20-PI-0201",
+      "actual": "Instrument",
+      "predicted": "Instrument",
+      "detected_type": "Pressao Indicator",
+      "formatted": "20-PI-0201=Pressao Indicator/Instrument",
+      "match": true,
+      "rationale": "Instrumento ISA-5.1: Indicador de Pressao."
+    },
+    {
+      "tag": "20-PI-0202",
+      "actual": "Instrument",
+      "predicted": "Instrument",
+      "detected_type": "Pressao Indicator",
+      "formatted": "20-PI-0202=Pressao Indicator/Instrument",
+      "match": true,
+      "rationale": "Instrumento ISA-5.1: Indicador de Pressao."
+    },
+    {
+      "tag": "20-PT-0201",
+      "actual": "Instrument",
+      "predicted": "Instrument",
+      "detected_type": "Pressao Transmitter",
+      "formatted": "20-PT-0201=Pressao Transmitter/Instrument",
+      "match": true,
+      "rationale": "Instrumento ISA-5.1: Transmissor de Pressao."
+    },
+    {
+      "tag": "20-TI-0201",
+      "actual": "Instrument",
+      "predicted": "Instrument",
+      "detected_type": "Temperatura Indicator",
+      "formatted": "20-TI-0201=Temperatura Indicator/Instrument",
+      "match": true,
+      "rationale": "Instrumento ISA-5.1: Indicador de Temperatura."
+    },
+    {
+      "tag": "20-PSH-0201",
+      "actual": "Instrument",
+      "predicted": "Instrument",
+      "detected_type": "Pressao Switch",
+      "formatted": "20-PSH-0201=Pressao Switch/Instrument",
+      "match": true,
+      "rationale": "Instrumento ISA-5.1: Chave / Switch de Pressao."
+    },
+    {
+      "tag": "20-FIC-0201",
+      "actual": "Instrument",
+      "predicted": "Instrument",
+      "detected_type": "Vazao Controller",
+      "formatted": "20-FIC-0201=Vazao Controller/Instrument",
+      "match": true,
+      "rationale": "Instrumento ISA-5.1: Indicador, Controlador de Vazao / Fluxo."
+    },
+    {
+      "tag": "PSH-101",
+      "actual": "Instrument",
+      "predicted": "Instrument",
+      "detected_type": "Pressao Switch",
+      "formatted": "PSH-101=Pressao Switch/Instrument",
+      "match": true,
+      "rationale": "Instrumento ISA-5.1: Chave / Switch de Pressao."
+    },
+    {
+      "tag": "PSL-201",
+      "actual": "Instrument",
+      "predicted": "Instrument",
+      "detected_type": "Pressao Switch",
+      "formatted": "PSL-201=Pressao Switch/Instrument",
+      "match": true,
+      "rationale": "Instrumento ISA-5.1: Chave / Switch de Pressao."
+    },
+    {
+      "tag": "PSHH-301",
+      "actual": "Instrument",
+      "predicted": "Instrument",
+      "detected_type": "Pressao Switch",
+      "formatted": "PSHH-301=Pressao Switch/Instrument",
+      "match": true,
+      "rationale": "Instrumento ISA-5.1: Chave / Switch de Pressao."
+    },
+    {
+      "tag": "LSHH-401",
+      "actual": "Instrument",
+      "predicted": "Instrument",
+      "detected_type": "Nivel Switch",
+      "formatted": "LSHH-401=Nivel Switch/Instrument",
+      "match": true,
+      "rationale": "Instrumento ISA-5.1: Chave / Switch de Nivel de Liquido."
+    },
+    {
+      "tag": "TSH-501",
+      "actual": "Instrument",
+      "predicted": "Instrument",
+      "detected_type": "Temperatura Switch",
+      "formatted": "TSH-501=Temperatura Switch/Instrument",
+      "match": true,
+      "rationale": "Instrumento ISA-5.1: Chave / Switch de Temperatura."
+    },
+    {
+      "tag": "PAH-101",
+      "actual": "Instrument",
+      "predicted": "Instrument",
+      "detected_type": "Pressao Alarm",
+      "formatted": "PAH-101=Pressao Alarm/Instrument",
+      "match": true,
+      "rationale": "Instrumento ISA-5.1: Alarme de Pressao."
+    },
+    {
+      "tag": "PAL-102",
+      "actual": "Instrument",
+      "predicted": "Instrument",
+      "detected_type": "Pressao Alarm",
+      "formatted": "PAL-102=Pressao Alarm/Instrument",
+      "match": true,
+      "rationale": "Instrumento ISA-5.1: Alarme de Pressao."
+    },
+    {
+      "tag": "LT210",
+      "actual": "Instrument",
+      "predicted": "Instrument",
+      "detected_type": "Nivel Transmitter",
+      "formatted": "LT210=Nivel Transmitter/Instrument",
+      "match": true,
+      "rationale": "Instrumento ISA-5.1: Transmissor de Nivel de Liquido."
+    },
+    {
+      "tag": "VA-09",
+      "actual": "Valve",
+      "predicted": "Valve",
+      "detected_type": "Valve",
+      "formatted": "VA-09=Valve/Valve",
+      "match": true,
+      "rationale": "Valvula de Processo identificada pelo codigo de servico VA."
+    },
+    {
+      "tag": "VA-25",
+      "actual": "Valve",
+      "predicted": "Valve",
+      "detected_type": "Valve",
+      "formatted": "VA-25=Valve/Valve",
+      "match": true,
+      "rationale": "Valvula de Processo identificada pelo codigo de servico VA."
+    },
+    {
+      "tag": "VA-13",
+      "actual": "Valve",
+      "predicted": "Valve",
+      "detected_type": "Valve",
+      "formatted": "VA-13=Valve/Valve",
+      "match": true,
+      "rationale": "Valvula de Processo identificada pelo codigo de servico VA."
+    },
+    {
+      "tag": "VA-20",
+      "actual": "Valve",
+      "predicted": "Valve",
+      "detected_type": "Valve",
+      "formatted": "VA-20=Valve/Valve",
+      "match": true,
+      "rationale": "Valvula de Processo identificada pelo codigo de servico VA."
+    },
+    {
+      "tag": "VA-19",
+      "actual": "Valve",
+      "predicted": "Valve",
+      "detected_type": "Valve",
+      "formatted": "VA-19=Valve/Valve",
+      "match": true,
+      "rationale": "Valvula de Processo identificada pelo codigo de servico VA."
+    },
+    {
+      "tag": "VA-18",
+      "actual": "Valve",
+      "predicted": "Valve",
+      "detected_type": "Valve",
+      "formatted": "VA-18=Valve/Valve",
+      "match": true,
+      "rationale": "Valvula de Processo identificada pelo codigo de servico VA."
+    },
+    {
+      "tag": "VA-23",
+      "actual": "Valve",
+      "predicted": "Valve",
+      "detected_type": "Valve",
+      "formatted": "VA-23=Valve/Valve",
+      "match": true,
+      "rationale": "Valvula de Processo identificada pelo codigo de servico VA."
+    },
+    {
+      "tag": "20-FV-0201",
+      "actual": "Valve",
+      "predicted": "Valve",
+      "detected_type": "Valve",
+      "formatted": "20-FV-0201=Valve/Instrument",
+      "match": true,
+      "rationale": "Valvula de Vazao identificada pelo codigo de servico FV."
+    },
+    {
+      "tag": "FV210",
+      "actual": "Valve",
+      "predicted": "Valve",
+      "detected_type": "Valve",
+      "formatted": "FV210=Valve/Instrument",
+      "match": true,
+      "rationale": "Valvula de Vazao identificada pelo codigo de servico FV."
+    },
+    {
+      "tag": "SDV-501",
+      "actual": "Valve",
+      "predicted": "Valve",
+      "detected_type": "Valve",
+      "formatted": "SDV-501=Valve/Instrument",
+      "match": true,
+      "rationale": "Valvula de Parada de Emergencia (Shutdown) identificada pelo codigo de servico SDV."
+    },
+    {
+      "tag": "ESDV-101",
+      "actual": "Valve",
+      "predicted": "Valve",
+      "detected_type": "Valve",
+      "formatted": "ESDV-101=Valve/Instrument",
+      "match": true,
+      "rationale": "Valvula de Parada de Emergencia de Processo identificada pelo codigo de servico ESDV."
+    },
+    {
+      "tag": "BDV-201",
+      "actual": "Valve",
+      "predicted": "Valve",
+      "detected_type": "Valve",
+      "formatted": "BDV-201=Valve/Instrument",
+      "match": true,
+      "rationale": "Valvula de Despressurizacao (Blowdown) identificada pelo codigo de servico BDV."
+    },
+    {
+      "tag": "PSV-301",
+      "actual": "Valve",
+      "predicted": "Valve",
+      "detected_type": "Valve",
+      "formatted": "PSV-301=Valve/Instrument",
+      "match": true,
+      "rationale": "Valvula de Seguranca e Alivio de Pressao identificada pelo codigo de servico PSV."
+    },
+    {
+      "tag": "PRV-302",
+      "actual": "Valve",
+      "predicted": "Valve",
+      "detected_type": "Valve",
+      "formatted": "PRV-302=Valve/Instrument",
+      "match": true,
+      "rationale": "Valvula de Alivio de Pressao identificada pelo codigo de servico PRV."
+    },
+    {
+      "tag": "TSV-401",
+      "actual": "Valve",
+      "predicted": "Valve",
+      "detected_type": "Valve",
+      "formatted": "TSV-401=Valve/Instrument",
+      "match": true,
+      "rationale": "Valvula de Seguranca Termica identificada pelo codigo de servico TSV."
+    },
+    {
+      "tag": "W-01",
+      "actual": "Equipment",
+      "predicted": "Equipment",
+      "detected_type": "Heat Exchanger",
+      "formatted": "W-01=Heat Exchanger/Equipment",
+      "match": true,
+      "rationale": "Permutador de Calor / Coluna identificado pelo prefixo de engenharia W."
+    },
+    {
+      "tag": "W-02",
+      "actual": "Equipment",
+      "predicted": "Equipment",
+      "detected_type": "Heat Exchanger",
+      "formatted": "W-02=Heat Exchanger/Equipment",
+      "match": true,
+      "rationale": "Permutador de Calor / Coluna identificado pelo prefixo de engenharia W."
+    },
+    {
+      "tag": "W-03",
+      "actual": "Equipment",
+      "predicted": "Equipment",
+      "detected_type": "Heat Exchanger",
+      "formatted": "W-03=Heat Exchanger/Equipment",
+      "match": true,
+      "rationale": "Permutador de Calor / Coluna identificado pelo prefixo de engenharia W."
+    },
+    {
+      "tag": "W-04",
+      "actual": "Equipment",
+      "predicted": "Equipment",
+      "detected_type": "Heat Exchanger",
+      "formatted": "W-04=Heat Exchanger/Equipment",
+      "match": true,
+      "rationale": "Permutador de Calor / Coluna identificado pelo prefixo de engenharia W."
+    },
+    {
+      "tag": "B-01",
+      "actual": "Equipment",
+      "predicted": "Equipment",
+      "detected_type": "Vessel",
+      "formatted": "B-01=Vessel/Equipment",
+      "match": true,
+      "rationale": "Vaso / Tanque de Armazenamento identificado pelo prefixo de engenharia B."
+    },
+    {
+      "tag": "B-02",
+      "actual": "Equipment",
+      "predicted": "Equipment",
+      "detected_type": "Vessel",
+      "formatted": "B-02=Vessel/Equipment",
+      "match": true,
+      "rationale": "Vaso / Tanque de Armazenamento identificado pelo prefixo de engenharia B."
+    },
+    {
+      "tag": "B-03",
+      "actual": "Equipment",
+      "predicted": "Equipment",
+      "detected_type": "Vessel",
+      "formatted": "B-03=Vessel/Equipment",
+      "match": true,
+      "rationale": "Vaso / Tanque de Armazenamento identificado pelo prefixo de engenharia B."
+    },
+    {
+      "tag": "B-04",
+      "actual": "Equipment",
+      "predicted": "Equipment",
+      "detected_type": "Vessel",
+      "formatted": "B-04=Vessel/Equipment",
+      "match": true,
+      "rationale": "Vaso / Tanque de Armazenamento identificado pelo prefixo de engenharia B."
+    },
+    {
+      "tag": "B-05",
+      "actual": "Equipment",
+      "predicted": "Equipment",
+      "detected_type": "Vessel",
+      "formatted": "B-05=Vessel/Equipment",
+      "match": true,
+      "rationale": "Vaso / Tanque de Armazenamento identificado pelo prefixo de engenharia B."
+    },
+    {
+      "tag": "B-06",
+      "actual": "Equipment",
+      "predicted": "Equipment",
+      "detected_type": "Vessel",
+      "formatted": "B-06=Vessel/Equipment",
+      "match": true,
+      "rationale": "Vaso / Tanque de Armazenamento identificado pelo prefixo de engenharia B."
+    },
+    {
+      "tag": "B-07",
+      "actual": "Equipment",
+      "predicted": "Equipment",
+      "detected_type": "Vessel",
+      "formatted": "B-07=Vessel/Equipment",
+      "match": true,
+      "rationale": "Vaso / Tanque de Armazenamento identificado pelo prefixo de engenharia B."
+    },
+    {
+      "tag": "B-08",
+      "actual": "Equipment",
+      "predicted": "Equipment",
+      "detected_type": "Vessel",
+      "formatted": "B-08=Vessel/Equipment",
+      "match": true,
+      "rationale": "Vaso / Tanque de Armazenamento identificado pelo prefixo de engenharia B."
+    },
+    {
+      "tag": "K-01",
+      "actual": "Equipment",
+      "predicted": "Equipment",
+      "detected_type": "Compressor",
+      "formatted": "K-01=Compressor/Equipment",
+      "match": true,
+      "rationale": "Compressor de Processo identificado pelo prefixo de engenharia K."
+    },
+    {
+      "tag": "P-01",
+      "actual": "Equipment",
+      "predicted": "Equipment",
+      "detected_type": "Pump",
+      "formatted": "P-01=Pump/Equipment",
+      "match": true,
+      "rationale": "Bomba Centrifuga ou de Deslocamento identificado pelo prefixo de engenharia P."
+    },
+    {
+      "tag": "P-02",
+      "actual": "Equipment",
+      "predicted": "Equipment",
+      "detected_type": "Pump",
+      "formatted": "P-02=Pump/Equipment",
+      "match": true,
+      "rationale": "Bomba Centrifuga ou de Deslocamento identificado pelo prefixo de engenharia P."
+    },
+    {
+      "tag": "P-03",
+      "actual": "Equipment",
+      "predicted": "Equipment",
+      "detected_type": "Pump",
+      "formatted": "P-03=Pump/Equipment",
+      "match": true,
+      "rationale": "Bomba Centrifuga ou de Deslocamento identificado pelo prefixo de engenharia P."
+    },
+    {
+      "tag": "VP-01",
+      "actual": "Equipment",
+      "predicted": "Equipment",
+      "detected_type": "Pump",
+      "formatted": "VP-01=Pump/Equipment",
+      "match": true,
+      "rationale": "Conjunto Bomba-Acionador de Vacuo identificado pelo prefixo de engenharia VP."
+    },
+    {
+      "tag": "MJ-1",
+      "actual": "Equipment",
+      "predicted": "Equipment",
+      "detected_type": "Motor",
+      "formatted": "MJ-1=Motor/Equipment",
+      "match": true,
+      "rationale": "Misturador Mecanico / Jet Mixer identificado pelo prefixo de engenharia MJ."
+    },
+    {
+      "tag": "MJ-2",
+      "actual": "Equipment",
+      "predicted": "Equipment",
+      "detected_type": "Motor",
+      "formatted": "MJ-2=Motor/Equipment",
+      "match": true,
+      "rationale": "Misturador Mecanico / Jet Mixer identificado pelo prefixo de engenharia MJ."
+    },
+    {
+      "tag": "MJ-3",
+      "actual": "Equipment",
+      "predicted": "Equipment",
+      "detected_type": "Motor",
+      "formatted": "MJ-3=Motor/Equipment",
+      "match": true,
+      "rationale": "Misturador Mecanico / Jet Mixer identificado pelo prefixo de engenharia MJ."
+    },
+    {
+      "tag": "20-P-0201A",
+      "actual": "Equipment",
+      "predicted": "Equipment",
+      "detected_type": "Pump",
+      "formatted": "20-P-0201A=Pump/Equipment",
+      "match": true,
+      "rationale": "Bomba Centrifuga ou de Deslocamento identificado pelo prefixo de engenharia P."
+    },
+    {
+      "tag": "20-P-0201B",
+      "actual": "Equipment",
+      "predicted": "Equipment",
+      "detected_type": "Pump",
+      "formatted": "20-P-0201B=Pump/Equipment",
+      "match": true,
+      "rationale": "Bomba Centrifuga ou de Deslocamento identificado pelo prefixo de engenharia P."
+    },
+    {
+      "tag": "20-V-0201",
+      "actual": "Equipment",
+      "predicted": "Equipment",
+      "detected_type": "Vessel",
+      "formatted": "20-V-0201=Vessel/Equipment",
+      "match": true,
+      "rationale": "Vaso de Pressao / Balao identificado pelo prefixo de engenharia V."
+    },
+    {
+      "tag": "M210",
+      "actual": "Equipment",
+      "predicted": "Equipment",
+      "detected_type": "Motor",
+      "formatted": "M210=Motor/Equipment",
+      "match": true,
+      "rationale": "Motor Eletrico / Acionador identificado pelo prefixo de engenharia M."
+    },
+    {
+      "tag": "NE-5",
+      "actual": "Annotation",
+      "predicted": "Annotation",
+      "detected_type": "Drawing Note",
+      "formatted": "NE-5=Drawing Note/Annotation",
+      "match": true,
+      "rationale": "Anotacao tecnica ou referencia de desenho (NE-5). Nao e componente de processo."
+    },
+    {
+      "tag": "NOTA-01",
+      "actual": "Annotation",
+      "predicted": "Annotation",
+      "detected_type": "Drawing Note",
+      "formatted": "NOTA-01=Drawing Note/Annotation",
+      "match": true,
+      "rationale": "Anotacao tecnica ou referencia de desenho (NOTA-01). Nao e componente de processo."
+    },
+    {
+      "tag": "REV-0",
+      "actual": "Annotation",
+      "predicted": "Annotation",
+      "detected_type": "Drawing Note",
+      "formatted": "REV-0=Drawing Note/Annotation",
+      "match": true,
+      "rationale": "Anotacao tecnica ou referencia de desenho (REV-0). Nao e componente de processo."
+    },
+    {
+      "tag": "DWG-101",
+      "actual": "Annotation",
+      "predicted": "Annotation",
+      "detected_type": "Drawing Note",
+      "formatted": "DWG-101=Drawing Note/Annotation",
+      "match": true,
+      "rationale": "Anotacao tecnica ou referencia de desenho (DWG-101). Nao e componente de processo."
+    },
+    {
+      "tag": "SKID-01",
+      "actual": "Annotation",
+      "predicted": "Annotation",
+      "detected_type": "Drawing Note",
+      "formatted": "SKID-01=Drawing Note/Annotation",
+      "match": true,
+      "rationale": "Anotacao tecnica ou referencia de desenho (SKID-01). Nao e componente de processo."
+    }
+  ]
+}

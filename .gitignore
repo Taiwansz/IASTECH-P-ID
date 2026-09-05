@@ -46,3 +46,4 @@ next-env.d.ts
 crop-*.png
 reflux-ocr-parsed.json
 reflux-pumps.tsv
+scratch-screenshots/

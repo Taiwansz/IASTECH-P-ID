@@ -391,6 +391,8 @@ export const sampleDetectionsMap: Record<string, Detection[]> = {
   "16.jpg": referenceDetections,
   "reflux-pumps": refluxPumpsDetections,
   "160.jpg": refluxPumpsDetections,
+  "petrochem-complex": [],
+  "PID-501-A.jpg": [],
   "fractionation-loop": fractionationLoopDetections,
   "151.jpg": fractionationLoopDetections,
   "pressure-vessel": pressureVesselDetections,
@@ -402,7 +404,7 @@ export const sampleDetectionsMap: Record<string, Detection[]> = {
 };
 
 export function getDetectionsForSample(sampleId: string): Detection[] {
-  return sampleDetectionsMap[sampleId] || referenceDetections;
+  return sampleDetectionsMap[sampleId] ?? [];
 }
 
 export const atlasAgents = [
